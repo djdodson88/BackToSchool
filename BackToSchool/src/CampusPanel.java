@@ -43,21 +43,25 @@ public class CampusPanel extends JPanel
 		setFocusable(true);
 		requestFocus();
 		
-		animate = new Thread(){
-			public void run() {
-				
-				while (animating)
-				{
-					try {
-						sleep(1000);
-						repaint();
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					//repaint();
+		animating = true;
+		AnimateThread animate = new AnimateThread();
+		animate.start();
+	}
+	
+	private class AnimateThread extends Thread
+	{	
+		public void run()
+		{
+			while (animating)
+			{
+				try {
+					sleep(500);
+					repaint();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
 				}
 			}
-		};
+		}
 	}
 	
 	private void updateTiles(Direction dir)
