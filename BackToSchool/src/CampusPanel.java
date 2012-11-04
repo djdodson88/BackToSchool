@@ -8,14 +8,15 @@ import java.io.IOException;
 
 public class CampusPanel extends JPanel 
 {
-	private Image[][] tiles;
-	private Image player;
-	private Campus campus;
 	private int playerX, playerY, screenX, screenY;
 	private static int PWIDTH=800, PHEIGHT=600, TILE=50, TILESX=16, TILESY=12;
 	private boolean animating;
 	private enum Direction{LEFT, UP, RIGHT, DOWN};
+	private Rectangle playerBounds;
+	private Image player;
+	private Image[][] tiles;
 	private Thread animate;
+	private Campus campus;
 	
 	public CampusPanel()
 	{
@@ -23,7 +24,6 @@ public class CampusPanel extends JPanel
 		
 		campus = new Campus();
 		tiles = new Image[TILESX][TILESY];
-		
 		for (int i=0; i<TILESX; i++)
 			for (int j=0; j<TILESY; j++)
 			{	Tile tile = campus.getTile(screenX+i, screenY+j);
@@ -36,6 +36,7 @@ public class CampusPanel extends JPanel
 		} catch(IOException e){};
 		playerX = playerY = 4;
 		screenX = screenY = 0;
+		playerBounds = new Rectangle(5,4,6,4);
 		
 		addKeyListener(new CampusListener());
 		setPreferredSize(new Dimension(PWIDTH,PHEIGHT));
@@ -45,7 +46,7 @@ public class CampusPanel extends JPanel
 		
 		animating = true;
 		AnimateThread animate = new AnimateThread();
-		animate.start();
+		//animate.start();
 	}
 	
 	private class AnimateThread extends Thread
@@ -159,13 +160,37 @@ public class CampusPanel extends JPanel
 		public void keyPressed(KeyEvent e)
 		{
 			if(e.getKeyCode() == KeyEvent.VK_UP)
-				updateTiles(Direction.UP);
+			{
+				if (playerBounds.contains(playerX, playerY-1))
+					playerY--;
+				else
+					updateTiles(Direction.UP);
+				repaint();
+			}
 			else if(e.getKeyCode() == KeyEvent.VK_LEFT)
-				updateTiles(Direction.LEFT);
+			{	
+				if (playerBounds.contains(playerX-1,playerY))
+					playerX--;
+				else
+					updateTiles(Direction.LEFT);
+				repaint();
+			}
 			else if(e.getKeyCode() == KeyEvent.VK_DOWN)
-				updateTiles(Direction.DOWN);
+			{	
+				if (playerBounds.contains(playerX,playerY+1))
+					playerY++;
+				else
+					updateTiles(Direction.DOWN);
+				repaint();
+			}
 			else if(e.getKeyCode() == KeyEvent.VK_RIGHT)
-				updateTiles(Direction.RIGHT);
+			{	
+				if (playerBounds.contains(playerX+1,playerY))
+					playerX++;
+				else
+					updateTiles(Direction.RIGHT);
+				repaint();
+			}
 		}
 	}
 	
