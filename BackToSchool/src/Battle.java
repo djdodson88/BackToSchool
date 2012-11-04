@@ -46,8 +46,8 @@ public class Battle extends JPanel {
 		setLayout(null);
 		
 		// loading the images
-		student = new ImageIcon("images/student.jpg");
-		boss = new ImageIcon("images/humboss.png");
+		student = new ImageIcon("art/battle/student.jpg");
+		boss = new ImageIcon("art/battle/humboss.png");
 		
 		studentX=500;// x coordinate for student
 		studentY=200;// y coordinate for student

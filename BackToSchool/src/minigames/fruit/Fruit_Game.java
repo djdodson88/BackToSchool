@@ -85,22 +85,22 @@ public class Fruit_Game extends JPanel implements KeyListener,Runnable{
 	public void loadImages() {
 		try {
 			//path for image files
-			String backPath = "images/Kitchen background_s_wm.jpg";
+			String backPath = "art/fruit/Kitchen background_s_wm.jpg";
 			background = ImageIO.read(new File(backPath));
 
-			String pathBasket = "images/basket.png";
+			String pathBasket = "art/fruit/basket.png";
 			basket = ImageIO.read(new File(pathBasket));
 
-			String pathBanana = "images/banana.png";
+			String pathBanana = "art/fruit/banana.png";
 			banana = ImageIO.read(new File(pathBanana));
 			
-			String pathApple = "images/apple.png";
+			String pathApple = "art/fruit/apple.png";
 			apple = ImageIO.read(new File(pathApple));
 			
-			String pathOrange = "images/orange.png";
+			String pathOrange = "art/fruit/orange.png";
 			orange = ImageIO.read(new File(pathOrange));
 			
-			String pathBomb = "images/bomb.png";
+			String pathBomb = "art/fruit/bomb.png";
 			bomb = ImageIO.read(new File(pathBomb));
 			
 		} catch (IOException ex) {
