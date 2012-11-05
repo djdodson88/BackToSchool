@@ -28,10 +28,15 @@ public class Battle extends JPanel {
 	Timer timer;
 	JLabel bossHealth;
 	JLabel playerHealth;
+	JLabel creativityLabel;
+	JLabel quantReasoningLabel;
+	JLabel scientRigorLabel;
+	JLabel bossType;
+	JLabel bossName;
 	int health;
 	boolean attackPressed;
 
-	public Battle(){
+	public Battle(Player player){
 		this.setPreferredSize(new Dimension(800, 600));// setting the size
 		this.setBackground(Color.white);// color of background
 		
@@ -40,16 +45,15 @@ public class Battle extends JPanel {
 		
 		//adding the attack button
 		button1 = new JButton("Attack");
-		button1.setBounds(500,500,100,30);
 		button1.addActionListener(new ButtonListener());
-		add(button1);
+		
 		setLayout(null);
 		
 		// loading the images
 		student = new ImageIcon("art/battle/student.jpg");
 		boss = new ImageIcon("art/battle/humboss.png");
 		
-		studentX=500;// x coordinate for student
+		studentX=600;// x coordinate for student
 		studentY=200;// y coordinate for student
 		xSpeed=5;// speed for movement
 		bossX=0;// x coordinate for boss
@@ -58,11 +62,34 @@ public class Battle extends JPanel {
 		bossHealth = new JLabel(health+"%");
 		playerHealth = new JLabel(health+"%");
 		
-		bossHealth.setBounds(100,300,100,100);
-		this.add(bossHealth);
+		creativityLabel = new JLabel("Cretivity: "+player.getCreativity());
+		quantReasoningLabel = new JLabel("Quantative Reasoning: "+player.getQuantReasoning());
+		scientRigorLabel = new JLabel("Scientific Rigor: "+player.getSciRigor());
+		bossName = new JLabel("Boss: Shakespeare");
+		bossType = new JLabel("Type: Humanities");
 		
-		playerHealth.setBounds(545,300,100,100);
+		// buttons for attack
+		button1.setBounds(340,400,100,30);
+		
+		// boss information
+		bossHealth.setBounds(50,340,100,100);
+		bossName.setBounds(50,420,140,30);
+		bossType.setBounds(50,460,100,30);
+		
+		// players statistics
+		playerHealth.setBounds(600,340,100,100);
+		creativityLabel.setBounds(600,380,150,100);
+		quantReasoningLabel.setBounds(600,420,150,100);
+		scientRigorLabel.setBounds(600,460,150,100);
+		
+		this.add(bossName);
+		this.add(bossType);
+		this.add(button1);
+		this.add(bossHealth);
 		this.add(playerHealth);
+		this.add(creativityLabel);
+		this.add(quantReasoningLabel);
+		this.add(scientRigorLabel);
 		
 		setVisible(true);
 	}		
@@ -71,17 +98,17 @@ public class Battle extends JPanel {
 		studentX -= xSpeed;
 		
 		// if student touches the boss , tell him to go the other direction
-		if (!(studentX > 600 - 50) && studentX < 200) 
+		if (!(studentX > 600) && studentX < 200) 
 		{
 			health-=10;
 			bossHealth.setText(health+"%");
 			xSpeed = -xSpeed;
 		}
 		// if the student reaches to the origin, make him stop
-		else if(studentX > 600 - 50 && !(studentX<200))
+		else if(studentX > 599 && !(studentX<200))
 		{
 			timer.stop();
-			studentX=550;
+			studentX=600;
 			xSpeed=5;
 			attackPressed=false;
 		}
@@ -122,7 +149,7 @@ public class Battle extends JPanel {
 
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("Back To School: Battle Mode");
-		Battle battle = new Battle();
+		Battle battle = new Battle(new Player());
 		frame.setSize(800,600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// frame.add(battle);
@@ -132,7 +159,7 @@ public class Battle extends JPanel {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				new Battle(); // Let the constructor do the job
+				new Battle(new Player()); // Let the constructor do the job
 			}
 		});
 		frame.setVisible(true);
