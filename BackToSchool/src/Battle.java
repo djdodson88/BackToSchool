@@ -26,6 +26,7 @@ public class Battle extends JPanel {
 	int bossY;
 	int xSpeed;
 	Timer timer;
+	Timer bossTimer;
 	JLabel bossHealth;
 	JLabel playerHealth;
 	JLabel creativityLabel;
