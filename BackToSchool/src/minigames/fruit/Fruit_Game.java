@@ -122,7 +122,7 @@ public class Fruit_Game extends JPanel implements KeyListener,Runnable{
 		g.drawImage(background, 0, 0, this);
 		g.drawImage(basket, cordX, cordY, this);
 		
-		if(bombsHit<3){
+		if(bombsHit<3 && counter<totalFruits){
 			if(currentItem.equals("apple")){
 				g.drawImage(apple, X, Y, this);
 			}
@@ -138,7 +138,6 @@ public class Fruit_Game extends JPanel implements KeyListener,Runnable{
 		}
 		else{
 			g.drawImage(background, 0, 0, this);
-			timer.stop();
 		}
 	}
 		
