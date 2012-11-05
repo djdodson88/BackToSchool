@@ -137,6 +137,7 @@ public class Fruit_Game extends JPanel implements KeyListener,Runnable{
 			}
 		}
 		else{
+			// will draw brackground at the end of the game
 			g.drawImage(background, 0, 0, this);
 		}
 	}
