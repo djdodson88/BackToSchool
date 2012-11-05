@@ -105,6 +105,7 @@ public class Battle extends JPanel {
 			xSpeed = -xSpeed;
 		}
 		// if the student reaches to the origin, make him stop
+		// make the student stop at 599
 		else if(studentX > 599 && !(studentX<200))
 		{
 			timer.stop();
