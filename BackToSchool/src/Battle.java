@@ -20,6 +20,7 @@ public class Battle extends JPanel {
 	ImageIcon student;
 	ImageIcon boss;
 	Graphics graphics;
+	int testing;// erase later
 	int studentX;
 	int studentY;
 	int bossX;
