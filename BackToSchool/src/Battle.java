@@ -36,6 +36,7 @@ public class Battle extends JPanel {
 	JLabel bossName;
 	int health;
 	boolean attackPressed;
+	boolean bossTurn;
 
 	public Battle(Player player){
 		this.setPreferredSize(new Dimension(800, 600));// setting the size
@@ -43,6 +44,7 @@ public class Battle extends JPanel {
 		
 		health=100;
 		attackPressed=false;
+		bossTurn=false;
 		
 		//adding the attack button
 		button1 = new JButton("Attack");
@@ -63,7 +65,7 @@ public class Battle extends JPanel {
 		bossHealth = new JLabel(health+"%");
 		playerHealth = new JLabel(health+"%");
 		
-		creativityLabel = new JLabel("Cretivity: "+player.getCreativity());
+		creativityLabel = new JLabel("Creativity: "+player.getCreativity());
 		quantReasoningLabel = new JLabel("Quantative Reasoning: "+player.getQuantReasoning());
 		scientRigorLabel = new JLabel("Scientific Rigor: "+player.getSciRigor());
 		bossName = new JLabel("Boss: Shakespeare");
@@ -95,9 +97,24 @@ public class Battle extends JPanel {
 		setVisible(true);
 	}		
 
-	public void update() {
+	public void moveBoss(){
+		bossX+=xSpeed;
+		if(bossX>400 && !(bossX<0))
+		{
+			playerHealth.setText(health+"%");
+			xSpeed=-xSpeed;
+		}
+		else if((bossX<5)){
+			bossTimer.stop();
+			bossX=0;
+			xSpeed=5;
+			bossTurn=false;
+		}
+	}
+	
+	public void movePlayer(){
 		studentX -= xSpeed;
-		
+
 		// if student touches the boss , tell him to go the other direction
 		if (!(studentX > 600) && studentX < 200) 
 		{
@@ -113,7 +130,23 @@ public class Battle extends JPanel {
 			studentX=600;
 			xSpeed=5;
 			attackPressed=false;
+			bossTurn=true;
+			ActionListener updateTask = new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent evt) {
+					update();   // update the (x, y) position
+					repaint();  // Refresh the JFrame, callback paintComponent()
+				}
+			};
+			bossTimer = new Timer(10, updateTask);
+			bossTimer.start();
 		}
+	}
+	public void update() {
+		if(bossTurn)
+			moveBoss();
+		else
+			movePlayer();
 	}
 
 	// paint the images and graphics
@@ -139,9 +172,9 @@ public class Battle extends JPanel {
 				}
 			};
 			// Allocate a Timer to run updateTask's actionPerformed() after every delay msec
-			if(health>0 && !attackPressed){
+			if(health>0 && !attackPressed && !bossTurn){
 				attackPressed=true;
-				timer = new Timer(50, updateTask);
+				timer = new Timer(10, updateTask);
 				timer.start();
 			}
 		}
