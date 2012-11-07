@@ -31,6 +31,7 @@ public class Battle extends JPanel {
 	JLabel quantReasoningLabel;
 	JLabel scientRigorLabel;
 	Timer timer;
+	Player player;
 	
 	// Boss variables
 	ImageIcon boss;
@@ -50,6 +51,7 @@ public class Battle extends JPanel {
 		this.setBackground(Color.white);// color of background
 		
 		bossSubject=classSubject;
+		this.player = player;
 		playerHealth=100;
 		bossHealth=100;
 	
@@ -111,7 +113,6 @@ public class Battle extends JPanel {
 		bossName.setBounds(50,420,140,30);
 		bossType.setBounds(50,460,100,30);
 		
-		
 		//--------------------- End of Boss Variables-----------------------------//
 		
 		// adding components to the jpanel
@@ -152,7 +153,13 @@ public class Battle extends JPanel {
 		// if student touches the boss , tell him to go the other direction
 		if (!(studentX > 600) && studentX < 200) 
 		{
-			bossHealth-=10;
+			if(bossSubject=="Science")
+				bossHealth-=player.getCreativity()*10;
+			else if(bossSubject=="Math")
+				bossHealth-=player.getQuantReasoning()*10;
+			else if(bossSubject=="Humanities")
+				bossHealth-=player.getSciRigor()*10;
+			
 			bossHealthLabel.setText(bossHealth+"%");// inflict damage on boss's health
 			xSpeed = -xSpeed;
 		}
@@ -197,7 +204,7 @@ public class Battle extends JPanel {
 	{
 		public void actionPerformed(ActionEvent event)
 		{
-			//System.out.println("Pressed Attack");
+			System.out.println("Pressed Attack");
 			ActionListener updateTask = new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent evt) {
@@ -214,7 +221,6 @@ public class Battle extends JPanel {
 		}
 		
 	}
-
 
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("Back To School: Battle Mode");
