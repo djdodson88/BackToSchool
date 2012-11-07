@@ -35,6 +35,9 @@ public class Battle extends JPanel {
 	
 	// Boss variables
 	ImageIcon boss;
+	ImageIcon attack;
+	int attackX;
+	int attackY;
 	int bossX;
 	int bossY;
 	int xSpeed;
@@ -45,6 +48,7 @@ public class Battle extends JPanel {
 	JLabel bossType;
 	JLabel bossName;
 	boolean bossTurn;
+	
 
 	public Battle(Player player, String classSubject){
 		this.setPreferredSize(new Dimension(800, 600));// setting the size
@@ -98,6 +102,7 @@ public class Battle extends JPanel {
 		else if(bossSubject.equals("Science"))
 		{
 			bossName = new JLabel("Boss: Frogerhut");
+			attack = new ImageIcon("art/battle/scalpels.png");
 			bossType = new JLabel("Type: Science");
 			boss = new ImageIcon("art/battle/science_boss.png");
 		}
@@ -129,22 +134,22 @@ public class Battle extends JPanel {
 	}		
 
 	public void moveBoss(){
-		if(bossHealth>0){
-			bossX+=xSpeed;
+		// -------------------Science boss atack-----------------------//
+		if(bossSubject.equals("Science"))
+		{
+			if(bossHealth>0){
+				attackX+=xSpeed;
 
-			if(bossX>400 && !(bossX<0))
-			{
-				playerHealth-=10;
-				playerHealthLabel.setText(playerHealth+"%");// inflict damage on players health
-				xSpeed=-xSpeed;
-			}
-			else if((bossX<5)){
-				bossTimer.stop();
-				bossX=0;
-				xSpeed=5;
-				bossTurn=false;
+				if(attackX>700)
+				{
+					playerHealth-=10;
+					playerHealthLabel.setText(playerHealth+"%");// inflict damage on players health
+					bossTimer.stop();
+					bossTurn=false;
+				}
 			}
 		}
+		//-------------------- end of Science boss attack-----------------//
 	}
 	
 	public void movePlayer(){
@@ -179,8 +184,10 @@ public class Battle extends JPanel {
 					repaint();  // Refresh the JFrame, callback paintComponent()
 				}
 			};
-			bossTimer = new Timer(10, updateTask);
+			bossTimer = new Timer(5, updateTask);
 			bossTimer.start();
+			attackX=60;
+			attackY=240;
 		}
 	}
 	public void update() {
@@ -196,6 +203,11 @@ public class Battle extends JPanel {
 		graphics=g;
 		student.paintIcon(this, g, studentX, studentY);
 		boss.paintIcon(this, g, bossX, bossY);
+		
+		if(bossTurn && bossSubject.equals("Science"))
+		{
+			attack.paintIcon(this,g,attackX,attackY);
+		}
 	}
 
 
