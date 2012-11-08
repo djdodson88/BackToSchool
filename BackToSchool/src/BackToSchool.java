@@ -5,7 +5,7 @@ public class BackToSchool
 {
 	public static void main(String[] args)
 	{
-		JFrame frame = new JFrame("Back To School");
+		JFrame frame = new JFrame("Back 2 School");
 		frame.setContentPane(new CampusPanel());
 		frame.pack();
 		frame.setVisible(true);

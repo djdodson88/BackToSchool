@@ -11,83 +11,121 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 public class Battle extends JPanel {
+	// global variables
 	JButton button1;
-	ImageIcon student;
-	ImageIcon boss;
+	boolean attackPressed;
+	
 	Graphics graphics;
+	
+	// Student variables
+	ImageIcon student;
 	int studentX;
 	int studentY;
-	int bossX;
-	int bossY;
-	int xSpeed;
-	Timer timer;
-	Timer bossTimer;
-	JLabel bossHealth;
-	JLabel playerHealth;
+	int playerHealth;
+	JLabel playerHealthLabel;
 	JLabel creativityLabel;
 	JLabel quantReasoningLabel;
 	JLabel scientRigorLabel;
+	Timer timer;
+	Player player;
+	
+	// Boss variables
+	ImageIcon boss;
+	ImageIcon attack;
+	int attackX;
+	int attackY;
+	int bossX;
+	int bossY;
+	int xSpeed;
+	int bossHealth;
+	String bossSubject;
+	Timer bossTimer;
+	JLabel bossHealthLabel;
 	JLabel bossType;
 	JLabel bossName;
-	int health;
-	boolean attackPressed;
+	boolean bossTurn;
+	
 
-	public Battle(Player player){
+	public Battle(Player player, String classSubject){
 		this.setPreferredSize(new Dimension(800, 600));// setting the size
 		this.setBackground(Color.white);// color of background
 		
-		health=100;
-		attackPressed=false;
-		
+		bossSubject=classSubject;
+		this.player = player;
+		playerHealth=100;
+		bossHealth=100;
+	
 		//adding the attack button
 		button1 = new JButton("Attack");
 		button1.addActionListener(new ButtonListener());
+		button1.setBounds(340,400,100,30);
 		
 		setLayout(null);
 		
-		// loading the images
-		student = new ImageIcon("art/battle/student.jpg");
-		boss = new ImageIcon("art/battle/humboss.png");
-		
+		//----------------------Player Variables--------------------------------//
+		student = new ImageIcon("art/battle/student.jpg"); // loading image
 		studentX=600;// x coordinate for student
 		studentY=200;// y coordinate for student
+		attackPressed=false;
+		
+		// initializing variables
+		playerHealthLabel = new JLabel(playerHealth+"%");
+		creativityLabel = new JLabel("Creativity: "+player.getCreativity());
+		quantReasoningLabel = new JLabel("Quantative Reasoning: "+player.getQuantReasoning());
+		scientRigorLabel = new JLabel("Scientific Rigor: "+player.getSciRigor());
+		
+		
+		//setting location of statistics
+		playerHealthLabel.setBounds(600,340,100,100);
+		creativityLabel.setBounds(600,380,150,100);
+		quantReasoningLabel.setBounds(600,420,150,100);
+		scientRigorLabel.setBounds(600,460,150,100);
+		//---------------------End of Player Variables---------------------------//
+		
+		//----------------------- Boss Variables----------------------------------//
+		bossTurn=false;
 		xSpeed=5;// speed for movement
 		bossX=0;// x coordinate for boss
 		bossY=0;// y coordinate for boss
 		
-		bossHealth = new JLabel(health+"%");
-		playerHealth = new JLabel(health+"%");
+		bossHealthLabel = new JLabel(bossHealth+"%");
 		
-		creativityLabel = new JLabel("Cretivity: "+player.getCreativity());
-		quantReasoningLabel = new JLabel("Quantative Reasoning: "+player.getQuantReasoning());
-		scientRigorLabel = new JLabel("Scientific Rigor: "+player.getSciRigor());
-		bossName = new JLabel("Boss: Shakespeare");
-		bossType = new JLabel("Type: Humanities");
+		if(bossSubject.equals("Humanities")){
+			bossName = new JLabel("Boss: Shakespeare's Ghost");
+			bossType = new JLabel("Type: Humanities");
+			boss = new ImageIcon("art/battle/humboss.png");
+		}
+		else if(bossSubject.equals("Science"))
+		{
+			bossName = new JLabel("Boss: Frogerhut");
+			attack = new ImageIcon("art/battle/scalpels.png");
+			bossType = new JLabel("Type: Science");
+			boss = new ImageIcon("art/battle/science_boss.png");
+		}
+		else if(bossSubject.equals("Math"))
+		{
+			bossName = new JLabel("Boss: Number of Doom");
+			bossType = new JLabel("Type: Math");
+			boss = new ImageIcon("art/battle/math_boss.png");
+		}
 		
-		// buttons for attack
-		button1.setBounds(340,400,100,30);
-		
-		// boss information
-		bossHealth.setBounds(50,340,100,100);
+		//setting location of statistics
+		bossHealthLabel.setBounds(50,340,100,100);
 		bossName.setBounds(50,420,140,30);
 		bossType.setBounds(50,460,100,30);
 		
-		// players statistics
-		playerHealth.setBounds(600,340,100,100);
-		creativityLabel.setBounds(600,380,150,100);
-		quantReasoningLabel.setBounds(600,420,150,100);
-		scientRigorLabel.setBounds(600,460,150,100);
+		//--------------------- End of Boss Variables-----------------------------//
 		
+		// adding components to the jpanel
 		this.add(bossName);
 		this.add(bossType);
 		this.add(button1);
-		this.add(bossHealth);
-		this.add(playerHealth);
+		this.add(bossHealthLabel);
+		this.add(playerHealthLabel);
 		this.add(creativityLabel);
 		this.add(quantReasoningLabel);
 		this.add(scientRigorLabel);
@@ -95,14 +133,39 @@ public class Battle extends JPanel {
 		setVisible(true);
 	}		
 
-	public void update() {
+	public void moveBoss(){
+		// -------------------Science boss atack-----------------------//
+		if(bossSubject.equals("Science"))
+		{
+			if(bossHealth>0){
+				attackX+=xSpeed;
+
+				if(attackX>700)
+				{
+					playerHealth-=10;
+					playerHealthLabel.setText(playerHealth+"%");// inflict damage on players health
+					bossTimer.stop();
+					bossTurn=false;
+				}
+			}
+		}
+		//-------------------- end of Science boss attack-----------------//
+	}
+	
+	public void movePlayer(){
 		studentX -= xSpeed;
-		
+
 		// if student touches the boss , tell him to go the other direction
 		if (!(studentX > 600) && studentX < 200) 
 		{
-			health-=10;
-			bossHealth.setText(health+"%");
+			if(bossSubject=="Science")
+				bossHealth-=player.getCreativity()*10;
+			else if(bossSubject=="Math")
+				bossHealth-=player.getQuantReasoning()*10;
+			else if(bossSubject=="Humanities")
+				bossHealth-=player.getSciRigor()*10;
+			
+			bossHealthLabel.setText(bossHealth+"%");// inflict damage on boss's health
 			xSpeed = -xSpeed;
 		}
 		
@@ -113,7 +176,25 @@ public class Battle extends JPanel {
 			studentX=600;
 			xSpeed=5;
 			attackPressed=false;
+			bossTurn=true;
+			ActionListener updateTask = new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent evt) {
+					update();   // update the (x, y) position
+					repaint();  // Refresh the JFrame, callback paintComponent()
+				}
+			};
+			bossTimer = new Timer(5, updateTask);
+			bossTimer.start();
+			attackX=60;
+			attackY=240;
 		}
+	}
+	public void update() {
+		if(bossTurn)
+			moveBoss();
+		else
+			movePlayer();
 	}
 
 	// paint the images and graphics
@@ -122,6 +203,11 @@ public class Battle extends JPanel {
 		graphics=g;
 		student.paintIcon(this, g, studentX, studentY);
 		boss.paintIcon(this, g, bossX, bossY);
+		
+		if(bossTurn && bossSubject.equals("Science"))
+		{
+			attack.paintIcon(this,g,attackX,attackY);
+		}
 	}
 
 
@@ -139,19 +225,18 @@ public class Battle extends JPanel {
 				}
 			};
 			// Allocate a Timer to run updateTask's actionPerformed() after every delay msec
-			if(health>0 && !attackPressed){
+			if(playerHealth>0 && !attackPressed && !bossTurn){
 				attackPressed=true;
-				timer = new Timer(50, updateTask);
+				timer = new Timer(10, updateTask);
 				timer.start();
 			}
 		}
 		
 	}
 
-
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("Back To School: Battle Mode");
-		Battle battle = new Battle(new Player());
+		Battle battle = new Battle(new Player(),"Science");
 		frame.setSize(800,600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// frame.add(battle);
@@ -161,7 +246,7 @@ public class Battle extends JPanel {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				new Battle(new Player()); // Let the constructor do the job
+				new Battle(new Player(),"Science"); // Let the constructor do the job
 			}
 		});
 		frame.setVisible(true);
