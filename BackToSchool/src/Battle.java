@@ -38,6 +38,8 @@ public class Battle extends JPanel {
 	JLabel defaultAttackLabel;
 	JLabel specializedAttackLabel;
 	ImageIcon scribble;
+	boolean optionA;
+	boolean optionB;
 	
 	// Boss variables
 	ImageIcon boss;
@@ -69,7 +71,7 @@ public class Battle extends JPanel {
 	
 		//adding the attack button
 		button1 = new JButton("Attack");
-		button1.addActionListener(new ButtonListener());
+		button1.addActionListener(new AttackButtonListener());
 		button1.setBounds(400,510,100,30);
 		
 		//attacking menu
@@ -236,7 +238,7 @@ public class Battle extends JPanel {
 
 
 	// action listener for the attack button
-	private class ButtonListener implements ActionListener
+	private class AttackButtonListener implements ActionListener
 	{
 		public void actionPerformed(ActionEvent event)
 		{
