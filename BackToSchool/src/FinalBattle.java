@@ -1,3 +1,5 @@
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 
 import javax.swing.ImageIcon;
@@ -7,6 +9,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+
+//import Battle.ButtonListener;
 
 
 public class FinalBattle extends JPanel {	
@@ -38,6 +42,7 @@ public class FinalBattle extends JPanel {
 	ImageIcon sciBoss;
 	ImageIcon mathBoss;
 	ImageIcon attack;
+	ImageIcon scribble;
 	int attackX;
 	int attackY;
 	int humBossX;
@@ -50,7 +55,6 @@ public class FinalBattle extends JPanel {
 	int humBossHealth;
 	int sciBossHealth;
 	int mathBossHealth;
-	String bossSubject;
 	Timer bossTimer;
 	JLabel humHealthLabel;
 	JLabel mathHealthLabel;
@@ -70,8 +74,83 @@ public class FinalBattle extends JPanel {
 	public FinalBattle(Player player)
 	{
 		this.player = player;
+		this.setPreferredSize(new Dimension(800, 600));// setting the size
+		this.setBackground(Color.white);// color of background
+		background = new ImageIcon("art/battle/battle.jpg");
+		playerHealth=100;
+		mathBossHealth=100;
+		sciBossHealth=100;
+		humBossHealth=100;
+
+		//adding the attack button
+		button1 = new JButton("Attack");
+		//button1.addActionListener(new ButtonListener());
+		button1.setBounds(400,510,100,30);
+
+		//attacking menu
+		defaultAttackLabel = new JLabel("Default Attack");
+		defaultAttackLabel.setBounds(450,405,100,30);
+		specializedAttackLabel = new JLabel("Special Attack");
+		specializedAttackLabel.setBounds(450,455,160,30);
+		scribble = new ImageIcon("art/battle/scribble_sprite.png");
+
+		setLayout(null);
+
+		//----------------------Player Variables--------------------------------//
+		student = new ImageIcon("art/characters/student_leftside.png"); // loading image
+		studentX=600;// x coordinate for student
+		studentY=200;// y coordinate for student
+		attackPressed=false;
+
+		// initializing variables
+		playerHealthLabel = new JLabel(playerHealth+"%");
+		creativityLabel = new JLabel("Creativity: "+player.getCreativity());
+		quantReasoningLabel = new JLabel("Quantative Reasoning: "+player.getQuantReasoning());
+		scientRigorLabel = new JLabel("Scientific Rigor: "+player.getSciRigor());
+
+
+		//setting location of statistics
+		playerHealthLabel.setBounds(670,340,100,100);
+		creativityLabel.setBounds(620,380,150,100);
+		quantReasoningLabel.setBounds(620,420,150,100);
+		scientRigorLabel.setBounds(620,460,150,100);
+		//---------------------End of Player Variables---------------------------//
+		
+		//---------------------Bosses Variables------------------------------------//
+		humBoss = new ImageIcon("art/battle/Finalhumboss.png");
+		sciBoss = new ImageIcon("art/battle/Finalscience_boss.png");
+		mathBoss = new ImageIcon("art/battle/Finalmath_boss.png");
+		//--------------------End of Bosses Variables
+		
+
+		// adding components to the jpanel
+		//this.add(bossName);
+		//this.add(bossType);
+		this.add(button1);
+		//this.add(bossHealthLabel);
+		this.add(playerHealthLabel);
+		this.add(creativityLabel);
+		this.add(quantReasoningLabel);
+		this.add(scientRigorLabel);
+		this.add(specializedAttackLabel);
+		this.add(defaultAttackLabel);
+
+		setVisible(true);
+
 	}
-	
+
+	// paint the images and graphics
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		graphics=g;
+		background.paintIcon(this,g,0,0);
+		student.paintIcon(this, g, studentX, studentY);
+		humBoss.paintIcon(this, g, 0, 0);
+		sciBoss.paintIcon(this, g, 100,100);
+		mathBoss.paintIcon(this, g, 0, 210);
+		scribble.paintIcon(this, g, 395, 400);
+	}
+
 
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("Back To School: Battle Mode");
