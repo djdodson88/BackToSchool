@@ -25,6 +25,9 @@ public class Battle extends JPanel {
 
 	// Student variables
 	ImageIcon student;
+	ImageIcon backpack;
+	int backpackX;
+	int backpackY;
 	int studentX;
 	int studentY;
 	int playerHealth;
@@ -34,6 +37,7 @@ public class Battle extends JPanel {
 	JLabel scientRigorLabel;
 	Timer timer;
 	Player player;
+	boolean setDown;
 
 	// Attack Menu variables
 	JLabel defaultAttackLabel;
@@ -74,6 +78,7 @@ public class Battle extends JPanel {
 		bossHealth=100;
 		background = new ImageIcon("art/battle/battle.jpg");
 		specialAttack=false;
+		setDown=false;
 
 		//adding the attack button
 		button1 = new JButton("Attack");
@@ -112,8 +117,11 @@ public class Battle extends JPanel {
 
 		//----------------------Player Variables--------------------------------//
 		student = new ImageIcon("art/characters/student_leftside.png"); // loading image
+		backpack = new ImageIcon("art/battle/backpack.png");
 		studentX=600;// x coordinate for student
 		studentY=200;// y coordinate for student
+		backpackX=600;
+		backpackY=200;
 		attackPressed=false;
 
 		// initializing variables
@@ -212,10 +220,11 @@ public class Battle extends JPanel {
 	}
 
 	public void movePlayer(){
-		studentX -= xSpeed;
+		backpackX -= xSpeed;
+		backpackY -= 1;
 
-		// if student touches the boss , tell him to go the other direction
-		if (!(studentX > 600) && studentX < 200) 
+		//if the student reaches to the origin, make him stop
+		if(backpackX < 190)
 		{
 			if(specialAttack){
 				if(bossSubject=="Science")
@@ -229,14 +238,10 @@ public class Battle extends JPanel {
 				bossHealth-=5;
 
 			bossHealthLabel.setText(bossHealth+"%");// inflict damage on boss's health
-			xSpeed = -xSpeed;
-		}
-
-		// if the student reaches to the origin, make him stop
-		else if(studentX > 599 && !(studentX<200))
-		{
 			timer.stop();
-			studentX=600;
+			setDown=false;
+			backpackX=600;
+			backpackY=200;
 			xSpeed=5;
 			attackPressed=false;
 			bossTurn=true;
@@ -267,6 +272,9 @@ public class Battle extends JPanel {
 		background.paintIcon(this,g,0,0);
 		student.paintIcon(this, g, studentX, studentY);
 		boss.paintIcon(this, g, bossX, bossY);
+		
+		if(attackPressed)
+			backpack.paintIcon(this, g, backpackX,backpackY);
 
 		if(optionA)
 			scribble.paintIcon(this, g, 395, 400);
@@ -283,8 +291,7 @@ public class Battle extends JPanel {
 	// action listener for the attack button
 	private class AttackButtonListener implements ActionListener
 	{
-		public void actionPerformed(ActionEvent event)
-		{
+		public void actionPerformed(ActionEvent event){
 			ActionListener updateTask = new ActionListener() {
 
 				public void actionPerformed(ActionEvent evt) {
@@ -295,7 +302,7 @@ public class Battle extends JPanel {
 			// Allocate a Timer to run updateTask's actionPerformed() after every delay msec
 			if(playerHealth>0 && !attackPressed && !bossTurn){
 				attackPressed=true;
-				timer = new Timer(10, updateTask);
+				timer = new Timer(20, updateTask);
 				timer.start();
 			}
 		}
