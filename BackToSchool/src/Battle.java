@@ -18,6 +18,7 @@ public class Battle extends JPanel {
 	// global variables
 	JButton button1;
 	boolean attackPressed;
+	ImageIcon background;
 	
 	Graphics graphics;
 	
@@ -32,6 +33,10 @@ public class Battle extends JPanel {
 	JLabel scientRigorLabel;
 	Timer timer;
 	Player player;
+	
+	// Attack Menu variables
+	JLabel defaultAttackLabel;
+	JLabel specializedAttackLabel;
 	
 	// Boss variables
 	ImageIcon boss;
@@ -58,11 +63,18 @@ public class Battle extends JPanel {
 		this.player = player;
 		playerHealth=100;
 		bossHealth=100;
+		background = new ImageIcon("art/battle/battle.jpg");
 	
 		//adding the attack button
 		button1 = new JButton("Attack");
 		button1.addActionListener(new ButtonListener());
-		button1.setBounds(340,400,100,30);
+		button1.setBounds(400,510,100,30);
+		
+		//attacking menu
+		defaultAttackLabel = new JLabel("Default Attack");
+		defaultAttackLabel.setBounds(450,405,100,30);
+		specializedAttackLabel = new JLabel("Special Attack");
+		specializedAttackLabel.setBounds(450,455,160,30);
 		
 		setLayout(null);
 		
@@ -80,10 +92,10 @@ public class Battle extends JPanel {
 		
 		
 		//setting location of statistics
-		playerHealthLabel.setBounds(600,340,100,100);
-		creativityLabel.setBounds(600,380,150,100);
-		quantReasoningLabel.setBounds(600,420,150,100);
-		scientRigorLabel.setBounds(600,460,150,100);
+		playerHealthLabel.setBounds(670,340,100,100);
+		creativityLabel.setBounds(620,380,150,100);
+		quantReasoningLabel.setBounds(620,420,150,100);
+		scientRigorLabel.setBounds(620,460,150,100);
 		//---------------------End of Player Variables---------------------------//
 		
 		//----------------------- Boss Variables----------------------------------//
@@ -114,9 +126,9 @@ public class Battle extends JPanel {
 		}
 		
 		//setting location of statistics
-		bossHealthLabel.setBounds(50,340,100,100);
-		bossName.setBounds(50,420,200,30);
-		bossType.setBounds(50,460,100,30);
+		bossHealthLabel.setBounds(100,340,100,100);
+		bossName.setBounds(100,420,200,30);
+		bossType.setBounds(100,460,100,30);
 		
 		//--------------------- End of Boss Variables-----------------------------//
 		
@@ -129,6 +141,8 @@ public class Battle extends JPanel {
 		this.add(creativityLabel);
 		this.add(quantReasoningLabel);
 		this.add(scientRigorLabel);
+		this.add(specializedAttackLabel);
+		this.add(defaultAttackLabel);
 		
 		setVisible(true);
 	}		
@@ -201,6 +215,7 @@ public class Battle extends JPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		graphics=g;
+		background.paintIcon(this,g,0,0);
 		student.paintIcon(this, g, studentX, studentY);
 		boss.paintIcon(this, g, bossX, bossY);
 		
