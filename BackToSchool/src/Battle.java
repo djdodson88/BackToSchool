@@ -115,7 +115,7 @@ public class Battle extends JPanel {
 		
 		//setting location of statistics
 		bossHealthLabel.setBounds(50,340,100,100);
-		bossName.setBounds(50,420,140,30);
+		bossName.setBounds(50,420,200,30);
 		bossType.setBounds(50,460,100,30);
 		
 		//--------------------- End of Boss Variables-----------------------------//
@@ -216,7 +216,7 @@ public class Battle extends JPanel {
 	{
 		public void actionPerformed(ActionEvent event)
 		{
-			System.out.println("Pressed Attack");
+			//System.out.println("Pressed Attack");
 			ActionListener updateTask = new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent evt) {
