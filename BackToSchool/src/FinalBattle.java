@@ -1,6 +1,8 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -36,6 +38,13 @@ public class FinalBattle extends JPanel {
 	// Attack Menu variables
 	JLabel defaultAttackLabel;
 	JLabel specializedAttackLabel;
+	JButton optionAButton;
+	JButton optionBButton;
+	ImageIcon A;
+	ImageIcon B;
+	boolean optionA;
+	boolean optionB;
+	boolean specialAttack;
 
 	// Boss variables
 	ImageIcon humBoss;
@@ -81,6 +90,8 @@ public class FinalBattle extends JPanel {
 		mathBossHealth=100;
 		sciBossHealth=100;
 		humBossHealth=100;
+		optionA=true;
+		optionB=false;
 
 		//adding the attack button
 		button1 = new JButton("Attack");
@@ -93,6 +104,24 @@ public class FinalBattle extends JPanel {
 		specializedAttackLabel = new JLabel("Special Attack");
 		specializedAttackLabel.setBounds(450,455,160,30);
 		scribble = new ImageIcon("art/battle/scribble_sprite.png");
+		
+		//adding option A button
+		optionAButton = new JButton();
+		optionAButton.addActionListener(new AButtonListener());
+		optionAButton.setIcon(new ImageIcon("art/battle/A_sprite.png"));
+		optionAButton.setBounds(388,398,50,40); 
+		optionAButton.setBackground(null);
+		optionAButton.setOpaque(false);
+		optionAButton.setBorder(null);
+		
+		// adding option B button
+		optionBButton = new JButton();
+		optionBButton.addActionListener(new BButtonListener());
+		optionBButton.setIcon(new ImageIcon("art/battle/B_sprite.png"));
+		optionBButton.setBounds(388,450,50,40);
+		optionBButton.setBackground(null);
+		optionBButton.setOpaque(false);
+		optionBButton.setBorder(null);
 
 		setLayout(null);
 
@@ -127,6 +156,8 @@ public class FinalBattle extends JPanel {
 		//this.add(bossName);
 		//this.add(bossType);
 		this.add(button1);
+		this.add(optionAButton);
+		this.add(optionBButton);
 		//this.add(bossHealthLabel);
 		this.add(playerHealthLabel);
 		this.add(creativityLabel);
@@ -148,9 +179,42 @@ public class FinalBattle extends JPanel {
 		humBoss.paintIcon(this, g, 0, 0);
 		sciBoss.paintIcon(this, g, 100,100);
 		mathBoss.paintIcon(this, g, 0, 210);
-		scribble.paintIcon(this, g, 395, 400);
+		
+		if(optionA)
+			scribble.paintIcon(this, g, 395, 400);
+		else if(optionB)
+			scribble.paintIcon(this,g,395,452);
 	}
 
+	// action listener for the Option A Button
+	private class AButtonListener implements ActionListener
+	{
+		public void actionPerformed(ActionEvent event)
+		{
+			if(!attackPressed){
+				//System.out.println("Pressed A");
+				optionA=true;
+				optionB=false;
+				specialAttack=false;
+				repaint();
+			}
+		}
+	}
+
+	// action listener for the Option B Button
+	private class BButtonListener implements ActionListener
+	{
+		public void actionPerformed(ActionEvent event)
+		{
+			if(!attackPressed){
+				//System.out.println("Pressed B");
+				optionA=false;
+				optionB=true;
+				specialAttack=true;
+				repaint();
+			}
+		}
+	}
 
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("Back To School: Battle Mode");

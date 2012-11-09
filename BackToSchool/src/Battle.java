@@ -88,7 +88,8 @@ public class Battle extends JPanel {
 		optionAButton.setBackground(null);
 		optionAButton.setOpaque(false);
 		optionAButton.setBorder(null);
-
+		
+		// adding option B button
 		optionBButton = new JButton();
 		optionBButton.addActionListener(new BButtonListener());
 		optionBButton.setIcon(new ImageIcon("art/battle/B_sprite.png"));
@@ -145,7 +146,7 @@ public class Battle extends JPanel {
 		}
 		else if(bossSubject.equals("Science"))
 		{
-			bossName = new JLabel("Boss: Frogerhut");
+			bossName = new JLabel("Boss: Froggerhut");
 			attack = new ImageIcon("art/battle/scalpels.png");
 			bossType = new JLabel("Type: Science");
 			boss = new ImageIcon("art/battle/science_boss.png");
@@ -194,7 +195,13 @@ public class Battle extends JPanel {
 
 				if(attackX>700)
 				{
-					playerHealth-=10;
+					if(bossSubject=="Humanities")
+						playerHealth-=(11-player.getCreativity());
+					else if(bossSubject=="Math")
+						playerHealth-=(11-player.getQuantReasoning());
+					else if(bossSubject=="Science")
+						playerHealth-=(11-player.getSciRigor());
+					
 					playerHealthLabel.setText(playerHealth+"%");// inflict damage on players health
 					bossTimer.stop();
 					bossTurn=false;
@@ -264,7 +271,7 @@ public class Battle extends JPanel {
 		if(optionA)
 			scribble.paintIcon(this, g, 395, 400);
 		else if(optionB)
-			scribble.paintIcon(this,g,395,450);
+			scribble.paintIcon(this,g,395,452);
 
 		if(bossTurn && bossSubject.equals("Science"))
 		{
