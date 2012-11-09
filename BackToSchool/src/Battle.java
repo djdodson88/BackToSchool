@@ -79,7 +79,7 @@ public class Battle extends JPanel {
 		setLayout(null);
 		
 		//----------------------Player Variables--------------------------------//
-		student = new ImageIcon("art/battle/student.jpg"); // loading image
+		student = new ImageIcon("art/characters/student_leftside.png"); // loading image
 		studentX=600;// x coordinate for student
 		studentY=200;// y coordinate for student
 		attackPressed=false;
