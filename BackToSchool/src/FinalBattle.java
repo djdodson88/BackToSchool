@@ -93,6 +93,7 @@ public class FinalBattle extends JPanel {
 		button1 = new JButton("Attack");
 		//button1.addActionListener(new ButtonListener());
 		button1.setBounds(400,510,100,30);
+		button1.addActionListener(new AttackButtonListener());
 
 		//attacking menu
 		defaultAttackLabel = new JLabel("Default Attack");
@@ -291,6 +292,17 @@ public class FinalBattle extends JPanel {
 				optionB=true;
 				specialAttack=true;
 				repaint();
+			}
+		}
+	}
+	
+	// action listener for the Attack Button
+	private class AttackButtonListener implements ActionListener
+	{
+		public void actionPerformed(ActionEvent event)
+		{
+			if(!attackPressed){
+				attackPressed=true;
 			}
 		}
 	}
