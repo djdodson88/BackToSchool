@@ -258,6 +258,7 @@ public class Battle extends JPanel {
 			attackY=240;
 		}
 	}
+	
 	public void update() {
 		if(bossTurn)
 			moveBoss();

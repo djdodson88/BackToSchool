@@ -23,8 +23,11 @@ public class FinalBattle extends JPanel {
 
 	// Student variables
 	ImageIcon student;
+	ImageIcon backpack;
 	int studentX;
 	int studentY;
+	int backpackX;
+	int backpackY;
 	int playerHealth;
 	JLabel playerHealthLabel;
 	JLabel creativityLabel;
@@ -88,6 +91,7 @@ public class FinalBattle extends JPanel {
 		optionA=true;
 		optionB=false;
 		bossChosen="";
+		xSpeed=5;// speed for movement
 
 		//adding the attack button
 		button1 = new JButton("Attack");
@@ -126,6 +130,8 @@ public class FinalBattle extends JPanel {
 		student = new ImageIcon("art/characters/student_leftside.png"); // loading image
 		studentX=600;// x coordinate for student
 		studentY=200;// y coordinate for student
+		backpackX=600;
+		backpackY=200;
 		attackPressed=false;
 
 		// initializing variables
@@ -133,7 +139,7 @@ public class FinalBattle extends JPanel {
 		creativityLabel = new JLabel("Creativity: "+player.getCreativity());
 		quantReasoningLabel = new JLabel("Quantative Reasoning: "+player.getQuantReasoning());
 		scientRigorLabel = new JLabel("Scientific Rigor: "+player.getSciRigor());
-
+		backpack = new ImageIcon("art/battle/backpack.png");
 
 		//setting location of statistics
 		playerHealthLabel.setBounds(670,340,100,100);
@@ -147,7 +153,7 @@ public class FinalBattle extends JPanel {
 		humBossButton = new JButton();
 		humBossButton.addActionListener(new HumButtonListener());
 		humBossButton.setIcon(humBoss);
-		humBossButton.setBounds(0,0,100,140); 
+		humBossButton.setBounds(0,0,140,140); 
 		humBossButton.setBackground(null);
 		humBossButton.setOpaque(false);
 		humBossButton.setBorder(null);
@@ -156,7 +162,7 @@ public class FinalBattle extends JPanel {
 		sciBossButton = new JButton();
 		sciBossButton.addActionListener(new ScienceButtonListener());
 		sciBossButton.setIcon(sciBoss);
-		sciBossButton.setBounds(0,110,100,140); 
+		sciBossButton.setBounds(0,110,130,140); 
 		sciBossButton.setBackground(null);
 		sciBossButton.setOpaque(false);
 		sciBossButton.setBorder(null);
@@ -165,7 +171,7 @@ public class FinalBattle extends JPanel {
 		mathBossButton = new JButton();
 		mathBossButton.addActionListener(new MathButtonListener());
 		mathBossButton.setIcon(mathBoss);
-		mathBossButton.setBounds(0,250,100,140); 
+		mathBossButton.setBounds(0,250,130,140); 
 		mathBossButton.setBackground(null);
 		mathBossButton.setOpaque(false);
 		mathBossButton.setBorder(null);
@@ -205,11 +211,80 @@ public class FinalBattle extends JPanel {
 		graphics=g;
 		background.paintIcon(this,g,0,0);
 		student.paintIcon(this, g, studentX, studentY);
+		
+		if(attackPressed)
+			backpack.paintIcon(this, g, backpackX,backpackY);
 
 		if(optionA)
 			scribble.paintIcon(this, g, 395, 400);
 		else if(optionB)
 			scribble.paintIcon(this,g,395,452);
+	}
+	
+	public void update() {
+		movePlayer();
+	}
+	
+	public void movePlayer(){
+		if(bossChosen.equals("Science"))
+			backpackY -= 0.5;
+		else if(bossChosen.equals("Math"))
+			backpackY += 1;
+		else if(bossChosen.equals("Humanities"))
+			backpackY -= 2;
+		
+		backpackX -= xSpeed;
+		
+
+		//if the student reaches to the origin, make him stop
+		if(backpackX < 190)
+		{
+			if(specialAttack)
+			{
+				if(bossChosen.equals("Science"))
+					sciBossHealth-=player.getCreativity()*10;
+				else if(bossChosen.equals("Math"))
+					mathBossHealth-=player.getQuantReasoning()*10;
+				else if(bossChosen.equals("Humanities"))
+					humBossHealth-=player.getSciRigor()*10;
+			}
+			else
+			{
+				if(bossChosen.equals("Science"))
+					sciBossHealth-=5;
+				else if(bossChosen.equals("Math"))
+					mathBossHealth-=5;
+				else if(bossChosen.equals("Humanities"))
+					humBossHealth-=5;
+			}
+
+		
+			if(bossChosen.equals("Science"))
+				bossHealthLabel.setText(sciBossHealth+"%");// inflict damage on boss's health
+			else if(bossChosen.equals("Math"))
+				bossHealthLabel.setText(mathBossHealth+"%");// inflict damage on boss's health
+			else if(bossChosen.equals("Humanities"))
+				bossHealthLabel.setText(humBossHealth+"%");// inflict damage on boss's health
+			
+			//repaint();
+			timer.stop();
+			backpackX=600;
+			backpackY=200;
+			xSpeed=5;
+			attackPressed=false;
+			anyBossTurn=true;
+//			ActionListener updateTask = new ActionListener() {
+//
+//				public void actionPerformed(ActionEvent evt) {
+//					update();   // update the (x, y) position
+//					repaint();  // Refresh the JFrame, callback paintComponent()
+//				}
+//			};
+//			bossTimer = new Timer(5, updateTask);
+//			bossTimer.start();
+			attackX=60;
+			attackY=240;
+		}
 	}
 
 	// action listener for the Humanities Boss Button
@@ -218,10 +293,9 @@ public class FinalBattle extends JPanel {
 		public void actionPerformed(ActionEvent event)
 		{
 			if(!attackPressed){
-				//System.out.println("You pressed the Humanities boss");
-				humBossButton.setBounds(100,0,100,140);  
-				sciBossButton.setBounds(0,110,100,140); 
-				mathBossButton.setBounds(0,250,100,140); 
+				humBossButton.setBounds(100,0,140,140); 
+				sciBossButton.setBounds(0,110,130,140); 
+				mathBossButton.setBounds(0,250,130,140);  
 				bossChosen="Humanities";
 				bossHealthLabel.setText(humBossHealth+"%");
 				bossTypeLabel.setText("Type: Humanities");
@@ -236,10 +310,9 @@ public class FinalBattle extends JPanel {
 		public void actionPerformed(ActionEvent event)
 		{
 			if(!attackPressed){
-				//System.out.println("You pressed the Science boss");
-				humBossButton.setBounds(0,0,100,140); 
-				sciBossButton.setBounds(100,110,100,140); 
-				mathBossButton.setBounds(0,250,100,140); 
+				humBossButton.setBounds(0,0,140,140); 
+				sciBossButton.setBounds(100,110,130,140); 
+				mathBossButton.setBounds(0,250,130,140);  
 				bossChosen="Science";
 				bossHealthLabel.setText(sciBossHealth+"%");
 				bossTypeLabel.setText("Type: Science");
@@ -254,12 +327,11 @@ public class FinalBattle extends JPanel {
 		public void actionPerformed(ActionEvent event)
 		{
 			if(!attackPressed){
-				//System.out.println("You pressed the Math boss");
-				humBossButton.setBounds(0,0,100,140); 
-				sciBossButton.setBounds(0,110,100,140); 
-				mathBossButton.setBounds(100,250,100,140); 
+				humBossButton.setBounds(0,0,140,140); 
+				sciBossButton.setBounds(0,110,130,140); 
+				mathBossButton.setBounds(100,250,130,140); 
 				bossChosen="Math";
-				bossHealthLabel.setText(humBossHealth+"%");
+				bossHealthLabel.setText(mathBossHealth+"%");
 				bossTypeLabel.setText("Type: Math");
 				bossNameLabel.setText("Name: Number of Doom");
 			}
@@ -272,7 +344,6 @@ public class FinalBattle extends JPanel {
 		public void actionPerformed(ActionEvent event)
 		{
 			if(!attackPressed){
-				//System.out.println("Pressed A");
 				optionA=true;
 				optionB=false;
 				specialAttack=false;
@@ -287,7 +358,6 @@ public class FinalBattle extends JPanel {
 		public void actionPerformed(ActionEvent event)
 		{
 			if(!attackPressed){
-				//System.out.println("Pressed B");
 				optionA=false;
 				optionB=true;
 				specialAttack=true;
@@ -301,8 +371,20 @@ public class FinalBattle extends JPanel {
 	{
 		public void actionPerformed(ActionEvent event)
 		{
-			if(!attackPressed){
-				attackPressed=true;
+			if(!bossChosen.equals("")){
+				ActionListener updateTask = new ActionListener() {
+
+					public void actionPerformed(ActionEvent evt) {
+						update();   // update the (x, y) position
+						repaint();  // Refresh the JFrame, callback paintComponent()
+					}
+				};
+				// Allocate a Timer to run updateTask's actionPerformed() after every delay msec
+				if(playerHealth>0 && !attackPressed){
+					attackPressed=true;
+					timer = new Timer(20, updateTask);
+					timer.start();
+				}
 			}
 		}
 	}
