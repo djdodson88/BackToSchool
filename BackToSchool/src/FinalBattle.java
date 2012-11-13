@@ -21,7 +21,7 @@ public class FinalBattle extends JPanel {
 
 	Graphics graphics;
 
-	// Student variables
+	// Student variable
 	ImageIcon student;
 	ImageIcon backpack;
 	int studentX;

@@ -287,7 +287,7 @@ public class Battle extends JPanel {
 			else
 				bossHealth-=5;
 
-			bossHealthLabel.setText(bossHealth+"%");// inflict damage on boss's health
+			bossHealthLabel.setText(bossHealth+"%");
 			timer.stop();
 			setDown=false;
 			backpackX=600;
