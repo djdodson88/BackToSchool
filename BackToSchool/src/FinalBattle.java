@@ -92,9 +92,9 @@ public class FinalBattle extends JPanel {
 		this.setBackground(Color.white);// color of background
 		background = new ImageIcon("art/battle/battle.jpg");
 		playerHealth=100;
-		mathBossHealth=100;
-		sciBossHealth=100;
-		humBossHealth=100;
+		mathBossHealth=10;
+		sciBossHealth=10;
+		humBossHealth=10;
 		optionA=true;
 		optionB=false;
 		bossChosen="";
@@ -104,7 +104,7 @@ public class FinalBattle extends JPanel {
 		humBossTurn=false;
 		sciBossTurn=false;
 		mathBossTurn=false;
-		
+
 
 		//adding the attack button
 		button1 = new JButton("Attack");
@@ -192,10 +192,10 @@ public class FinalBattle extends JPanel {
 		mathBossButton.setBackground(null);
 		mathBossButton.setOpaque(false);
 		mathBossButton.setBorder(null);
-		
+
 		mathBossX=0;
 		mathBossY=250;
-		
+
 		bossHealthLabel = new JLabel("Choose");
 		bossTypeLabel = new JLabel("to attack");
 		bossNameLabel = new JLabel("a boss");
@@ -206,7 +206,7 @@ public class FinalBattle extends JPanel {
 		bossTypeLabel.setBounds(100,460,100,30);
 		bossSpecialAttackLabel.setBounds(100,500,200,30);
 		bossSpecialDefenseLabel.setBounds(100,540,250,30);
-		
+
 		lastBossToGo="";
 		//--------------------End of Bosses Variables
 
@@ -239,7 +239,7 @@ public class FinalBattle extends JPanel {
 		graphics=g;
 		background.paintIcon(this,g,0,0);
 		student.paintIcon(this, g, studentX, studentY);
-		
+
 		if(attackPressed)
 			backpack.paintIcon(this, g, backpackX,backpackY);
 
@@ -247,7 +247,7 @@ public class FinalBattle extends JPanel {
 			scribble.paintIcon(this, g, 395, 400);
 		else if(optionB)
 			scribble.paintIcon(this,g,395,452);
-		
+
 		if(anyBossTurn&&mathBossTurn)
 			mathBossButton.setBounds(mathBossX,mathBossY,130,140); 
 		else if(anyBossTurn&&sciBossTurn)
@@ -261,14 +261,14 @@ public class FinalBattle extends JPanel {
 			humAttack1.paintIcon(this,g,attackX+60,attackY);
 		}
 	}
-	
+
 	public void update() {
 		if(anyBossTurn &&(sciBossHealth>0||mathBossHealth>0||humBossHealth>0))
 			moveBoss();
 		else
 			movePlayer();
 	}
-	
+
 	public void whosTurn(){
 		if(lastBossToGo.equals("Humanities"))
 		{
@@ -276,7 +276,7 @@ public class FinalBattle extends JPanel {
 				sciBossTurn=true;
 			else if(mathBossHealth>0)
 				mathBossTurn=true;
-			else
+			else if(humBossHealth>0)
 				humBossTurn=true;
 		}
 		else if(lastBossToGo.equals("Science"))
@@ -285,16 +285,16 @@ public class FinalBattle extends JPanel {
 				mathBossTurn=true;
 			else if(humBossHealth>0)
 				humBossTurn=true;
-			else
+			else if(sciBossHealth>0)
 				sciBossTurn=true;
 		}
 		else if(lastBossToGo.equals("Math")||lastBossToGo.equals(""))
 		{
-			if(sciBossHealth>0)
+			if(humBossHealth>0)
 				humBossTurn=true;
 			else if(sciBossHealth>0)
 				sciBossTurn=true;
-			else
+			else if(mathBossHealth>0)
 				mathBossTurn=true;
 		}
 	}
@@ -306,7 +306,11 @@ public class FinalBattle extends JPanel {
 			if (mathBossX > 500) 
 			{
 				playerHealth-=(11-player.getQuantReasoning());
-				playerHealthLabel.setText(playerHealth+"%");
+
+				if(playerHealth<0)
+					playerHealthLabel.setText("0%");
+				else
+					playerHealthLabel.setText(playerHealth+"%");
 				xSpeed = -xSpeed;
 				ySpeed = -ySpeed;
 			}
@@ -332,11 +336,14 @@ public class FinalBattle extends JPanel {
 		}
 		else if(humBossTurn){
 			attackY += xSpeed;
-			
+
 			if(attackY>200)
 			{
 				playerHealth-=(11-player.getCreativity());
-				playerHealthLabel.setText(playerHealth+"%");
+				if(playerHealth<0)
+					playerHealthLabel.setText("0%");
+				else
+					playerHealthLabel.setText(playerHealth+"%");
 				bossTimer.stop();
 				xSpeed=5;
 				anyBossTurn=false;
@@ -345,6 +352,11 @@ public class FinalBattle extends JPanel {
 				sciBossButton.setBounds(0,110,130,140); 
 				mathBossButton.setBounds(0,250,130,140); 
 				lastBossToGo="Humanities";
+				bossHealthLabel.setText("Choose");
+				bossTypeLabel.setText("a boss");
+				bossNameLabel.setText("to attack");
+				bossSpecialAttackLabel.setText("");
+				bossSpecialDefenseLabel.setText("");
 			}
 		}
 		else if(sciBossTurn)
@@ -354,8 +366,10 @@ public class FinalBattle extends JPanel {
 			if(attackX>800)
 			{
 				playerHealth-=(11-player.getSciRigor());
-
-				playerHealthLabel.setText(playerHealth+"%");// inflict damage on players health
+				if(playerHealth<0)
+					playerHealthLabel.setText("0%");
+				else
+					playerHealthLabel.setText(playerHealth+"%");
 				bossTimer.stop();
 				sciBossTurn=false;
 				anyBossTurn=false;
@@ -372,7 +386,7 @@ public class FinalBattle extends JPanel {
 			}
 		}
 	}
-	
+
 	public void movePlayer(){
 		if(bossChosen.equals("Science"))
 			backpackY -= 0.5;
@@ -380,9 +394,9 @@ public class FinalBattle extends JPanel {
 			backpackY += 1;
 		else if(bossChosen.equals("Humanities"))
 			backpackY -= 2;
-		
+
 		backpackX -= xSpeed;
-		
+
 
 		//if the student reaches to the origin, make him stop
 		if(backpackX < 190)
@@ -406,14 +420,31 @@ public class FinalBattle extends JPanel {
 					humBossHealth-=5;
 			}
 
-		
-			if(bossChosen.equals("Science"))
-				bossHealthLabel.setText(sciBossHealth+"%");// inflict damage on boss's health
-			else if(bossChosen.equals("Math"))
-				bossHealthLabel.setText(mathBossHealth+"%");// inflict damage on boss's health
-			else if(bossChosen.equals("Humanities"))
-				bossHealthLabel.setText(humBossHealth+"%");// inflict damage on boss's health
-			
+
+			if(bossChosen.equals("Science")){
+				if(sciBossHealth<=0){
+					bossHealthLabel.setText("0%");
+				}
+				else
+					bossHealthLabel.setText(sciBossHealth+"%");// inflict damage on boss's health
+				
+			}
+			else if(bossChosen.equals("Math")){
+				if(mathBossHealth<=0){
+					bossHealthLabel.setText("0%");
+				}
+				else
+					bossHealthLabel.setText(mathBossHealth+"%");// inflict damage on boss's health	
+			}
+			else if(bossChosen.equals("Humanities")){
+				if(humBossHealth<=0){
+					bossHealthLabel.setText("0%");
+				}
+				else
+					bossHealthLabel.setText(humBossHealth+"%");// inflict damage on boss's health
+				
+			}
+
 			//repaint();
 			timer.stop();
 			backpackX=600;
@@ -423,7 +454,7 @@ public class FinalBattle extends JPanel {
 			attackPressed=false;
 			anyBossTurn=true;
 			bossChosen="";
-			
+
 			ActionListener updateTask = new ActionListener() {
 
 				public void actionPerformed(ActionEvent evt) {
@@ -432,28 +463,46 @@ public class FinalBattle extends JPanel {
 				}
 			};
 			whosTurn();
-			if(mathBossTurn){
-				humBossButton.setBounds(0,0,140,140); 
-				sciBossButton.setBounds(0,110,130,140); 
-				mathBossButton.setBounds(100,250,130,140); 
+			if(sciBossHealth>0||mathBossHealth>0||humBossHealth>0){
+				if(mathBossTurn){
+					humBossButton.setBounds(0,0,140,140); 
+					sciBossButton.setBounds(0,110,130,140); 
+					mathBossButton.setBounds(100,250,130,140); 
+					bossHealthLabel.setText(mathBossHealth+"%");
+					bossTypeLabel.setText("Type: Math");
+					bossNameLabel.setText("Name: Number of Doom");
+					bossSpecialAttackLabel.setText("Special Attack: Number Cruncher");
+					bossSpecialDefenseLabel.setText("Special Defense: Bias Data");
+				}
+				else if(sciBossTurn){
+					humBossButton.setBounds(0,0,140,140); 
+					sciBossButton.setBounds(100,110,130,140); 
+					mathBossButton.setBounds(0,250,130,140); 
+					bossHealthLabel.setText(sciBossHealth+"%");
+					bossTypeLabel.setText("Type: Science");
+					bossNameLabel.setText("Name: Froggerhut");
+					bossSpecialAttackLabel.setText("Special Attack: Shooting Scalpels");
+					bossSpecialDefenseLabel.setText("Special Defense: Preservation");
+					attackX=60;
+					attackY=240;
+				}
+				else if(humBossTurn)
+				{
+					humBossButton.setBounds(100,0,140,140); 
+					sciBossButton.setBounds(0,110,130,140); 
+					mathBossButton.setBounds(0,250,130,140); 
+					attackX=600;
+					attackY=0;
+					bossHealthLabel.setText(humBossHealth+"%");
+					bossTypeLabel.setText("Type: Humanities");
+					bossNameLabel.setText("Name: Shakespeare's Ghost");
+					bossSpecialAttackLabel.setText("Special Attack: Artistic Squeeze");
+					bossSpecialDefenseLabel.setText("Special Defense: Long Live the King!");
+				}
+
+				bossTimer = new Timer(15, updateTask);
+				bossTimer.start();
 			}
-			else if(sciBossTurn){
-				humBossButton.setBounds(0,0,140,140); 
-				sciBossButton.setBounds(100,110,130,140); 
-				mathBossButton.setBounds(0,250,130,140); 
-				attackX=60;
-				attackY=240;
-			}
-			else if(humBossTurn)
-			{
-				humBossButton.setBounds(100,0,140,140); 
-				sciBossButton.setBounds(0,110,130,140); 
-				mathBossButton.setBounds(0,250,130,140); 
-				attackX=600;
-				attackY=0;
-			}
-			bossTimer = new Timer(15, updateTask);
-			bossTimer.start();
 		}
 	}
 
@@ -462,7 +511,7 @@ public class FinalBattle extends JPanel {
 	{
 		public void actionPerformed(ActionEvent event)
 		{
-			if(!attackPressed){
+			if(!attackPressed && humBossHealth>0){
 				humBossButton.setBounds(100,0,140,140); 
 				sciBossButton.setBounds(0,110,130,140); 
 				mathBossButton.setBounds(0,250,130,140);  
@@ -481,7 +530,7 @@ public class FinalBattle extends JPanel {
 	{
 		public void actionPerformed(ActionEvent event)
 		{
-			if(!attackPressed){
+			if(!attackPressed  && sciBossHealth>0){
 				humBossButton.setBounds(0,0,140,140); 
 				sciBossButton.setBounds(100,110,130,140); 
 				mathBossButton.setBounds(0,250,130,140);  
@@ -500,7 +549,7 @@ public class FinalBattle extends JPanel {
 	{
 		public void actionPerformed(ActionEvent event)
 		{
-			if(!attackPressed){
+			if(!attackPressed  && mathBossHealth>0){
 				humBossButton.setBounds(0,0,140,140); 
 				sciBossButton.setBounds(0,110,130,140); 
 				mathBossButton.setBounds(100,250,130,140); 
@@ -541,7 +590,7 @@ public class FinalBattle extends JPanel {
 			}
 		}
 	}
-	
+
 	// action listener for the Attack Button
 	private class AttackButtonListener implements ActionListener
 	{
