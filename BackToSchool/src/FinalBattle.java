@@ -73,6 +73,8 @@ public class FinalBattle extends JPanel {
 	JLabel bossHealthLabel;
 	JLabel bossTypeLabel;
 	JLabel bossNameLabel;
+	JLabel bossSpecialAttackLabel;
+	JLabel bossSpecialDefenseLabel;
 	boolean anyBossTurn;
 	boolean humBossTurn;
 	boolean sciBossTurn;
@@ -92,6 +94,11 @@ public class FinalBattle extends JPanel {
 		optionB=false;
 		bossChosen="";
 		xSpeed=5;// speed for movement
+		anyBossTurn=false;
+		humBossTurn=true;
+		sciBossTurn=false;
+		mathBossTurn=false;
+		
 
 		//adding the attack button
 		button1 = new JButton("Attack");
@@ -179,12 +186,18 @@ public class FinalBattle extends JPanel {
 		bossHealthLabel = new JLabel("Choose");
 		bossTypeLabel = new JLabel("to attack");
 		bossNameLabel = new JLabel("a boss");
+		bossSpecialAttackLabel = new JLabel("");
+		bossSpecialDefenseLabel = new JLabel("");
 		bossHealthLabel.setBounds(100,340,100,100);
 		bossNameLabel.setBounds(100,420,200,30);
 		bossTypeLabel.setBounds(100,460,100,30);
+		bossSpecialAttackLabel.setBounds(100,500,200,30);
+		bossSpecialDefenseLabel.setBounds(100,540,200,30);
 		//--------------------End of Bosses Variables
 
 		// adding components to the jpanel
+		this.add(bossSpecialAttackLabel);
+		this.add(bossSpecialDefenseLabel);
 		this.add(bossNameLabel);
 		this.add(bossTypeLabel);
 		this.add(bossHealthLabel);
@@ -300,6 +313,8 @@ public class FinalBattle extends JPanel {
 				bossHealthLabel.setText(humBossHealth+"%");
 				bossTypeLabel.setText("Type: Humanities");
 				bossNameLabel.setText("Name: Shakespeare's Ghost");
+				bossSpecialAttackLabel.setText("Special Attack: Artistic Squeeze");
+				bossSpecialDefenseLabel.setText("Special Defense: Long Live the King!");
 			}
 		}
 	}
@@ -317,6 +332,8 @@ public class FinalBattle extends JPanel {
 				bossHealthLabel.setText(sciBossHealth+"%");
 				bossTypeLabel.setText("Type: Science");
 				bossNameLabel.setText("Name: Froggerhut");
+				bossSpecialAttackLabel.setText("Special Attack: Shooting Scalpels");
+				bossSpecialDefenseLabel.setText("Special Defense: Preservation");
 			}
 		}
 	}
@@ -334,6 +351,8 @@ public class FinalBattle extends JPanel {
 				bossHealthLabel.setText(mathBossHealth+"%");
 				bossTypeLabel.setText("Type: Math");
 				bossNameLabel.setText("Name: Number of Doom");
+				bossSpecialAttackLabel.setText("Special Attack: Number Cruncher");
+				bossSpecialDefenseLabel.setText("Special Defense: Bias Data");
 			}
 		}
 	}

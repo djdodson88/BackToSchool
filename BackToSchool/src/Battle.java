@@ -63,6 +63,8 @@ public class Battle extends JPanel {
 	String bossSubject;
 	Timer bossTimer;
 	JLabel bossHealthLabel;
+	JLabel bossSpecialAttackLabel;
+	JLabel bossSpecialDefenseLabel;
 	JLabel bossType;
 	JLabel bossName;
 	//JLabel bossStory;
@@ -93,7 +95,7 @@ public class Battle extends JPanel {
 		optionAButton.setBackground(null);
 		optionAButton.setOpaque(false);
 		optionAButton.setBorder(null);
-		
+
 		// adding option B button
 		optionBButton = new JButton();
 		optionBButton.addActionListener(new BButtonListener());
@@ -149,6 +151,8 @@ public class Battle extends JPanel {
 		if(bossSubject.equals("Humanities")){
 			bossName = new JLabel("Boss: Shakespeare's Ghost");
 			bossType = new JLabel("Type: Humanities");
+			bossSpecialAttackLabel = new JLabel("Special Attack: Artistic Squeeze");
+			bossSpecialDefenseLabel = new JLabel("Special Defense: Long Live the King!");
 			boss = new ImageIcon("art/battle/humboss.png");
 			//bossStory = new JLabel("Hello");
 		}
@@ -157,6 +161,8 @@ public class Battle extends JPanel {
 			bossName = new JLabel("Boss: Froggerhut");
 			attack = new ImageIcon("art/battle/scalpels.png");
 			bossType = new JLabel("Type: Science");
+			bossSpecialAttackLabel = new JLabel("Special Attack: Shooting Scalpels");
+			bossSpecialDefenseLabel = new JLabel("Special Defense: Preservation");
 			boss = new ImageIcon("art/battle/science_boss.png");
 			//bossStory = new JLabel("");
 		}
@@ -165,6 +171,8 @@ public class Battle extends JPanel {
 			bossName = new JLabel("Boss: Number of Doom");
 			bossType = new JLabel("Type: Math");
 			boss = new ImageIcon("art/battle/math_boss.png");
+			bossSpecialAttackLabel = new JLabel("Special Attack: Number Cruncher");
+			bossSpecialDefenseLabel = new JLabel("Special Defense: Bias Data");
 			//bossStory = new JLabel("");
 		}
 
@@ -172,6 +180,8 @@ public class Battle extends JPanel {
 		bossHealthLabel.setBounds(100,340,100,100);
 		bossName.setBounds(100,420,200,30);
 		bossType.setBounds(100,460,100,30);
+		bossSpecialAttackLabel.setBounds(100,500,200,30);
+		bossSpecialDefenseLabel.setBounds(100,540,200,30);
 		//bossStory.setBounds(100,500,100,10);
 
 		//--------------------- End of Boss Variables-----------------------------//
@@ -179,6 +189,8 @@ public class Battle extends JPanel {
 		// adding components to the jpanel
 		this.add(bossName);
 		this.add(bossType);
+		this.add(bossSpecialAttackLabel);
+		this.add(bossSpecialDefenseLabel);
 		//this.add(bossStory);
 		this.add(button1);
 		this.add(optionAButton);
@@ -195,23 +207,37 @@ public class Battle extends JPanel {
 	}		
 
 	public void moveBoss(){
-		// -------------------Science boss atack-----------------------//
-		if(bossSubject.equals("Science"))
-		{
-			if(bossHealth>0){
+		if(bossHealth>0){
+			// -------------------Science boss atack-----------------------//
+			if(bossSubject.equals("Science"))
+			{
 				attackX+=xSpeed;
 
 				if(attackX>700)
 				{
-					if(bossSubject=="Humanities")
-						playerHealth-=(11-player.getCreativity());
-					else if(bossSubject=="Math")
-						playerHealth-=(11-player.getQuantReasoning());
-					else if(bossSubject=="Science")
-						playerHealth-=(11-player.getSciRigor());
-					
+					playerHealth-=(11-player.getSciRigor());
+
 					playerHealthLabel.setText(playerHealth+"%");// inflict damage on players health
 					bossTimer.stop();
+					bossTurn=false;
+				}
+			}
+			else if(bossSubject.equals("Math"))
+			{
+				bossX += xSpeed;
+				// if student touches the boss , tell him to go the other direction
+				if (bossX > 500) 
+				{
+					playerHealth-=(11-player.getQuantReasoning());
+					playerHealthLabel.setText(playerHealth+"%");
+					xSpeed = -xSpeed;
+				}
+				// if the student reaches to the origin, make him stop
+				else if(bossX < 4)
+				{
+					bossTimer.stop();
+					bossX=0;
+					xSpeed=5;
 					bossTurn=false;
 				}
 			}
@@ -258,7 +284,7 @@ public class Battle extends JPanel {
 			attackY=240;
 		}
 	}
-	
+
 	public void update() {
 		if(bossTurn)
 			moveBoss();
@@ -273,7 +299,7 @@ public class Battle extends JPanel {
 		background.paintIcon(this,g,0,0);
 		student.paintIcon(this, g, studentX, studentY);
 		boss.paintIcon(this, g, bossX, bossY);
-		
+
 		if(attackPressed)
 			backpack.paintIcon(this, g, backpackX,backpackY);
 
@@ -341,7 +367,7 @@ public class Battle extends JPanel {
 	}
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("Back To School: Battle Mode");
-		Battle battle = new Battle(new Player(),"Science");
+		Battle battle = new Battle(new Player(),"Math");
 		frame.setSize(800,600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// frame.add(battle);
@@ -350,7 +376,7 @@ public class Battle extends JPanel {
 
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				new Battle(new Player(),"Science"); // Let the constructor do the job
+				new Battle(new Player(),"Math"); // Let the constructor do the job
 			}
 		});
 		frame.setVisible(true);
