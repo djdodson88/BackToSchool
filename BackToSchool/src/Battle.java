@@ -191,7 +191,7 @@ public class Battle extends JPanel {
 		bossName.setBounds(100,420,200,30);
 		bossType.setBounds(100,460,100,30);
 		bossSpecialAttackLabel.setBounds(100,500,200,30);
-		bossSpecialDefenseLabel.setBounds(100,540,200,30);
+		bossSpecialDefenseLabel.setBounds(100,540,250,30);
 		//bossStory.setBounds(100,500,100,10);
 
 		//--------------------- End of Boss Variables-----------------------------//
@@ -256,7 +256,7 @@ public class Battle extends JPanel {
 			{
 				attackY += xSpeed;
 				
-				if(attackY>700)
+				if(attackY>200)
 				{
 					playerHealth-=(11-player.getCreativity());
 					playerHealthLabel.setText(playerHealth+"%");
