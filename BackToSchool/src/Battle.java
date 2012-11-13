@@ -54,6 +54,9 @@ public class Battle extends JPanel {
 	// Boss variables
 	ImageIcon boss;
 	ImageIcon attack;
+	ImageIcon humAttack1;
+	ImageIcon humAttack2;
+	ImageIcon humAttack3;
 	int attackX;
 	int attackY;
 	int bossX;
@@ -149,11 +152,18 @@ public class Battle extends JPanel {
 		bossHealthLabel = new JLabel(bossHealth+"%");
 
 		if(bossSubject.equals("Humanities")){
+			attackY=0;
+			attackX=600;
 			bossName = new JLabel("Boss: Shakespeare's Ghost");
 			bossType = new JLabel("Type: Humanities");
 			bossSpecialAttackLabel = new JLabel("Special Attack: Artistic Squeeze");
 			bossSpecialDefenseLabel = new JLabel("Special Defense: Long Live the King!");
 			boss = new ImageIcon("art/battle/humboss.png");
+			humAttack1=new ImageIcon("art/battle/hum_attack1.png");
+			humAttack2=new ImageIcon("art/battle/hum_attack2.png");
+			humAttack3=new ImageIcon("art/battle/hum_attack3.png");
+			attackY=0;
+			attackX=600;
 			//bossStory = new JLabel("Hello");
 		}
 		else if(bossSubject.equals("Science"))
@@ -242,6 +252,19 @@ public class Battle extends JPanel {
 					bossTurn=false;
 				}
 			}
+			else if(bossSubject.equals("Humanities"))
+			{
+				attackY += xSpeed;
+				
+				if(attackY>700)
+				{
+					playerHealth-=(11-player.getCreativity());
+					playerHealthLabel.setText(playerHealth+"%");
+					bossTimer.stop();
+					xSpeed=5;
+					bossTurn=false;
+				}
+			}
 		}
 		//-------------------- end of Science boss attack-----------------//
 	}
@@ -279,11 +302,18 @@ public class Battle extends JPanel {
 					repaint();  // Refresh the JFrame, callback paintComponent()
 				}
 			};
-			bossTimer = new Timer(5, updateTask);
+			bossTimer = new Timer(15, updateTask);
 			bossTimer.start();
-			attackX=60;
-			attackY=240;
-		}
+			
+			if(bossSubject.equals("Science")){
+				attackX=60;
+				attackY=240;
+			}
+			if(bossSubject.equals("Humanities")){
+				attackX=600;
+				attackY=0;
+			}
+		}	
 	}
 
 	public void update() {
@@ -312,6 +342,12 @@ public class Battle extends JPanel {
 		if(bossTurn && bossSubject.equals("Science"))
 		{
 			attack.paintIcon(this,g,attackX,attackY);
+		}
+		if(bossTurn && bossSubject.equals("Humanities"))
+		{
+			humAttack1.paintIcon(this,g,attackX,attackY);
+			humAttack1.paintIcon(this,g,attackX+30,attackY+30);
+			humAttack1.paintIcon(this,g,attackX+60,attackY);
 		}
 	}
 
@@ -368,7 +404,7 @@ public class Battle extends JPanel {
 	}
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("Back To School: Battle Mode");
-		Battle battle = new Battle(new Player(),"Math");
+		Battle battle = new Battle(new Player(),"Humanities");
 		frame.setSize(800,600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// frame.add(battle);
@@ -377,7 +413,7 @@ public class Battle extends JPanel {
 
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				new Battle(new Player(),"Math"); // Let the constructor do the job
+				new Battle(new Player(),"Humanities"); // Let the constructor do the job
 			}
 		});
 		frame.setVisible(true);

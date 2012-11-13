@@ -95,7 +95,7 @@ public class FinalBattle extends JPanel {
 		bossChosen="";
 		xSpeed=5;// speed for movement
 		anyBossTurn=false;
-		humBossTurn=true;
+		humBossTurn=false;
 		sciBossTurn=false;
 		mathBossTurn=false;
 		
@@ -235,7 +235,24 @@ public class FinalBattle extends JPanel {
 	}
 	
 	public void update() {
-		movePlayer();
+		if(anyBossTurn)
+			moveBoss();
+		else
+			movePlayer();
+	}
+	
+	public void moveBoss(){
+		if(mathBossTurn){
+		
+		}
+		else if(humBossTurn){
+			
+			
+		}
+		else if(sciBossTurn)
+		{
+			
+		}
 	}
 	
 	public void movePlayer(){
@@ -287,15 +304,15 @@ public class FinalBattle extends JPanel {
 			attackPressed=false;
 			anyBossTurn=true;
 			bossChosen="";
-//			ActionListener updateTask = new ActionListener() {
-//
-//				public void actionPerformed(ActionEvent evt) {
-//					update();   // update the (x, y) position
-//					repaint();  // Refresh the JFrame, callback paintComponent()
-//				}
-//			};
-//			bossTimer = new Timer(5, updateTask);
-//			bossTimer.start();
+			ActionListener updateTask = new ActionListener() {
+
+				public void actionPerformed(ActionEvent evt) {
+					update();   // update the (x, y) position
+					repaint();  // Refresh the JFrame, callback paintComponent()
+				}
+			};
+			bossTimer = new Timer(5, updateTask);
+			bossTimer.start();
 			attackX=60;
 			attackY=240;
 		}
