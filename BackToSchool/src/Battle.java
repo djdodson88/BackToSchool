@@ -187,6 +187,7 @@ public class Battle extends JPanel {
 		//--------------------- End of Boss Variables-----------------------------//
 
 		// adding components to the jpanel
+		//
 		this.add(bossName);
 		this.add(bossType);
 		this.add(bossSpecialAttackLabel);

@@ -286,6 +286,7 @@ public class FinalBattle extends JPanel {
 			xSpeed=5;
 			attackPressed=false;
 			anyBossTurn=true;
+			bossChosen="";
 //			ActionListener updateTask = new ActionListener() {
 //
 //				public void actionPerformed(ActionEvent evt) {
@@ -390,7 +391,7 @@ public class FinalBattle extends JPanel {
 	{
 		public void actionPerformed(ActionEvent event)
 		{
-			if(!bossChosen.equals("")){
+			if(!bossChosen.equals("") && !anyBossTurn){
 				ActionListener updateTask = new ActionListener() {
 
 					public void actionPerformed(ActionEvent evt) {
