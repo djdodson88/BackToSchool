@@ -18,7 +18,6 @@ public class FinalBattle extends JPanel {
 	JButton button1;
 	boolean attackPressed;
 	ImageIcon background;
-
 	Graphics graphics;
 
 	// Student variable
@@ -92,9 +91,9 @@ public class FinalBattle extends JPanel {
 		this.setBackground(Color.white);// color of background
 		background = new ImageIcon("art/battle/battle.jpg");
 		playerHealth=100;
-		mathBossHealth=10;
-		sciBossHealth=10;
-		humBossHealth=10;
+		mathBossHealth=100;
+		sciBossHealth=100;
+		humBossHealth=100;
 		optionA=true;
 		optionB=false;
 		bossChosen="";
@@ -104,7 +103,6 @@ public class FinalBattle extends JPanel {
 		humBossTurn=false;
 		sciBossTurn=false;
 		mathBossTurn=false;
-
 
 		//adding the attack button
 		button1 = new JButton("Attack");
