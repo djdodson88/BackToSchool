@@ -61,10 +61,10 @@ public class WareHouseKeeper extends JFrame
     public WareHouseKeeper(){
         setLayout( new FlowLayout());
        
-        startScreen = new JLabel( new ImageIcon("images/start.jpg") );
+        startScreen = new JLabel( new ImageIcon("art/warehouse/start.jpg") );
         
         
-        welldone = new JLabel( new ImageIcon("images/welldone.jpg") );
+        welldone = new JLabel( new ImageIcon("art/warehouse/welldone.jpg") );
         welldone.addMouseListener( new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -74,7 +74,7 @@ public class WareHouseKeeper extends JFrame
             }
         });
         
-        levelLabel = new JLabel( new ImageIcon("images/level.jpg") );
+        levelLabel = new JLabel( new ImageIcon("art/warehouse/level.jpg") );
         levelLabel.setHorizontalTextPosition(JLabel.CENTER);
         levelLabel.setVerticalTextPosition(JLabel.CENTER);
         
@@ -86,7 +86,7 @@ public class WareHouseKeeper extends JFrame
             }
         });
         
-        undo = new JLabel( new ImageIcon("images/undo.jpg") );
+        undo = new JLabel( new ImageIcon("art/warehouse/undo.jpg") );
         undo.addMouseListener( new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -106,18 +106,18 @@ public class WareHouseKeeper extends JFrame
             }
         });
         
-        countLabel = new JLabel( new ImageIcon("images/level.jpg") );
+        countLabel = new JLabel( new ImageIcon("art/warehouse/level.jpg") );
         countLabel.setHorizontalTextPosition(JLabel.CENTER);
         countLabel.setVerticalTextPosition(JLabel.CENTER);
         
         
-        ground = new ImageIcon("images/ground.jpg");
-        wall = new ImageIcon("images/wall.jpg");
-        box =  new ImageIcon("images/box.jpg");
-        guy =  new ImageIcon("images/guy.jpg");
-        groundDot = new ImageIcon("images/groundDot.jpg");
-        boxDot = new ImageIcon("images/boxDot.jpg");
-        guyDot = new ImageIcon("images/guyDot.jpg");
+        ground = new ImageIcon("art/warehouse/ground.jpg");
+        wall = new ImageIcon("art/warehouse/wall.jpg");
+        box =  new ImageIcon("art/warehouse/box.jpg");
+        guy =  new ImageIcon("art/warehouse/guy.jpg");
+        groundDot = new ImageIcon("art/warehouse/groundDot.jpg");
+        boxDot = new ImageIcon("art/warehouse/boxDot.jpg");
+        guyDot = new ImageIcon("art/warehouse/guyDot.jpg");
         
         p = new JPanel();
         controlPanel = new JPanel();
