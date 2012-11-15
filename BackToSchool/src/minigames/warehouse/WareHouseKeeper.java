@@ -1,22 +1,54 @@
-package minigames.warehouse;
- 
 /**
  *
- * @author  Cagatay Sahin
+ * @author Cagatay Sahin
  */
 
-/*import ucigame.Image;
-import ucigame.Sound;
-import ucigame.Sprite;
-import ucigame.Ucigame;*/
-import ucigame.*;
+package minigames.warehouse;
+ 
 
-public class WareHouseKeeper extends Ucigame
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+
+public class WareHouseKeeper extends JFrame
 {    
-    final int MAX_LEVELS = 10;
-    final int MAX_UNDO = 10;
+    JPanel p;
+    JPanel controlPanel;
+    
+    int [][] nums;   
+    int [][] dots;
+    
+    JLabel welldone;
+    JLabel levelLabel;
+    JLabel restart;
+    JLabel undo;
+    JLabel countLabel;
+    JLabel startScreen;
+    
+    ImageIcon ground;
+    ImageIcon wall;   
+    ImageIcon box;
+    ImageIcon guy;
+    ImageIcon groundDot;
+    ImageIcon boxDot;
+    ImageIcon guyDot;
+    
     boolean isGameStarted;
     int currentLevel;
+    
+    UndoStack stack;
+    final int MAX_LEVELS = 10;
+    final int MAX_UNDO = 10;
     int hitCount;
     int numBoxes;
     int yerX;
@@ -24,282 +56,299 @@ public class WareHouseKeeper extends Ucigame
     int moveCount;
     int spriteX;
     int spriteY;
-    int [][] nums;   
-    int [][] dots;
     
-    Sound sound1;    
     
-    Sprite welldone;
-    Sprite controlPanel;
-    Sprite yer;
-    Sprite levelLabel;
-    Sprite restart;
-    Sprite undo;
-    Sprite countLabel;
-    Sprite startScreen;
-    
-    Image ground;
-    Image wall;
-    Image box;
-    Image guy;
-    Image groundDot;
-    Image boxDot;
-    Image guyDot;
-    
-    UndoStack stack;
-    
-    public void setup()
-    {            
-        sound1 = getSound("sounds/harder_better_faster_stronger_8bit.mp3");
-        sound1.loop();
+    public WareHouseKeeper(){
+        setLayout( new FlowLayout());
+       
+        startScreen = new JLabel( new ImageIcon("images/start.jpg") );
+        
+        
+        welldone = new JLabel( new ImageIcon("images/welldone.jpg") );
+        welldone.addMouseListener( new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                welldone.setVisible(false);
+                if(currentLevel < MAX_LEVELS )
+                  initLevel(++currentLevel);
+            }
+        });
+        
+        levelLabel = new JLabel( new ImageIcon("images/level.jpg") );
+        levelLabel.setHorizontalTextPosition(JLabel.CENTER);
+        levelLabel.setVerticalTextPosition(JLabel.CENTER);
+        
+        restart = new JLabel( new ImageIcon("images/restart.jpg") );
+        restart.addMouseListener( new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                 initLevel(currentLevel);
+            }
+        });
+        
+        undo = new JLabel( new ImageIcon("images/undo.jpg") );
+        undo.addMouseListener( new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(!stack.isEmpty())
+                {
+                    nums = stack.pop(); 
+                    moveCount--;
+                    reDraw();
+                }
+           for( int i = 0; i < nums.length; i++ )
+                for( int j = 0; j < nums[i].length; j++ )
+                if(nums[i][j] == 3)
+                {
+                    spriteX = i;
+                    spriteY = j;
+                }
+            }
+        });
+        
+        countLabel = new JLabel( new ImageIcon("images/level.jpg") );
+        countLabel.setHorizontalTextPosition(JLabel.CENTER);
+        countLabel.setVerticalTextPosition(JLabel.CENTER);
+        
+        
+        ground = new ImageIcon("images/ground.jpg");
+        wall = new ImageIcon("images/wall.jpg");
+        box =  new ImageIcon("images/box.jpg");
+        guy =  new ImageIcon("images/guy.jpg");
+        groundDot = new ImageIcon("images/groundDot.jpg");
+        boxDot = new ImageIcon("images/boxDot.jpg");
+        guyDot = new ImageIcon("images/guyDot.jpg");
+        
+        p = new JPanel();
+        controlPanel = new JPanel();
+        controlPanel.setBackground(Color.yellow);
+        controlPanel.setPreferredSize( new Dimension (170,500));
+        controlPanel.add(levelLabel);
+        controlPanel.add(restart);
+        controlPanel.add(welldone);
+        controlPanel.add(undo);
+        controlPanel.add(countLabel);
+        
+        
         isGameStarted = false;
         currentLevel = 1;
-        window.size(1100, 600);
-        window.title("MiniGame");
-        window.showFPS();
-        canvas.background(222,214,173);       
+        setBackground(Color.red);      
+
+
+        KeyListener listener = new MyKeyListener();    
+        addKeyListener(listener );
+
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true);
         
-        startScreen = makeSprite( getImage("art/warehouse/start.jpg"),1100, 600);
-        startScreen.position(0, 0);
-        levelLabel = makeSprite( getImage("art/warehouse/level.jpg"),118, 61);
-        restart = makeButton( "Restart", getImage("art/warehouse/restart.jpg"),118, 61 );
-        undo = makeButton( "Undo", getImage("art/warehouse/undo.jpg"),118, 61 );
-        controlPanel = makeSprite( getImage("art/warehouse/controlPanel.jpg"), 200, 600);
-        welldone = makeButton( "WellDone", getImage("art/warehouse/welldone.jpg"),118, 111 );
-        countLabel = makeSprite( getImage("art/warehouse/level.jpg"),118, 61);
+        add(p);
+        add(controlPanel);
+        p.addKeyListener(listener);
         
-        controlPanel.position(900, 0);
-        controlPanel.pin(levelLabel, 42, 20);
-        controlPanel.pin(restart, 42, 100);
-        controlPanel.pin(undo, 42, 390);
-        controlPanel.pin(welldone, 42, 220);
-        controlPanel.pin(countLabel, 42, 500);
-        welldone.hide();                
-                
-        ground = getImage("art/warehouse/ground.jpg" );
-        wall = getImage("art/warehouse/wall.jpg" );
-        box = getImage("art/warehouse/box.jpg");
-        guy = getImage("art/warehouse/guy.jpg" );
-        groundDot = getImage("art/warehouse/groundDot.jpg" );
-        boxDot = getImage("art/warehouse/boxDot.jpg");
-        guyDot = getImage("art/warehouse/guyDot.jpg");
-        
+        setFocusable(true);
         initLevel(currentLevel);
-        framerate(12);
-    }
-
-    public void draw()
-    {        
-        canvas.clear();
-        
-        if(isGameStarted)
-        {   controlPanel.draw();
-            yer.draw();
-            levelLabel.putText("Level:  " + currentLevel , 40, 37);
-            countLabel.putText("Moves:  " + moveCount , 23, 35);
-        }
-        else
-        {
-            startScreen.draw();
-        }
-    }
-
-    public void onKeyPress()
-    {
-        if(isGameStarted)
-        {    
-            if (keyboard.isDown(keyboard.UP, keyboard.W))
-            {
-                if( spriteX > 0 && nums[spriteX - 1][spriteY] == 0 )
-                {
-                    stack.push(nums);
-                    nums[spriteX][spriteY] = 0;
-                    nums[spriteX - 1][spriteY] = 3;
-                    spriteX--;
-                    moveCount++;
-                    
-                }
-                else if( spriteX > 1 && nums[spriteX - 1][spriteY] == 2 && nums[spriteX - 2][spriteY] == 0 )
-                {
-                    stack.push(nums);
-                    nums[spriteX][spriteY] = 0;
-                    nums[spriteX - 1][spriteY] = 3;
-                    nums[spriteX - 2][spriteY] = 2;
-                    spriteX--;
-                    moveCount++;
-                    
-                }
-            }
-
-            if (keyboard.isDown(keyboard.DOWN, keyboard.S))
-            {
-                if( spriteX < nums.length-1 && nums[spriteX + 1][spriteY] == 0 )
-                {
-                    stack.push(nums);
-                    nums[spriteX][spriteY] = 0;
-                    nums[spriteX + 1][spriteY] = 3;
-                    spriteX++;
-                    moveCount++;
-                    
-                }
-                else if( spriteX < nums.length-2 && nums[spriteX + 1][spriteY] == 2 && nums[spriteX + 2][spriteY] == 0 )
-                {
-                    stack.push(nums);
-                    nums[spriteX][spriteY] = 0;
-                    nums[spriteX + 1][spriteY] = 3;
-                    nums[spriteX + 2][spriteY] = 2;
-                    spriteX++;
-                    moveCount++;
-                    
-                }
-            }        
-
-            if (keyboard.isDown(keyboard.LEFT, keyboard.A))
-            {
-                if( spriteY > 0 && nums[spriteX][spriteY - 1] == 0 )
-                {
-                    stack.push(nums);
-                    nums[spriteX][spriteY] = 0;
-                    nums[spriteX][spriteY-1] = 3;
-                    spriteY--;
-                    moveCount++;
-                    
-                }
-                else if ( spriteY > 1 && nums[spriteX][spriteY - 1] == 2 && nums[spriteX][spriteY - 2] == 0 )
-                {
-                    stack.push(nums);
-                    nums[spriteX][spriteY] = 0;
-                    nums[spriteX][spriteY-1] = 3;
-                    nums[spriteX][spriteY-2] = 2;
-                    spriteY--; 
-                    moveCount++;
-                    
-                }
-            }
-
-            if (keyboard.isDown(keyboard.RIGHT, keyboard.D))
-            {            
-                if( spriteY < nums[0].length-1 && nums[spriteX][spriteY + 1] == 0 )
-                {
-                    stack.push(nums);
-                    nums[spriteX][spriteY] = 0;
-                    nums[spriteX][spriteY + 1] = 3;
-                    spriteY = spriteY + 1;
-                    moveCount++;
-                    
-                }
-                else if( spriteY < nums[0].length-2 && nums[spriteX][spriteY + 1] == 2 && nums[spriteX][spriteY + 2] == 0 )
-                {
-                    stack.push(nums);
-                    nums[spriteX][spriteY] = 0;
-                    nums[spriteX][spriteY + 1] = 3;
-                    nums[spriteX][spriteY + 2] = 2;
-                    spriteY++;
-                    moveCount++;
-                    
-                }
-            }        
-        }//End of if(isGameStarted)
     
-        if (keyboard.isDown(keyboard.R))
-        {
-            sound1.stop();
-            setup();
-        }
-        if(keyboard.isDown(keyboard.SPACE))
-        {
-            if(!isGameStarted)
-            {
-                isGameStarted = true;
-                startScreen.hide();
-            }
-        }
-        
-        if (keyboard.key() == keyboard.M)
-        {
-             sound1.play();
-        }
-        if(keyboard.key() == keyboard.N)
-        {
-             sound1.stop();
-        }
     
-        reDraw();
-    }
+    }//End of the default constructor
     
-    public void initLevel(int lvl){        
-        
+    private void initLevel(int lvl){        
+        welldone.setVisible(false);
+        int yLen = (LevelConstants.getNums(lvl)).length;
+        int xLen = (LevelConstants.getNums(lvl))[0].length;
         //Create and initialize the nums array for the level
-        nums = new int[(LevelConstants.getNums(lvl)).length][(LevelConstants.getNums(lvl))[0].length];
-        for(int i = 0; i < (LevelConstants.getNums(lvl)).length; i++ )
-            System.arraycopy((LevelConstants.getNums(lvl))[i], 0, nums[i], 0, (LevelConstants.getNums(lvl))[i].length);
+        nums = new int[yLen][xLen];
+        for(int i = 0; i < yLen; i++ )
+            System.arraycopy((LevelConstants.getNums(lvl))[i], 0, nums[i], 0, xLen);
         stack = new UndoStack(MAX_UNDO, nums.length, nums[0].length);        
         moveCount = 0;
         dots =  LevelConstants.getDots(lvl);
         numBoxes = LevelConstants.getNumBoxes(lvl);
         spriteX = LevelConstants.getSpriteX(lvl);
         spriteY = LevelConstants.getSpriteY(lvl);
-        yer = makeTiledSprite(nums[1].length, nums.length, 50, 50);
-        yer.position(LevelConstants.getYerX(lvl), LevelConstants.getYerY(lvl)); 
+        p.setLayout( new GridLayout(yLen,xLen) );
         reDraw();
     }
     
-    //Re-Draw the Tiled Spirit (Called after modifying the nums array)
-    public void reDraw(){
+    private void reDraw()
+    {   
         hitCount = 0;
+        p.removeAll();
         
-        for(int i = 0; i < nums.length; i++ )
-        {    
+        for(int i = 0; i < nums.length; i++)
+        {
+            
             for(int j = 0; j < nums[0].length; j++ )
-            {    if(nums[i][j] == 0) 
-                    yer.setTiles( (dots[i][j] == 0 ? ground : groundDot),0,0,j,i);
-                else if(nums[i][j] == 1)
-                    yer.setTiles(wall,0,0,j,i);
-                else if(nums[i][j] == 2)
+            {
+                if( nums[i][j] == 0)
+                    p.add( dots[i][j] == 0 ? (new JLabel (ground)) : (new JLabel (groundDot)));
+                else if( nums[i][j] == 1)
+                    p.add( new JLabel(wall));
+                else if( nums[i][j] == 2)
                 {
                     if(dots[i][j] == 0)
-                        yer.setTiles( box,0,0,j,i);
+                        p.add( new JLabel(box ));
                     else
                     {
-                        yer.setTiles( boxDot,0,0,j,i);
+                        p.add( new JLabel(boxDot));                        
                         hitCount++;
-                    }                    
-                }                    
+                    }
+                }
                 else
-                    yer.setTiles( (dots[i][j] == 0 ? guy : guyDot),0,0,j,i);
+                    p.add( dots[i][j] == 0 ? (new JLabel(guy)) : (new JLabel(guyDot)));
+            }
+            
+            if(hitCount == numBoxes)
+            {                
+                 welldone.setVisible(true);
             }
         }
-        if(hitCount == numBoxes)
+        
+        p.repaint();
+        p.validate();
+        levelLabel.setText("Level: " + currentLevel);
+        countLabel.setText("Moves: " + moveCount);
+       
+        controlPanel.repaint();
+        controlPanel.validate();
+        pack();
+        
+    }
+    
+    private class MyKeyListener implements KeyListener{
+            
+            @Override
+            public void keyPressed(KeyEvent e) {
+              
+                if(e.getKeyCode() == KeyEvent.VK_LEFT)
+                {
+                    if( spriteY > 0 && nums[spriteX][spriteY - 1] == 0 )
+                    {
+                        stack.push(nums);
+                        nums[spriteX][spriteY] = 0;
+                        nums[spriteX][spriteY-1] = 3;
+                        spriteY--;
+                        moveCount++;
+
+                    }
+                    else if ( spriteY > 1 && nums[spriteX][spriteY - 1] == 2 && nums[spriteX][spriteY - 2] == 0 )
+                    {
+                        stack.push(nums);
+                        nums[spriteX][spriteY] = 0;
+                        nums[spriteX][spriteY-1] = 3;
+                        nums[spriteX][spriteY-2] = 2;
+                        spriteY--; 
+                        moveCount++;
+
+                    }                    
+                }                                        
+               
+                if(e.getKeyCode() == KeyEvent.VK_RIGHT)
+                {
+                    if( spriteY < nums[0].length-1 && nums[spriteX][spriteY + 1] == 0 )
+                    {
+                        stack.push(nums);
+                        nums[spriteX][spriteY] = 0;
+                        nums[spriteX][spriteY + 1] = 3;
+                        spriteY = spriteY + 1;
+                        moveCount++;
+
+                    }
+                    else if( spriteY < nums[0].length-2 && nums[spriteX][spriteY + 1] == 2 && nums[spriteX][spriteY + 2] == 0 )
+                    {
+                        stack.push(nums);
+                        nums[spriteX][spriteY] = 0;
+                        nums[spriteX][spriteY + 1] = 3;
+                        nums[spriteX][spriteY + 2] = 2;
+                        spriteY++;
+                        moveCount++;
+
+                    }                
+                }                              
+                
+                
+                if(e.getKeyCode() == KeyEvent.VK_UP)
+                {
+                    if( spriteX > 0 && nums[spriteX - 1][spriteY] == 0 )
+                    {
+                        stack.push(nums);
+                        nums[spriteX][spriteY] = 0;
+                        nums[spriteX - 1][spriteY] = 3;
+                        spriteX--;
+                        moveCount++;
+
+                    }
+                    else if( spriteX > 1 && nums[spriteX - 1][spriteY] == 2 && nums[spriteX - 2][spriteY] == 0 )
+                    {
+                        stack.push(nums);
+                        nums[spriteX][spriteY] = 0;
+                        nums[spriteX - 1][spriteY] = 3;
+                        nums[spriteX - 2][spriteY] = 2;
+                        spriteX--;
+                        moveCount++;
+
+                    }
+                }
+                
+                if(e.getKeyCode() == KeyEvent.VK_DOWN)
+                {
+                    if( spriteX < nums.length-1 && nums[spriteX + 1][spriteY] == 0 )
+                    {
+                        stack.push(nums);
+                        nums[spriteX][spriteY] = 0;
+                        nums[spriteX + 1][spriteY] = 3;
+                        spriteX++;
+                        moveCount++;
+
+                    }
+                    else if( spriteX < nums.length-2 && nums[spriteX + 1][spriteY] == 2 && nums[spriteX + 2][spriteY] == 0 )
+                    {
+                        stack.push(nums);
+                        nums[spriteX][spriteY] = 0;
+                        nums[spriteX + 1][spriteY] = 3;
+                        nums[spriteX + 2][spriteY] = 2;
+                        spriteX++;
+                        moveCount++;
+
+                    }
+                }
+                
+                if(e.getKeyCode() == KeyEvent.VK_COMMA)
+                    initLevel(9);
+                reDraw();
+            }//End of method keyPressed
+            
+            @Override
+            public void keyTyped(KeyEvent e) {              
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {                
+            }
+    };
+    
+    private void printNums(){
+        System.out.println();
+        for(int i = 0; i < nums.length; i++)
         {
-            welldone.show();
+            for(int j = 0; j < nums[1].length; j++)
+                System.out.print( " " + nums[i][j]);
+            System.out.println();
         }
     }
     
-    public void onClickRestart()
-    {
-        initLevel(currentLevel);
-    }
-    public void onClickWellDone()
-    {
-        welldone.hide();
-        if(currentLevel < MAX_LEVELS )
-            initLevel(++currentLevel);        
-    }
-      
-    public void onClickUndo()
-    {
-        if(!stack.isEmpty())
+    private void printDots(){
+        System.out.println();
+        for(int i = 0; i < dots.length; i++)
         {
-            nums = stack.pop(); 
-            moveCount--;
-            reDraw();
+            for(int j = 0; j < dots[1].length; j++)
+                System.out.print( " " + dots[i][j]);
+            System.out.println();
         }
-        for( int i = 0; i < nums.length; i++ )
-            for( int j = 0; j < nums[i].length; j++ )
-                if(nums[i][j] == 3)
-                {
-                    spriteX = i;
-                    spriteY = j;
-                }
+    }
+    
+    public static void main (String[] args){
+        System.out.println("test");   
+        WareHouseKeeper mainFrame = new WareHouseKeeper();
+       
     }
 }
