@@ -142,7 +142,7 @@ public class Fruit_Game extends JPanel implements KeyListener,Runnable{
 		}
 	}
 		
-	@Override
+	
 	public void keyPressed(KeyEvent ke) {	
 		switch (ke.getKeyCode()) {
 		//if the right arrow in keyboard is pressed...
@@ -161,13 +161,13 @@ public class Fruit_Game extends JPanel implements KeyListener,Runnable{
 		repaint();
 	}
 
-	@Override
+	
 	public void keyReleased(KeyEvent ke) {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
+	
 	public void keyTyped(KeyEvent ke) {
 		// TODO Auto-generated method stub
 	}
@@ -241,7 +241,7 @@ public class Fruit_Game extends JPanel implements KeyListener,Runnable{
 		score.setText("Score: "+Integer.toString(totalScore)+"/"+totalFruits+"  Life:"+(3-bombsHit));
 	}
 
-	@Override
+	
 	public void run() 
 	{	
 	}

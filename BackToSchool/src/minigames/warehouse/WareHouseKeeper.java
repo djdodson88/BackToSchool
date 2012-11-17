@@ -216,7 +216,7 @@ public class WareHouseKeeper extends JFrame
     
     private class MyKeyListener implements KeyListener{
             
-            @Override
+            
             public void keyPressed(KeyEvent e) {
               
                 if(e.getKeyCode() == KeyEvent.VK_LEFT)
@@ -317,11 +317,11 @@ public class WareHouseKeeper extends JFrame
                 reDraw();
             }//End of method keyPressed
             
-            @Override
+            
             public void keyTyped(KeyEvent e) {              
             }
 
-            @Override
+            
             public void keyReleased(KeyEvent e) {                
             }
     };
