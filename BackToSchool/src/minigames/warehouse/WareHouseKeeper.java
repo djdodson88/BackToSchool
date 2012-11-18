@@ -122,6 +122,7 @@ public class WareHouseKeeper extends JPanel
                  initLevel(currentLevel);
             }
         });
+        restart.setVisible(false);
         
         undo = new JLabel( new ImageIcon("art/warehouse/undo.jpg") );
         undo.addMouseListener( new MouseAdapter() {
@@ -244,7 +245,7 @@ public class WareHouseKeeper extends JPanel
            {
         	   isGameOver = true;
         	   t.stop();
-        	   resultLabel.setText("You win!");
+        	   resultLabel.setText("You won!");
         	   resultLabel.setVisible(true);
            }
            
@@ -409,6 +410,7 @@ public class WareHouseKeeper extends JPanel
         fr.setVisible(true);
         fr.add(game);
         fr.pack();
+        fr.setFocusable(false);
        
     }
 }
