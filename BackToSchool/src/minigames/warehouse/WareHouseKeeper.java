@@ -9,6 +9,7 @@ package minigames.warehouse;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,15 +17,20 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import javax.swing.colorchooser.ColorSelectionModel;
 
 
 public class WareHouseKeeper extends JPanel
-{    
+{   
+	
 	Timer t;
     JPanel p;
     JPanel controlPanel;
@@ -66,6 +72,7 @@ public class WareHouseKeeper extends JPanel
     
     
     public WareHouseKeeper(int day){
+    	//setMaximumSize(new Dimension(550,450));
     	
     	int delay = 1000; //milliseconds
     	ActionListener taskPerformer = new ActionListener() {
@@ -77,7 +84,7 @@ public class WareHouseKeeper extends JPanel
 	        	{
 	        		t.stop();
 	        		isGameOver = true;
-	        		resultLabel.setText("Time over. You lost!");
+	        		resultLabel.setText("Time over :(");
 	            	resultLabel.setVisible(true);
 	        	}
 	        	controlPanel.repaint();
@@ -87,12 +94,12 @@ public class WareHouseKeeper extends JPanel
     	};
     	t = new Timer(delay, taskPerformer);
     	
-        setLayout( new FlowLayout());
-       
+    	setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+        
         startScreen = new JLabel( new ImageIcon("art/warehouse/start.jpg") );
         
         
-        welldone = new JLabel( new ImageIcon("art/warehouse/welldone.jpg") );
+        welldone = new JLabel(  );
         welldone.addMouseListener( new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -102,20 +109,25 @@ public class WareHouseKeeper extends JPanel
             }
         });
         
-        levelLabel = new JLabel( new ImageIcon("art/warehouse/level.jpg") );
+        levelLabel = new JLabel(  );
         levelLabel.setHorizontalTextPosition(JLabel.CENTER);
         levelLabel.setVerticalTextPosition(JLabel.CENTER);
+        levelLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, 12));
+        levelLabel.setForeground(Color.black);
         
-        timerLabel = new JLabel( new ImageIcon("art/warehouse/level.jpg") );
+        timerLabel = new JLabel(  );
         timerLabel.setHorizontalTextPosition(JLabel.CENTER);
         timerLabel.setVerticalTextPosition(JLabel.CENTER);
+        timerLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, 12));
+        timerLabel.setForeground(Color.black);
         
-        resultLabel = new JLabel( new ImageIcon("art/warehouse/level.jpg") );
+        resultLabel = new JLabel(  );
         resultLabel.setHorizontalTextPosition(JLabel.CENTER);
         resultLabel.setVerticalTextPosition(JLabel.CENTER);
-      
+        resultLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, 12));
+        resultLabel.setForeground(Color.black);
         
-        restart = new JLabel( new ImageIcon("art/warehouse/restart.jpg") );
+        restart = new JLabel(  );
         restart.addMouseListener( new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -124,30 +136,16 @@ public class WareHouseKeeper extends JPanel
         });
         restart.setVisible(false);
         
-        undo = new JLabel( new ImageIcon("art/warehouse/undo.jpg") );
-        undo.addMouseListener( new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if(!stack.isEmpty())
-                {
-                    nums = stack.pop(); 
-                    moveCount--;
-                    reDraw();
-                }
-           for( int i = 0; i < nums.length; i++ )
-                for( int j = 0; j < nums[i].length; j++ )
-                if(nums[i][j] == 3)
-                {
-                    spriteX = i;
-                    spriteY = j;
-                }
-            }
-        });
+        undo = new JLabel ("Undo") ;
+        undo.setFont(new Font("Comic Sans MS", Font.PLAIN, 12));
+        undo.setForeground(Color.black);
+
         
-        countLabel = new JLabel( new ImageIcon("art/warehouse/level.jpg") );
+        countLabel = new JLabel(  );
+        countLabel.setForeground(Color.black);
+        countLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, 12));
         countLabel.setHorizontalTextPosition(JLabel.CENTER);
         countLabel.setVerticalTextPosition(JLabel.CENTER);
-        
         
         ground = new ImageIcon("art/warehouse/ground.jpg");
         wall = new ImageIcon("art/warehouse/wall.jpg");
@@ -158,30 +156,78 @@ public class WareHouseKeeper extends JPanel
         guyDot = new ImageIcon("art/warehouse/guyDot.jpg");
         
         p = new JPanel();
-        controlPanel = new JPanel();
-        controlPanel.setBackground(Color.yellow);
-        controlPanel.setPreferredSize( new Dimension (170,500));
         
+        controlPanel = new JPanel();
+        controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.Y_AXIS));
+        
+        controlPanel.setBackground( new Color(193,141,88));
+        
+        controlPanel.setPreferredSize( new Dimension (75,450));
+        controlPanel.setMaximumSize( new Dimension (75,450));
+        controlPanel.setMinimumSize( new Dimension (75,450));
+        
+        controlPanel.add(Box.createVerticalGlue() );
         controlPanel.add(levelLabel);
-        controlPanel.add(restart);
-        controlPanel.add(welldone);
-        controlPanel.add(resultLabel);
+        //controlPanel.add(restart);
+        controlPanel.add( Box.createRigidArea( new Dimension(5,25)) );
+        //controlPanel.add(welldone);
         controlPanel.add(countLabel);
+        controlPanel.add( Box.createRigidArea( new Dimension(5,25)) );
         controlPanel.add(undo);        
+        controlPanel.add( Box.createRigidArea( new Dimension(5,25)) );
         controlPanel.add(timerLabel);
+        controlPanel.add( Box.createRigidArea( new Dimension(5,25)) );
+        controlPanel.add(resultLabel);
+        controlPanel.add(Box.createVerticalGlue() );
+        
+        controlPanel.addMouseListener( new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                 undo.setForeground( Color.green); 
+                 undo.setFont(new Font("Comic Sans MS", Font.BOLD, 12));
+             	 controlPanel.setBackground( new Color(193,161,108));
+                 controlPanel.repaint();
+ 	             controlPanel.validate();
+            }
+            @Override
+            public void mouseExited(MouseEvent e){
+            	undo.setForeground( Color.black);
+            	undo.setFont(new Font("Comic Sans MS", Font.PLAIN, 12));
+            	controlPanel.setBackground( new Color(193,141,88));
+            	controlPanel.repaint();
+	            controlPanel.validate();
+            	
+            }
+            public void mousePressed(MouseEvent e){
+                if(!stack.isEmpty())
+                {
+                    nums = stack.pop(); 
+                    moveCount--;
+                    reDraw();
+                }
+                
+                for( int i = 0; i < nums.length; i++ )
+	                for( int j = 0; j < nums[i].length; j++ )
+		                if(nums[i][j] == 3)
+		                {
+		                    spriteX = i;
+		                    spriteY = j;
+		                }
+            }
+        });
         
         currentLevel = day;
-        setBackground(Color.LIGHT_GRAY);      
+        setBackground( new Color(199,188,136));      
 
         initLevel(currentLevel);
         KeyListener listener = new MyKeyListener();    
         addKeyListener(listener );
-
+        setPreferredSize(new Dimension(550,450));
         
+        add(Box.createHorizontalGlue() );
         add(p);
+        add(Box.createHorizontalGlue() );
         add(controlPanel);
-     //   p.addKeyListener(listener);
-        
         setFocusable(true);
         
     
@@ -209,6 +255,7 @@ public class WareHouseKeeper extends JPanel
         spriteX = LevelConstants.getSpriteX(lvl);
         spriteY = LevelConstants.getSpriteY(lvl);
         p.setLayout( new GridLayout(yLen,xLen) );
+        p.setMaximumSize(new Dimension(xLen*25, yLen*25));
         reDraw();
     }
     
