@@ -20,7 +20,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 
-public class WareHouseKeeper extends JFrame
+public class WareHouseKeeper extends JPanel
 {    
     JPanel p;
     JPanel controlPanel;
@@ -58,7 +58,7 @@ public class WareHouseKeeper extends JFrame
     int spriteY;
     
     
-    public WareHouseKeeper(){
+    public WareHouseKeeper(int day){
         setLayout( new FlowLayout());
        
         startScreen = new JLabel( new ImageIcon("art/warehouse/start.jpg") );
@@ -78,7 +78,7 @@ public class WareHouseKeeper extends JFrame
         levelLabel.setHorizontalTextPosition(JLabel.CENTER);
         levelLabel.setVerticalTextPosition(JLabel.CENTER);
         
-        restart = new JLabel( new ImageIcon("images/restart.jpg") );
+        restart = new JLabel( new ImageIcon("art/warehouse/restart.jpg") );
         restart.addMouseListener( new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -131,19 +131,17 @@ public class WareHouseKeeper extends JFrame
         
         
         isGameStarted = false;
-        currentLevel = 1;
-        setBackground(Color.red);      
+        currentLevel = day;
+        setBackground(Color.LIGHT_GRAY);      
 
 
         KeyListener listener = new MyKeyListener();    
         addKeyListener(listener );
 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setVisible(true);
         
         add(p);
         add(controlPanel);
-        p.addKeyListener(listener);
+     //   p.addKeyListener(listener);
         
         setFocusable(true);
         initLevel(currentLevel);
@@ -197,10 +195,11 @@ public class WareHouseKeeper extends JFrame
                     p.add( dots[i][j] == 0 ? (new JLabel(guy)) : (new JLabel(guyDot)));
             }
             
-            if(hitCount == numBoxes)
-            {                
-                 welldone.setVisible(true);
-            }
+//		Enables to go to the next level            
+//            if(hitCount == numBoxes)
+//            {                
+//                 welldone.setVisible(true);
+//            }
         }
         
         p.repaint();
@@ -210,7 +209,7 @@ public class WareHouseKeeper extends JFrame
        
         controlPanel.repaint();
         controlPanel.validate();
-        pack();
+        
         
     }
     
@@ -348,7 +347,12 @@ public class WareHouseKeeper extends JFrame
     
     public static void main (String[] args){
         System.out.println("test");   
-        WareHouseKeeper mainFrame = new WareHouseKeeper();
+        WareHouseKeeper game = new WareHouseKeeper(1);
+        JFrame fr = new JFrame();
+        fr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        fr.setVisible(true);
+        fr.add(game);
+        fr.pack();
        
     }
 }
