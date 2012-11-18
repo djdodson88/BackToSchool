@@ -86,8 +86,8 @@ public class Classroom extends JPanel{
 			break;
 		case 2:
 			//Warehouse
-			//minigame = new WareHouseKeeper(); // needs to be Jpanel
-			minigame = new Fruit_Game(1); //temporary until Warehouse --> Jpanel
+			minigame = new WareHouseKeeper(1); 
+		
 			break;
 		case 3:
 			minigame = new SudokuGame(1);
