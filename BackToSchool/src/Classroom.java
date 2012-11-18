@@ -16,10 +16,12 @@ import minigames.tiles.PuzzlePanel;
 import minigames.warehouse.WareHouseKeeper;
 
 
+
 public class Classroom extends JPanel{
 
 	private BufferedImage backgroundImg;
-
+	private static boolean done;
+	
 	public Classroom()
 	{
 		// Pass through day
@@ -49,11 +51,12 @@ public class Classroom extends JPanel{
 		
 		Random generator = new Random();
 		game = generator.nextInt(4) + 1; // 1-4
-
+		System.out.println(game);
 		JPanel miniSplash = new MiniSplash(game);
-		JPanel minigame = new Fruit_Game(1); 
+		JPanel minigame = new JPanel();
 
 		JFrame frame = new JFrame("Back to School: Classroom");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JLayeredPane lpane = new JLayeredPane();
 		frame.setPreferredSize(new Dimension(800,600));
 		frame.setResizable(false);
@@ -61,38 +64,54 @@ public class Classroom extends JPanel{
 		lpane.setBounds(0, 0, 800, 600);
 
 		JPanel classroom = new Classroom();
-	
-	
+
+		
+		classroom.setBounds(0, 0, 800, 600);
+		miniSplash.setBounds(50,50, 500, 300);
+		
+		lpane.add(classroom);
+		lpane.add(miniSplash);
+		lpane.moveToFront(miniSplash);
+		
+		frame.pack();
+		frame.setVisible(true);
+
+		splashLoop((MiniSplash) miniSplash); // loops until splash screen finishes
+		
 		switch(game)
 		{
 		
 		case 1:
-			
 			minigame = new Fruit_Game(1);
 			break;
 		case 2:
 			//Warehouse
-
+			//minigame = new WareHouseKeeper(); // needs to be Jpanel
+			minigame = new Fruit_Game(1); //temporary until Warehouse --> Jpanel
 			break;
 		case 3:
 			minigame = new SudokuGame(1);
 			break;
 		case 4:
-
+			//Tiles
+			minigame = new SudokuGame(1); //temporary until Tiles work
 			break;
 		}
-
 		
-		classroom.setBounds(0, 0, 800, 600);
 		minigame.setBounds(26, 32, 550, 450);
-		miniSplash.setBounds(100,100, 400, 300);
-		lpane.add(classroom);
-		//lpane.add(minigame);
-		lpane.add(miniSplash);
-		lpane.moveToFront(miniSplash);
-		frame.pack();
-		frame.setVisible(true);
-
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		lpane.add(minigame);
+		lpane.moveToFront(minigame);
+		minigame.requestFocus();
+	
+	}
+	
+	public static void splashLoop(MiniSplash splash)
+	{
+		while(!splash.isDone())
+		{
+			System.out.print(""); // workaround for now
+		}
+		
 	}
 }
