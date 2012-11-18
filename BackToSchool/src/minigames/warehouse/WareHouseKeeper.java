@@ -10,6 +10,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
@@ -18,10 +20,12 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 
 public class WareHouseKeeper extends JPanel
 {    
+	Timer t;
     JPanel p;
     JPanel controlPanel;
     
@@ -34,6 +38,8 @@ public class WareHouseKeeper extends JPanel
     JLabel undo;
     JLabel countLabel;
     JLabel startScreen;
+    JLabel timerLabel;
+    JLabel resultLabel;
     
     ImageIcon ground;
     ImageIcon wall;   
@@ -43,8 +49,9 @@ public class WareHouseKeeper extends JPanel
     ImageIcon boxDot;
     ImageIcon guyDot;
     
-    boolean isGameStarted;
+    boolean isGameOver;
     int currentLevel;
+    int timeRemains;
     
     UndoStack stack;
     final int MAX_LEVELS = 10;
@@ -59,6 +66,27 @@ public class WareHouseKeeper extends JPanel
     
     
     public WareHouseKeeper(int day){
+    	
+    	int delay = 1000; //milliseconds
+    	ActionListener taskPerformer = new ActionListener() {
+	        public void actionPerformed(ActionEvent evt) {
+	        	
+	        	timeRemains--;
+	        	timerLabel.setText("Time: " + timeRemains);
+	        	if(timeRemains == 0)
+	        	{
+	        		t.stop();
+	        		isGameOver = true;
+	        		resultLabel.setText("Time over. You lost!");
+	            	resultLabel.setVisible(true);
+	        	}
+	        	controlPanel.repaint();
+	            controlPanel.validate();
+	            
+	        }
+    	};
+    	t = new Timer(delay, taskPerformer);
+    	
         setLayout( new FlowLayout());
        
         startScreen = new JLabel( new ImageIcon("art/warehouse/start.jpg") );
@@ -77,6 +105,15 @@ public class WareHouseKeeper extends JPanel
         levelLabel = new JLabel( new ImageIcon("art/warehouse/level.jpg") );
         levelLabel.setHorizontalTextPosition(JLabel.CENTER);
         levelLabel.setVerticalTextPosition(JLabel.CENTER);
+        
+        timerLabel = new JLabel( new ImageIcon("art/warehouse/level.jpg") );
+        timerLabel.setHorizontalTextPosition(JLabel.CENTER);
+        timerLabel.setVerticalTextPosition(JLabel.CENTER);
+        
+        resultLabel = new JLabel( new ImageIcon("art/warehouse/level.jpg") );
+        resultLabel.setHorizontalTextPosition(JLabel.CENTER);
+        resultLabel.setVerticalTextPosition(JLabel.CENTER);
+      
         
         restart = new JLabel( new ImageIcon("art/warehouse/restart.jpg") );
         restart.addMouseListener( new MouseAdapter() {
@@ -123,18 +160,19 @@ public class WareHouseKeeper extends JPanel
         controlPanel = new JPanel();
         controlPanel.setBackground(Color.yellow);
         controlPanel.setPreferredSize( new Dimension (170,500));
+        
         controlPanel.add(levelLabel);
         controlPanel.add(restart);
         controlPanel.add(welldone);
-        controlPanel.add(undo);
+        controlPanel.add(resultLabel);
         controlPanel.add(countLabel);
+        controlPanel.add(undo);        
+        controlPanel.add(timerLabel);
         
-        
-        isGameStarted = false;
         currentLevel = day;
         setBackground(Color.LIGHT_GRAY);      
 
-
+        initLevel(currentLevel);
         KeyListener listener = new MyKeyListener();    
         addKeyListener(listener );
 
@@ -144,13 +182,19 @@ public class WareHouseKeeper extends JPanel
      //   p.addKeyListener(listener);
         
         setFocusable(true);
-        initLevel(currentLevel);
+        
     
     
     }//End of the default constructor
     
-    private void initLevel(int lvl){        
-        welldone.setVisible(false);
+    private void initLevel(int lvl){
+    	isGameOver = false;
+    	resultLabel.setVisible(false);
+    	timeRemains = 60;       
+    	timerLabel.setText("Time: " + timeRemains);
+        t.start();
+    	
+    	welldone.setVisible(false);
         int yLen = (LevelConstants.getNums(lvl)).length;
         int xLen = (LevelConstants.getNums(lvl))[0].length;
         //Create and initialize the nums array for the level
@@ -195,18 +239,28 @@ public class WareHouseKeeper extends JPanel
                     p.add( dots[i][j] == 0 ? (new JLabel(guy)) : (new JLabel(guyDot)));
             }
             
-//		Enables to go to the next level            
-//            if(hitCount == numBoxes)
-//            {                
-//                 welldone.setVisible(true);
-//            }
+           //Player wins 
+           if(hitCount == numBoxes)
+           {
+        	   isGameOver = true;
+        	   t.stop();
+        	   resultLabel.setText("You win!");
+        	   resultLabel.setVisible(true);
+           }
+           
+//	        Enables to go to the next level            
+//          if(hitCount == numBoxes)
+//          {                
+//               welldone.setVisible(true);
+//          }
+            
         }
         
         p.repaint();
         p.validate();
         levelLabel.setText("Level: " + currentLevel);
         countLabel.setText("Moves: " + moveCount);
-       
+        
         controlPanel.repaint();
         controlPanel.validate();
         
@@ -217,7 +271,8 @@ public class WareHouseKeeper extends JPanel
             
             
             public void keyPressed(KeyEvent e) {
-              
+            if(!isGameOver)
+            {
                 if(e.getKeyCode() == KeyEvent.VK_LEFT)
                 {
                     if( spriteY > 0 && nums[spriteX][spriteY - 1] == 0 )
@@ -314,6 +369,7 @@ public class WareHouseKeeper extends JPanel
                 if(e.getKeyCode() == KeyEvent.VK_COMMA)
                     initLevel(9);
                 reDraw();
+            }
             }//End of method keyPressed
             
             
