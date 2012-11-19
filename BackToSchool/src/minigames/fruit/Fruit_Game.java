@@ -29,8 +29,11 @@ public class Fruit_Game extends JPanel implements KeyListener,Runnable{
 	int Y=0;
 	int totalScore;
 	JLabel score;
+	JLabel earnedPercentageLabel;
+	int earnedPercentage;
 	Graphics graphics;
 	Timer timer;
+	int life;
 	static int totalFruits;
 	static int counter;
 
@@ -39,10 +42,11 @@ public class Fruit_Game extends JPanel implements KeyListener,Runnable{
 		this.setFocusable(true);   // Allow this panel to get focus.
 		this.addKeyListener(this);
 		//this.setSize(550,450);
-		
+		earnedPercentage=0;
 		this.setBackground(Color.white);
 		currentItem="apple";
 		bombsHit=0;
+		life=3;
 		X=0;
 		Y=0;
 		
@@ -62,7 +66,10 @@ public class Fruit_Game extends JPanel implements KeyListener,Runnable{
 		totalScore=0;// used to keep the score
 		loadImages();// load the images for the game
 		score = new JLabel("0");
+		earnedPercentageLabel = new JLabel();
+		earnedPercentageLabel.setBounds(0,100,100,100);
 		this.add(score,BorderLayout.SOUTH);
+		this.add(earnedPercentageLabel);
 		this.setVisible(true);
 		startAnimation();
 	}
@@ -122,7 +129,7 @@ public class Fruit_Game extends JPanel implements KeyListener,Runnable{
 		g.drawImage(background, 0, 0, this);
 		g.drawImage(basket, cordX, cordY, this);
 		
-		if(bombsHit<3 && counter<totalFruits){
+		if(life>0 && counter<totalFruits){
 			if(currentItem.equals("apple")){
 				g.drawImage(apple, X, Y, this);
 			}
@@ -199,7 +206,7 @@ public class Fruit_Game extends JPanel implements KeyListener,Runnable{
         		timer.stop();
         		timer=null;
         		checkHit();
-        		if(totalFruits>counter){
+        		if(totalFruits+1>counter && life>0){
         			Random r = new Random();
         			int option = r.nextInt(4);
         			
@@ -225,7 +232,7 @@ public class Fruit_Game extends JPanel implements KeyListener,Runnable{
 		{
 			if(currentItem.equals("bomb")){
     			totalScore-=2;
-    			bombsHit++;
+    			life--;
 			}
     		else{
     			totalScore++;
@@ -234,11 +241,21 @@ public class Fruit_Game extends JPanel implements KeyListener,Runnable{
 			
 		}
 		else if(!(currentItem.equals("bomb"))){
-			bombsHit++;// this will mean that the fruit fell and you were not able to catch it
+			life--;// this will mean that the fruit fell and you were not able to catch it
 			counter++;
 		}
 		
-		score.setText("Score: "+Integer.toString(totalScore)+"/"+totalFruits+"  Life:"+(3-bombsHit));
+		score.setText("Score: "+Integer.toString(totalScore)+"/"+totalFruits+"  Life:"+(life));
+		
+		if(!(life>0)){
+			earnedPercentage=1;
+			earnedPercentageLabel.setText(" You earned: "+earnedPercentage+"%");
+		}
+		else if(!(totalFruits>counter)){
+			earnedPercentage=5;
+			earnedPercentageLabel.setText(" You earned: "+earnedPercentage+"%");
+		}
+			
 	}
 
 	
