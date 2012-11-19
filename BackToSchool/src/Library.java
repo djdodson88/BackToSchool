@@ -19,6 +19,8 @@ public class Library extends JPanel {
 	boolean humanitiesSelected;
 	boolean scienceSelected;
 	boolean mathSelected;
+	
+	Player student; 
 
 	public Library(Player player){
 		this.setPreferredSize(new Dimension(800, 600));// setting the size
@@ -29,6 +31,8 @@ public class Library extends JPanel {
 		scienceSelected=false;
 		mathSelected=false;
 
+		student = player;
+		
 		txt = new JLabel("Please select a skill level to increase");
 		txt.setBounds(350,100,300,30);
 
@@ -40,6 +44,7 @@ public class Library extends JPanel {
 				if(!optionSelected){
 					optionSelected=true;
 					humanitiesSelected=true;
+					student.increaseCreativit(0.01);
 					System.out.println("Pressed Humanities");
 				}
 			}
@@ -50,6 +55,7 @@ public class Library extends JPanel {
 			{
 				if(!optionSelected){
 					optionSelected=true;
+					student.increaseSciRigor(0.01); 
 					System.out.println("Pressed Science");
 					scienceSelected = true;
 				}
@@ -61,7 +67,8 @@ public class Library extends JPanel {
 			{
 				if(!optionSelected){
 					optionSelected=true;
-					System.out.println("Pressed Science");
+					student.increaseQuantReasoning(0.01);
+					System.out.println("Pressed Math");
 					mathSelected=true;
 				}
 			}			

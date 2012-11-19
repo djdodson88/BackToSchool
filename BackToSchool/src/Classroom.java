@@ -51,7 +51,6 @@ public class Classroom extends JPanel{
 		
 		Random generator = new Random();
 		game = generator.nextInt(4) + 1; // 1-4
-		System.out.println(game);
 		JPanel miniSplash = new MiniSplash(game);
 		JPanel minigame = new JPanel();
 

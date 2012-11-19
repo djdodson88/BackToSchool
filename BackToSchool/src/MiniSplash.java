@@ -43,14 +43,14 @@ public class MiniSplash extends JPanel implements ActionListener
 			button = new JButton("Start Game");
 			break;
 		case 2:
-			button = new JButton("");
+			button = new JButton("Start Game");
 			break;
 		case 3:
 			button = new JButton("Next Screen");
 			numScreen = 1;
 			break;
 		case 4:
-			button = new JButton("");
+			button = new JButton("Start Game");
 			break;
 		}
 
@@ -151,7 +151,12 @@ public class MiniSplash extends JPanel implements ActionListener
 		else if(game == 2)
 		{
 			gameTitle = "Warehouse Keeper";
-			instructions += gameTitle;
+			instructions += gameTitle + "\n";
+			instructions += "Instructions: \n";
+			instructions += ";liUse the <left>, <right>, <up>, <down> keys to move the player\n";
+			instructions += ";liMove the boxes to the pink dots\n";
+			instructions += ";liYou may use the UNDO stack 10 times\n";
+			
 		}
 		else if(game == 3)
 		{
@@ -168,7 +173,7 @@ public class MiniSplash extends JPanel implements ActionListener
 			else if(numScreen == 2)
 			{
 
-				instructions = "Instructions:";
+				instructions = "Instructions:\n";
 				instructions += "\n \n ;liNavigate the grid by moving highlight square with arrow keys \n";
 				instructions += ";liFill in the grid with numbers with number keys \n";
 				instructions += ";liUse the <delete> key to clear cell entry,\n;li;indent you may also replace current cell\n;indent with another number key\n";
@@ -180,7 +185,11 @@ public class MiniSplash extends JPanel implements ActionListener
 		else if(game == 4)
 		{
 			gameTitle = "Tile Puzzle";
-			instructions += gameTitle;
+			instructions += gameTitle + "\n";
+			instructions += "Instructions: \n";
+			instructions += ";li Click the mouse to move the tile over\n";
+			instructions += ";li Arrange the puzzle into the correct order.";
+			
 		}
 		return instructions;
 	}
