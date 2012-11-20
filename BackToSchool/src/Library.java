@@ -83,6 +83,10 @@ public class Library extends JPanel {
 		this.add(scienceButton);
 		this.add(mathButton);
 	}
+	
+	public Player getBackPlayer(){
+		return student;
+	}
 
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("Back To School: Library");
