@@ -56,8 +56,10 @@ public class SudokuGame extends JPanel implements ActionListener{
 		sevenKey sevenKey = new sevenKey();
 		eightKey eightKey = new eightKey();
 		nineKey nineKey = new nineKey();
-
+		
+		delete delete = new delete();
 		enter enter = new enter();
+		
 		up up = new up();
 		down down = new down();
 		left left = new left();
@@ -77,7 +79,8 @@ public class SudokuGame extends JPanel implements ActionListener{
 		myInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_9, 0, false), "9");
 
 		myInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,0, false), "enter");
-
+		myInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE,0,false), "delete");
+		myInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE,0,false), "delete");
 		// Arrow Keys
 		myInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0, false), "up");
 		myInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0, false), "down");
@@ -102,6 +105,7 @@ public class SudokuGame extends JPanel implements ActionListener{
 
 		// Miscellaneous
 		myActionMap.put("enter", enter);
+		myActionMap.put("delete", delete);
 
 
 		gameSol = new SudokuSol(day);
@@ -228,6 +232,7 @@ public class SudokuGame extends JPanel implements ActionListener{
 						g.setColor(Color.RED);
 						g.drawString(String.valueOf(currentAnswer[row][col]), posx+dx, posy+dy);
 					}
+				
 					dx += 95;
 				}
 				dx = 0;
@@ -667,6 +672,14 @@ public class SudokuGame extends JPanel implements ActionListener{
 				//System.out.println(sq_y);
 			}
 
+		}
+	}
+	
+	private class delete extends AbstractAction{
+		public void actionPerformed(ActionEvent e)
+		{
+			currentAnswer[getIndex()[0]][getIndex()[1]] = 0;
+			repaint();
 		}
 	}
 	private class left extends AbstractAction{

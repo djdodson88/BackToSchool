@@ -24,7 +24,7 @@ public class MiniSplash extends JPanel implements ActionListener
 	private boolean nxtScreen, finished, kill;
 	private BufferedImage binderBg, bulletpoint;
 	private int game, numScreen;
-	private JButton button, previous;
+	private JButton button, previous, skipButton;
 
 	public MiniSplash(int type)
 	{
@@ -37,6 +37,8 @@ public class MiniSplash extends JPanel implements ActionListener
 		 */
 		game = type;
 
+		skipButton = new JButton("Skip");
+		
 		switch(game)
 		{
 		case 1:
@@ -60,8 +62,20 @@ public class MiniSplash extends JPanel implements ActionListener
 		setup();
 		this.setLayout(null);
 		this.add(button);
-		button.setBounds(200, 250, 100, 30);
+		
+		if(!button.getText().equals("Start Game"))
+		{
+			this.add(skipButton);
+			button.setBounds(150, 250, 100, 30);
+			skipButton.setBounds(250, 250, 100, 30);
+			skipButton.addActionListener(this);	
+		}
+		else
+		{
+			button.setBounds(200, 250, 100, 30);
+		}
 		button.addActionListener(this);
+		
 		this.setVisible(true);
 
 
@@ -202,7 +216,12 @@ public class MiniSplash extends JPanel implements ActionListener
 	public void actionPerformed(ActionEvent e) {
 		Object src = e.getSource();
 
-		if(src == button)
+		if(src == skipButton)
+		{
+			this.setVisible(false);
+			kill = true;
+		}
+		else if(src == button)
 		{
 			if(game == 1)
 			{
