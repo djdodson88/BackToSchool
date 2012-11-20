@@ -1,6 +1,8 @@
 import java.awt.Color;
 import java.awt.Dimension;
-
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -30,6 +32,8 @@ public class Transcript extends JPanel{
 		quantReasLabel.setBounds(100,300,50,50);
 		
 		
+		
+		
 		this.add(dayLabel);
 		this.add(creativityLabel);
 		this.add(sciRigorLabel);
@@ -40,13 +44,25 @@ public class Transcript extends JPanel{
 	}
 	
 	public static void main(String[] args) {
-		JFrame frame = new JFrame("Back To School: Battle Mode");
+		final JFrame frame = new JFrame("Back To School: Battle Mode");
 		Transcript transcript = new Transcript(new Player(), new Day(1));
 		frame.setSize(800,600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// frame.add(battle);
 		frame.setContentPane(transcript);
 		frame.pack();
+		
+		JButton exitButton = new JButton("Exit");
+		exitButton.setBounds(100,500,100,50);
+		exitButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e)
+			{
+				frame.dispose();
+			}
+			
+		});
+		
+		frame.add(exitButton);
 
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
