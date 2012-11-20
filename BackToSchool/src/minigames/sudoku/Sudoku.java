@@ -17,7 +17,7 @@ public class Sudoku extends JFrame{
 		JFrame frame = new JFrame("");
 		frame.setPreferredSize(new Dimension(550,450));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.add(new SudokuGame(5));
+		frame.add(new SudokuGame(7));
 		frame.setResizable(false);
 		frame.pack();
 		frame.setVisible(true);
