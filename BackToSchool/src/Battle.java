@@ -278,16 +278,20 @@ public class Battle extends JPanel {
 		{
 			if(specialAttack){
 				if(bossSubject=="Science")
-					bossHealth-=player.getCreativity()*10;
+					bossHealth-=player.getCreativity()*5;
 				else if(bossSubject=="Math")
-					bossHealth-=player.getQuantReasoning()*10;
+					bossHealth-=player.getQuantReasoning()*5;
 				else if(bossSubject=="Humanities")
-					bossHealth-=player.getSciRigor()*10;
+					bossHealth-=player.getSciRigor()*5;
 			}
 			else
-				bossHealth-=5;
+				bossHealth-=6;
 
-			bossHealthLabel.setText(bossHealth+"%");
+			if(bossHealth<0)
+				bossHealthLabel.setText("0%");
+			else
+				bossHealthLabel.setText(bossHealth+"%");
+			
 			timer.stop();
 			setDown=false;
 			backpackX=600;
@@ -295,6 +299,7 @@ public class Battle extends JPanel {
 			xSpeed=5;
 			attackPressed=false;
 			bossTurn=true;
+			
 			ActionListener updateTask = new ActionListener() {
 
 				public void actionPerformed(ActionEvent evt) {
@@ -302,8 +307,11 @@ public class Battle extends JPanel {
 					repaint();  // Refresh the JFrame, callback paintComponent()
 				}
 			};
-			bossTimer = new Timer(15, updateTask);
-			bossTimer.start();
+			
+			if(bossHealth>0){
+				bossTimer = new Timer(15, updateTask);
+				bossTimer.start();
+			}
 			
 			if(bossSubject.equals("Science")){
 				attackX=60;
@@ -339,15 +347,17 @@ public class Battle extends JPanel {
 		else if(optionB)
 			scribble.paintIcon(this,g,395,452);
 
-		if(bossTurn && bossSubject.equals("Science"))
-		{
-			attack.paintIcon(this,g,attackX,attackY);
-		}
-		if(bossTurn && bossSubject.equals("Humanities"))
-		{
-			humAttack1.paintIcon(this,g,attackX,attackY);
-			humAttack1.paintIcon(this,g,attackX+30,attackY+30);
-			humAttack1.paintIcon(this,g,attackX+60,attackY);
+		if(bossHealth>0){
+			if(bossTurn && bossSubject.equals("Science"))
+			{
+				attack.paintIcon(this,g,attackX,attackY);
+			}
+			if(bossTurn && bossSubject.equals("Humanities"))
+			{
+				humAttack1.paintIcon(this,g,attackX,attackY);
+				humAttack1.paintIcon(this,g,attackX+30,attackY+30);
+				humAttack1.paintIcon(this,g,attackX+60,attackY);
+			}
 		}
 	}
 

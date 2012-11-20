@@ -411,11 +411,11 @@ public class FinalBattle extends JPanel {
 			else
 			{
 				if(bossChosen.equals("Science"))
-					sciBossHealth-=5;
+					sciBossHealth-=11;
 				else if(bossChosen.equals("Math"))
-					mathBossHealth-=5;
+					mathBossHealth-=11;
 				else if(bossChosen.equals("Humanities"))
-					humBossHealth-=5;
+					humBossHealth-=11;
 			}
 
 
