@@ -103,14 +103,13 @@ public class PuzzlePanel extends JPanel
 		queue.add(ten);
 		queue.add(eleven);
 
-		indexI=3;
-		indexJ=3;
+		indexI=indexJ=2;
 		
 		if (day > 3)
 		{	queue.add(four);		
 			queue.add(eight);
 			queue.add(twelve);
-			indexI = 4;
+			indexI = 3;
 		}
 		if (day > 6)
 		{
@@ -118,11 +117,11 @@ public class PuzzlePanel extends JPanel
 			queue.add(fourteen);
 			queue.add(fifteen);
 			queue.add(sixteen);
-			indexJ=4;
+			indexJ=3;
 		}
 		
-		for (int i=0; i<indexI; i++)
-		{	for (int j=0; j<indexJ; j++)
+		for (int i=0; i<=indexI; i++)
+		{	for (int j=0; j<=indexJ; j++)
 			{
 				int skip = (int)((Math.random())*10);
 				for (int k=skip; k>0; k--)
@@ -140,8 +139,8 @@ public class PuzzlePanel extends JPanel
 		g.setColor(Color.LIGHT_GRAY);
 		g.fillRect(0, 0, PWIDTH, PHEIGHT);
 		
-		for (int i=0; i<indexI; i++)
-			for (int j=0; j<indexJ; j++)
+		for (int i=0; i<=indexI; i++)
+			for (int j=0; j<=indexJ; j++)
 				puzzle[i][j].paintIcon(this, g, (i*TILE)+xPad, (j*TILE)+yPad);
 		
 		if (finished)
