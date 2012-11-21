@@ -54,7 +54,7 @@ public class Classroom extends JPanel{
 		JPanel miniSplash = new MiniSplash(game);
 		JPanel minigame = new JPanel();
 
-		//game = 1; // Override random for testing
+		game = 4; // Override random for testing
 		
 		JFrame frame = new JFrame("Back to School: Classroom");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -95,7 +95,7 @@ public class Classroom extends JPanel{
 			break;
 		case 4:
 			//Tiles
-			minigame = new SudokuGame(1); //temporary until Tiles work
+			minigame = new PuzzlePanel(1); 
 			break;
 		}
 		
