@@ -12,7 +12,6 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
-
 public class FinalBattle extends JPanel {	
 	// global variables
 	JButton button1;
@@ -21,6 +20,8 @@ public class FinalBattle extends JPanel {
 	Graphics graphics;
 	ImageIcon splashWin;
 	ImageIcon splashLost;
+	BackToSchool frame;
+	JButton exit;
 
 	// Student variable
 	ImageIcon student;
@@ -136,6 +137,13 @@ public class FinalBattle extends JPanel {
 		optionBButton.setBackground(null);
 		optionBButton.setOpaque(false);
 		optionBButton.setBorder(null);
+		
+		exit = new JButton("Exit");
+		exit.addActionListener(new exitButtonListener());
+		exit.setBounds(300,100,100,50); 
+		exit.setVisible(false);
+		exit.setBackground(null);
+		exit.setOpaque(false);
 
 		setLayout(null);
 
@@ -231,9 +239,15 @@ public class FinalBattle extends JPanel {
 		this.add(quantReasoningLabel);
 		this.add(scientRigorLabel);
 		this.add(specializedAttackLabel);
+		this.add(exit);
 		this.add(defaultAttackLabel);
 
 		setVisible(true);
+	}
+	
+	protected void sendFrame(BackToSchool frame) 
+	{
+		this.frame = frame;
 	}
 
 	// paint the images and graphics
@@ -243,10 +257,13 @@ public class FinalBattle extends JPanel {
 		background.paintIcon(this,g,0,0);
 		student.paintIcon(this, g, studentX, studentY);
 		
-		if(mathBossHealth<=0&&humBossHealth<=0&&sciBossHealth<=0)
+		if(mathBossHealth<=0&&humBossHealth<=0&&sciBossHealth<=0){
 			splashWin.paintIcon(this, g, 0, 0);
+			exit.setVisible(true);
+		}
 		else if(playerHealth<=0){
 			splashLost.paintIcon(this,g,0,0);
+			exit.setVisible(true);
 		}
 
 		if(attackPressed)
@@ -606,6 +623,15 @@ public class FinalBattle extends JPanel {
 		}
 	}
 
+	// action listener for the exit Button
+		private class exitButtonListener implements ActionListener
+		{
+			public void actionPerformed(ActionEvent event)
+			{
+				frame.switchPanel(BackToSchool.Screen.CAMPUS);
+			}
+		}
+		
 	// action listener for the Attack Button
 	private class AttackButtonListener implements ActionListener
 	{
