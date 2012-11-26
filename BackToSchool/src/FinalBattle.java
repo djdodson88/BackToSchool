@@ -243,10 +243,11 @@ public class FinalBattle extends JPanel {
 		background.paintIcon(this,g,0,0);
 		student.paintIcon(this, g, studentX, studentY);
 		
-		if(mathBossHealth<=0&&humBossHealth<=0||sciBossHealth<=0)
+		if(mathBossHealth<=0&&humBossHealth<=0&&sciBossHealth<=0)
 			splashWin.paintIcon(this, g, 0, 0);
-		else if(playerHealth<=0)
+		else if(playerHealth<=0){
 			splashLost.paintIcon(this,g,0,0);
+		}
 
 		if(attackPressed)
 			backpack.paintIcon(this, g, backpackX,backpackY);
