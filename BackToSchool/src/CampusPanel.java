@@ -9,10 +9,9 @@ import java.io.IOException;
 public class CampusPanel extends JPanel 
 {
 	private int playerX, playerY, screenX, screenY;
-	private static int PWIDTH=800, PHEIGHT=600, TILE=50, TILESX=16, TILESY=12;
+	private static int PWIDTH=800, PHEIGHT=600, TILE=50, TILESX=16, TILESY=12, PADX=4, PADY=3;
 	private boolean animating;
 	private enum Direction{LEFT, UP, RIGHT, DOWN};
-	private Rectangle playerBounds;
 	private Image player;
 	private Image[][] tiles;
 	private Thread animate;
@@ -34,9 +33,8 @@ public class CampusPanel extends JPanel
 		try { 
 			player = ImageIO.read(new File("art/school/student.png"));
 		} catch(IOException e){};
-		playerX = playerY = 4;
+		playerX = playerY = 5;
 		screenX = screenY = 0;
-		playerBounds = new Rectangle(5,4,6,4);
 		
 		addKeyListener(new CampusListener());
 		setPreferredSize(new Dimension(PWIDTH,PHEIGHT));
@@ -47,6 +45,7 @@ public class CampusPanel extends JPanel
 		animating = true;
 		AnimateThread animate = new AnimateThread();
 		//animate.start();
+		
 	}
 	
 	private class AnimateThread extends Thread
@@ -158,38 +157,58 @@ public class CampusPanel extends JPanel
 	{	
 		//TODO: take user input to control player
 		public void keyPressed(KeyEvent e)
-		{
+		{	
 			if(e.getKeyCode() == KeyEvent.VK_UP)
 			{
-				if (playerBounds.contains(playerX, playerY-1))
-					playerY--;
-				else
-					updateTiles(Direction.UP);
-				repaint();
+				if (campus.isTraversable(screenX+playerX, screenY+playerY-1))
+				{	
+					int cHeight = campus.getHeight();
+					if ((playerY-1>PADY-1 && playerY-1<(TILESY-PADY)) || screenY == 0
+							|| ((screenY == cHeight-TILESY) && playerY-1>=(TILESY-PADY)) )
+						playerY--;
+					else
+						updateTiles(Direction.UP);
+					repaint();
+				}
 			}
 			else if(e.getKeyCode() == KeyEvent.VK_LEFT)
 			{	
-				if (playerBounds.contains(playerX-1,playerY))
-					playerX--;
-				else
-					updateTiles(Direction.LEFT);
-				repaint();
+				if (campus.isTraversable(screenX+playerX-1, screenY+playerY))
+				{	
+					int cWidth = campus.getWidth();
+					if ((playerX-1>PADX-1 && playerX-1<(TILESX-PADX)) || screenX == 0
+							|| ((screenX == cWidth-TILESX) && playerX-1>=(TILESX-PADX)) )
+						playerX--;
+					else
+						updateTiles(Direction.LEFT);
+					repaint();
+				}
 			}
 			else if(e.getKeyCode() == KeyEvent.VK_DOWN)
 			{	
-				if (playerBounds.contains(playerX,playerY+1))
-					playerY++;
-				else
-					updateTiles(Direction.DOWN);
-				repaint();
+				if (campus.isTraversable(screenX+playerX, screenY+playerY+1))
+				{	
+					int cHeight = campus.getHeight();
+					if ((playerY+1>PADY && playerY+1<(TILESY-PADY)) || screenY == (cHeight-TILESY)
+							|| ((screenY == 0) && playerY+1<=PADY) )
+						playerY++;
+					else
+						updateTiles(Direction.DOWN);
+					repaint();
+				}
 			}
 			else if(e.getKeyCode() == KeyEvent.VK_RIGHT)
 			{	
-				if (playerBounds.contains(playerX+1,playerY))
-					playerX++;
-				else
-					updateTiles(Direction.RIGHT);
-				repaint();
+				if (campus.isTraversable(screenX+playerX+1, screenY+playerY))
+				{	
+					int cWidth = campus.getWidth();
+					if ((playerX+1>PADX && playerX+1<(TILESX-PADX)) || screenX == (cWidth-TILESX)
+							|| ((screenX == 0) && playerX+1<=PADX) )
+						playerX++;
+					else
+						updateTiles(Direction.RIGHT);
+					repaint();
+				}
 			}
 		}
 	}

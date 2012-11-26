@@ -115,6 +115,10 @@ public class Campus
 	public boolean isTraversable(int xIndex, int yIndex)
 	{
 		//TODO: add any additional traversable types (add new types as needed)
+		if (xIndex<0 || xIndex >= WIDTH)
+			return false;
+		if (yIndex<0 || yIndex >= HEIGHT)
+			return false;
 		
 		switch (campus[xIndex][yIndex].getType()) 
 		{
