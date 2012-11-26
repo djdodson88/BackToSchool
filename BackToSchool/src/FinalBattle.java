@@ -19,6 +19,8 @@ public class FinalBattle extends JPanel {
 	boolean attackPressed;
 	ImageIcon background;
 	Graphics graphics;
+	ImageIcon splashWin;
+	ImageIcon splashLost;
 
 	// Student variable
 	ImageIcon student;
@@ -207,6 +209,9 @@ public class FinalBattle extends JPanel {
 
 		lastBossToGo="";
 		//--------------------End of Bosses Variables
+		
+		splashLost = new ImageIcon("art/battle/Lost.png");
+		splashWin = new ImageIcon("art/battle/Win.png");
 
 		// adding components to the jpanel
 		this.add(bossSpecialAttackLabel);
@@ -237,6 +242,11 @@ public class FinalBattle extends JPanel {
 		graphics=g;
 		background.paintIcon(this,g,0,0);
 		student.paintIcon(this, g, studentX, studentY);
+		
+		if(mathBossHealth<=0&&humBossHealth<=0||sciBossHealth<=0)
+			splashWin.paintIcon(this, g, 0, 0);
+		else if(playerHealth<=0)
+			splashLost.paintIcon(this,g,0,0);
 
 		if(attackPressed)
 			backpack.paintIcon(this, g, backpackX,backpackY);
@@ -383,6 +393,8 @@ public class FinalBattle extends JPanel {
 				lastBossToGo="Science";
 			}
 		}
+		
+		repaint();
 	}
 
 	public void movePlayer(){
@@ -500,6 +512,10 @@ public class FinalBattle extends JPanel {
 
 				bossTimer = new Timer(15, updateTask);
 				bossTimer.start();
+			}
+			else{
+				// display You Win!
+				repaint();
 			}
 		}
 	}
