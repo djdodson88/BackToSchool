@@ -147,7 +147,7 @@ public class BeerPong extends JPanel{
     
     ActionListener onEachFrame = new ActionListener() 
     {
-        @Override
+       
         public void actionPerformed(ActionEvent evt) 
         {
             if( gameState == GS_INIT)
@@ -262,12 +262,12 @@ public class BeerPong extends JPanel{
     
      private class MyKeyListener implements KeyListener {
 
-        @Override
+        
         public void keyTyped(KeyEvent e) {
             //throw new UnsupportedOperationException("Not supported yet.");
         }
 
-        @Override
+        
         public void keyPressed(KeyEvent e) {
             if( e.getKeyCode() == KeyEvent.VK_K )
             {
@@ -349,7 +349,7 @@ public class BeerPong extends JPanel{
             System.out.println(gameState);
         }
 
-        @Override
+        
         public void keyReleased(KeyEvent e) {
             //throw new UnsupportedOperationException("Not supported yet.");
         }
