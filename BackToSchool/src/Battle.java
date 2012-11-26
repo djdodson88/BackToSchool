@@ -1,8 +1,7 @@
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.GridLayout;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -13,15 +12,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
-import javax.swing.border.EmptyBorder;
 
 public class Battle extends JPanel {
 	// global variables
 	JButton button1;
 	boolean attackPressed;
 	ImageIcon background;
-
-	Graphics graphics;
+	BackToSchool frame;
 
 	// Student variables
 	ImageIcon student;
@@ -72,7 +69,7 @@ public class Battle extends JPanel {
 	JLabel bossName;
 	//JLabel bossStory;
 	boolean bossTurn;
-
+		
 	public Battle(Player player, String classSubject){
 		this.setPreferredSize(new Dimension(800, 600));// setting the size
 		this.setBackground(Color.white);// color of background
@@ -217,7 +214,12 @@ public class Battle extends JPanel {
 		setVisible(true);
 	}		
 
-	public void moveBoss(){
+	protected void sendFrame(BackToSchool frame) 
+	{
+		this.frame = frame;
+	}
+
+	private void moveBoss(){
 		if(bossHealth>0){
 			// -------------------Science boss atack-----------------------//
 			if(bossSubject.equals("Science"))
@@ -265,11 +267,21 @@ public class Battle extends JPanel {
 					bossTurn=false;
 				}
 			}
+			
+			if (playerHealth <= 0)
+			{
+				// BATTLE END (Loss)
+				System.out.println("You were vanquished by the "+ this.bossSubject + " midterm...");
+				//cardLayout.show(cardPanel, "CAMPUS");
+				frame.switchPanel(BackToSchool.Screen.CAMPUS);
+			}
+			
+			
 		}
 		//-------------------- end of Science boss attack-----------------//
 	}
 
-	public void movePlayer(){
+	private void movePlayer(){
 		backpackX -= xSpeed;
 		backpackY -= 1;
 
@@ -308,11 +320,6 @@ public class Battle extends JPanel {
 				}
 			};
 			
-			if(bossHealth>0){
-				bossTimer = new Timer(15, updateTask);
-				bossTimer.start();
-			}
-			
 			if(bossSubject.equals("Science")){
 				attackX=60;
 				attackY=240;
@@ -321,10 +328,22 @@ public class Battle extends JPanel {
 				attackX=600;
 				attackY=0;
 			}
+			
+			if(bossHealth>0){
+				bossTimer = new Timer(15, updateTask);
+				bossTimer.start();
+			}
+			else
+			{
+				// BATTLE END (victor)
+				System.out.println("You dominated the "+ this.bossSubject + " midterm!");
+				//cardLayout.show(cardPanel, "CAMPUS");
+				frame.switchPanel(BackToSchool.Screen.CAMPUS);
+			}
 		}	
 	}
 
-	public void update() {
+	private void update() {
 		if(bossTurn)
 			moveBoss();
 		else
@@ -334,7 +353,6 @@ public class Battle extends JPanel {
 	// paint the images and graphics
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		graphics=g;
 		background.paintIcon(this,g,0,0);
 		student.paintIcon(this, g, studentX, studentY);
 		boss.paintIcon(this, g, bossX, bossY);

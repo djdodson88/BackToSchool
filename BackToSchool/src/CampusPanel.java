@@ -22,6 +22,7 @@ public class CampusPanel extends JPanel
 	private Point destination;
 	private CardLayout cardLayout;
 	private JPanel cardPanel;
+	private BackToSchool frame;
 	
 	public CampusPanel()
 	{
@@ -47,10 +48,10 @@ public class CampusPanel extends JPanel
 		setPreferredSize(new Dimension(PWIDTH,PHEIGHT));
 		setBackground(Color.RED);
 		setFocusable(true);
-		requestFocus();
+		//requestFocus();
 		
-		animating = true;
-		AnimateThread animate = new AnimateThread();
+		//animating = true;
+		//AnimateThread animate = new AnimateThread();
 		//animate.start();
 		
 		ArrayList<Point> doors = campus.getDoors();
@@ -73,31 +74,14 @@ public class CampusPanel extends JPanel
 		cardLayout = layout;
 	}
 	
-	public static void main(String[] args)
+	protected void sendFrame(BackToSchool frame)
 	{
-		CardLayout layout = new CardLayout();
-		JPanel cardPanel = new JPanel(layout);
-		
-		// campus panel
-		CampusPanel campus = new CampusPanel();
-		campus.grantCardLayout(cardPanel, layout);
-		cardPanel.add(campus , "CAMPUS");
-		
-		// battle
-		Player player = new Player();
-		cardPanel.add(new Battle(player, "Humanities"), "BATTLE");
-		
-		// classroom
-		cardPanel.add(new Classroom(), "CLASS");
-		
-		layout.show(cardPanel, "CAMPUS");
-		
-		// Frame setup
-		JFrame frame = new JFrame("Back to School");
-		frame.setContentPane(cardPanel);
-		frame.pack();
-		frame.setVisible(true);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.frame = frame;
+	}
+	
+	public void continueDay() 
+	{
+		// TODO Auto-generated method stub	
 	}
 	
 	private class AnimateThread extends Thread
@@ -192,7 +176,6 @@ public class CampusPanel extends JPanel
 	
 	public void paintComponent(Graphics g)
 	{
-		//TODO: more elaborate rendering
 		g.setColor(Color.LIGHT_GRAY);
 		for (int i=0; i<TILESX; i++)
 			for (int j=0; j<TILESY; j++)
@@ -212,7 +195,6 @@ public class CampusPanel extends JPanel
 	
 	public class CampusListener extends KeyAdapter
 	{	
-		//TODO: take user input to control player
 		public void keyPressed(KeyEvent e)
 		{	
 			if(e.getKeyCode() == KeyEvent.VK_UP)
@@ -220,7 +202,8 @@ public class CampusPanel extends JPanel
 				if ((screenX+playerX==destination.x) && (screenY+playerY-1==destination.y))
 				{	// destination door reached
 					System.out.println("FOUND CLASS");
-					cardLayout.show(cardPanel, "BATTLE");
+					//cardLayout.show(cardPanel, "BATTLE");
+					frame.switchPanel(BackToSchool.Screen.BATTLE);
 				}
 				
 				if (campus.isTraversable(screenX+playerX, screenY+playerY-1))
@@ -301,4 +284,5 @@ public class CampusPanel extends JPanel
 			
 		}
 	}
+
 }
