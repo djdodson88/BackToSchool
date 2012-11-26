@@ -19,6 +19,10 @@ public class Battle extends JPanel {
 	boolean attackPressed;
 	ImageIcon background;
 	BackToSchool frame;
+	ImageIcon lostScreen;
+	ImageIcon winScreen;
+	JButton exit;
+	boolean gameOver=false;
 
 	// Student variables
 	ImageIcon student;
@@ -69,7 +73,8 @@ public class Battle extends JPanel {
 	JLabel bossName;
 	//JLabel bossStory;
 	boolean bossTurn;
-		
+	Graphics graphics;
+
 	public Battle(Player player, String classSubject){
 		this.setPreferredSize(new Dimension(800, 600));// setting the size
 		this.setBackground(Color.white);// color of background
@@ -86,6 +91,14 @@ public class Battle extends JPanel {
 		button1 = new JButton("Attack");
 		button1.addActionListener(new AttackButtonListener());
 		button1.setBounds(400,510,100,30);
+		
+		exit = new JButton("Exit");
+		exit.addActionListener(new exitButtonListener());
+		exit.setBounds(300,100,100,50); 
+		exit.setVisible(false);
+		exit.setBackground(null);
+		exit.setOpaque(false);
+		//exit.setBorder(null);
 
 		//adding option A button
 		optionAButton = new JButton();
@@ -95,7 +108,7 @@ public class Battle extends JPanel {
 		optionAButton.setBackground(null);
 		optionAButton.setOpaque(false);
 		optionAButton.setBorder(null);
-
+		
 		// adding option B button
 		optionBButton = new JButton();
 		optionBButton.addActionListener(new BButtonListener());
@@ -193,6 +206,8 @@ public class Battle extends JPanel {
 
 		//--------------------- End of Boss Variables-----------------------------//
 
+		lostScreen = new ImageIcon("art/battle/Lost.png");
+		winScreen = new ImageIcon("art/battle/Win.png");
 		// adding components to the jpanel
 		//
 		this.add(bossName);
@@ -210,6 +225,8 @@ public class Battle extends JPanel {
 		this.add(scientRigorLabel);
 		this.add(specializedAttackLabel);
 		this.add(defaultAttackLabel);
+		
+		this.add(exit);
 
 		setVisible(true);
 	}		
@@ -257,26 +274,31 @@ public class Battle extends JPanel {
 			else if(bossSubject.equals("Humanities"))
 			{
 				attackY += xSpeed;
-				
+
 				if(attackY>200)
 				{
 					playerHealth-=(11-player.getCreativity());
+					//playerHealth-=100;
 					playerHealthLabel.setText(playerHealth+"%");
 					bossTimer.stop();
 					xSpeed=5;
 					bossTurn=false;
 				}
 			}
-			
+
 			if (playerHealth <= 0)
 			{
 				// BATTLE END (Loss)
+				//lostScreen.paintIcon(this, graphics, 0, 0);
 				System.out.println("You were vanquished by the "+ this.bossSubject + " midterm...");
+				repaint();
 				//cardLayout.show(cardPanel, "CAMPUS");
-				frame.switchPanel(BackToSchool.Screen.CAMPUS);
+				
+				
+				//frame.switchPanel(BackToSchool.Screen.CAMPUS);
 			}
-			
-			
+
+
 		}
 		//-------------------- end of Science boss attack-----------------//
 	}
@@ -303,7 +325,7 @@ public class Battle extends JPanel {
 				bossHealthLabel.setText("0%");
 			else
 				bossHealthLabel.setText(bossHealth+"%");
-			
+
 			timer.stop();
 			setDown=false;
 			backpackX=600;
@@ -311,7 +333,7 @@ public class Battle extends JPanel {
 			xSpeed=5;
 			attackPressed=false;
 			bossTurn=true;
-			
+
 			ActionListener updateTask = new ActionListener() {
 
 				public void actionPerformed(ActionEvent evt) {
@@ -319,7 +341,7 @@ public class Battle extends JPanel {
 					repaint();  // Refresh the JFrame, callback paintComponent()
 				}
 			};
-			
+
 			if(bossSubject.equals("Science")){
 				attackX=60;
 				attackY=240;
@@ -328,7 +350,7 @@ public class Battle extends JPanel {
 				attackX=600;
 				attackY=0;
 			}
-			
+
 			if(bossHealth>0){
 				bossTimer = new Timer(15, updateTask);
 				bossTimer.start();
@@ -336,9 +358,14 @@ public class Battle extends JPanel {
 			else
 			{
 				// BATTLE END (victor)
+				//lostScreen.paintIcon(this, graphics, 0, 0);
 				System.out.println("You dominated the "+ this.bossSubject + " midterm!");
+
+				repaint();
+				
+
 				//cardLayout.show(cardPanel, "CAMPUS");
-				frame.switchPanel(BackToSchool.Screen.CAMPUS);
+				//frame.switchPanel(BackToSchool.Screen.CAMPUS);
 			}
 		}	
 	}
@@ -353,6 +380,7 @@ public class Battle extends JPanel {
 	// paint the images and graphics
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		graphics=g;
 		background.paintIcon(this,g,0,0);
 		student.paintIcon(this, g, studentX, studentY);
 		boss.paintIcon(this, g, bossX, bossY);
@@ -376,6 +404,18 @@ public class Battle extends JPanel {
 				humAttack1.paintIcon(this,g,attackX+30,attackY+30);
 				humAttack1.paintIcon(this,g,attackX+60,attackY);
 			}
+		}
+		
+		if(playerHealth<=0){
+			lostScreen.paintIcon(this, g, 0, 0);
+			exit.setVisible(true);
+		
+		}
+		else if(bossHealth<=0)
+		{
+			winScreen.paintIcon(this, g, 0, 0);
+			exit.setVisible(true);
+			
 		}
 	}
 
@@ -430,6 +470,15 @@ public class Battle extends JPanel {
 			}
 		}
 	}
+	
+	// action listener for the exit Button
+		private class exitButtonListener implements ActionListener
+		{
+			public void actionPerformed(ActionEvent event)
+			{
+				frame.switchPanel(BackToSchool.Screen.CAMPUS);
+			}
+		}
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("Back To School: Battle Mode");
 		Battle battle = new Battle(new Player(),"Humanities");
