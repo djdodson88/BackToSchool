@@ -289,7 +289,7 @@ public class Battle extends JPanel {
 			if (playerHealth <= 0)
 			{
 				// BATTLE END (Loss)
-				//lostScreen.paintIcon(this, graphics, 0, 0);
+
 				System.out.println("You were vanquished by the "+ this.bossSubject + " midterm...");
 				repaint();
 				//cardLayout.show(cardPanel, "CAMPUS");
@@ -312,11 +312,11 @@ public class Battle extends JPanel {
 		{
 			if(specialAttack){
 				if(bossSubject=="Science")
-					bossHealth-=player.getCreativity()*5;
+					bossHealth-=player.getSciRigor()*5;
 				else if(bossSubject=="Math")
 					bossHealth-=player.getQuantReasoning()*5;
 				else if(bossSubject=="Humanities")
-					bossHealth-=player.getSciRigor()*5;
+					bossHealth-=player.getCreativity()*5;
 			}
 			else
 				bossHealth-=6;
@@ -414,8 +414,7 @@ public class Battle extends JPanel {
 		else if(bossHealth<=0)
 		{
 			winScreen.paintIcon(this, g, 0, 0);
-			exit.setVisible(true);
-			
+			exit.setVisible(true);	
 		}
 	}
 
@@ -488,11 +487,11 @@ public class Battle extends JPanel {
 		frame.setContentPane(battle);
 		frame.pack();
 
-		SwingUtilities.invokeLater(new Runnable() {
+		/*SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				new Battle(new Player(),"Humanities"); // Let the constructor do the job
 			}
-		});
+		});*/
 		frame.setVisible(true);
 	}
 

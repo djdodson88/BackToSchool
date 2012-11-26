@@ -47,8 +47,6 @@ public class BackToSchool extends JFrame
 				finalBattle = (FinalBattle)panel;
 				//finalBattle.sendFrame(this);
 				break;
-			default:
-				break;
 		}	
 	}
 	
@@ -59,7 +57,7 @@ public class BackToSchool extends JFrame
 		switch (screen)
 		{	case CAMPUS:
 				campus.requestFocus();
-				campus.continueDay();
+				campus.continueClasses();
 				break;
 			case CLASS:
 				classroom.requestFocus();
@@ -70,8 +68,6 @@ public class BackToSchool extends JFrame
 			case FINALBATTLE:
 				finalBattle.requestFocus();
 				break;
-			default:
-				break;
 		}		
 	}
 	
@@ -80,16 +76,11 @@ public class BackToSchool extends JFrame
 		CardLayout layout = new CardLayout();
 		JPanel cards = new JPanel(layout);
 		BackToSchool frame = new BackToSchool(layout, cards);
-	
-		//campus 
+		
 		frame.addPanel(new CampusPanel(), Screen.CAMPUS);
-		
-		//battle
-		Player student = new Player();
-		frame.addPanel(new Battle(student, "Humanities"), Screen.BATTLE);
-		
-		frame.switchPanel(Screen.CAMPUS);
 		frame.setContentPane(cards);
+		frame.switchPanel(Screen.CAMPUS);
+		
 		frame.pack();
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

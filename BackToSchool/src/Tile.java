@@ -6,6 +6,12 @@ public class Tile
 	private Type type;
 	private Direction dir;
 	
+	public Tile(Type type)
+	{
+		this.type = type;
+		this.dir = Direction.UP;
+	}
+	
 	public Tile(Type type, Direction dir)
 	{
 		this.type = type;

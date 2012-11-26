@@ -61,16 +61,16 @@ public class Tiles
 				{
 					switch (t.getDirection())
 					{
-						case LEFT:
-						{	tile = ImageIO.read(new File("art/school/humanities.jpg"));
-							break;
-						}
-						case UP: 
+						case LEFT: 
 						{	tile = ImageIO.read(new File("art/school/math_sign.jpg"));
 							break;
 						}
-						default:
+						case RIGHT:
 						{	tile = ImageIO.read(new File("art/school/science_sign.jpg"));
+							break;
+						}
+						default:
+						{	tile = ImageIO.read(new File("art/school/humanities.jpg"));
 							break;
 						}
 					}		
@@ -84,7 +84,9 @@ public class Tiles
 			}
 		} 
 		catch (IOException e)
-		{	/*TODO: any exceptiopn handling*/ } 
+		{	//TODO: any exception handling 
+			
+		}
 		
 		//TODO: any image manipulation
 		if (rotate)

@@ -23,6 +23,7 @@ public class CampusPanel extends JPanel
 	private CardLayout cardLayout;
 	private JPanel cardPanel;
 	private BackToSchool frame;
+	private Day day;
 	
 	public CampusPanel()
 	{
@@ -30,48 +31,24 @@ public class CampusPanel extends JPanel
 		
 		campus = new Campus();
 		tiles = new Image[TILESX][TILESY];
-		for (int i=0; i<TILESX; i++)
-			for (int j=0; j<TILESY; j++)
-			{	Tile tile = campus.getTile(screenX+i, screenY+j);
-				if (tile != null)
-					tiles[i][j] = Tiles.get(tile);
-			}
 			
 		try { 
 			player = ImageIO.read(new File("art/school/student.png"));
 		} catch(IOException e){};
-		playerX = playerY = 5;
-		screenX = screenY = 0;
+		
 		student = new Player();
+		day = new Day(1);
+		continueClasses();
 		
 		addKeyListener(new CampusListener());
 		setPreferredSize(new Dimension(PWIDTH,PHEIGHT));
 		setBackground(Color.RED);
 		setFocusable(true);
-		//requestFocus();
+		requestFocus();
 		
 		//animating = true;
 		//AnimateThread animate = new AnimateThread();
 		//animate.start();
-		
-		ArrayList<Point> doors = campus.getDoors();
-		destination = doors.get((int)(Math.random()*doors.size()));
-		
-		
-		//cardLayout = new CardLayout();
-		//cardPanel = new JPanel(cardLayout);
-		
-		//cardPanel.add(this, "CAMPUS");
-		//cardPanel.add(new Battle(student, "Humanities"), "BATTLE");
-		//add(cardPanel);
-		//cardLayout.show(cardPanel, "CAMPUS");
-		//this.getParent();
-	}
-	
-	public void grantCardLayout(JPanel cardP, CardLayout layout)
-	{
-		cardPanel = cardP;
-		cardLayout = layout;
 	}
 	
 	protected void sendFrame(BackToSchool frame)
@@ -79,9 +56,35 @@ public class CampusPanel extends JPanel
 		this.frame = frame;
 	}
 	
-	public void continueDay() 
+	public void continueClasses() 
 	{
-		// TODO Auto-generated method stub	
+		if (day.getNextClass() == 1)
+		{
+			playerX = playerY = 5;
+			screenX = screenY = 0;
+			destination = null;
+			
+			for (int i=0; i<TILESX; i++)
+				for (int j=0; j<TILESY; j++)
+				{	Tile tile = campus.getTile(screenX+i, screenY+j);
+					if (tile != null)
+						tiles[i][j] = Tiles.get(tile);
+				}
+		}
+		
+		ArrayList<Point> doors = campus.getDoors(true);
+		if (destination != null)
+			doors.remove(destination);	// remove last used door (no two classes in same place in a row)
+		
+		destination = doors.get((int)(Math.random()*doors.size()));
+		campus.addSign(destination, day.getNextClassName());
+		
+		// Update any sign tiles currently onscreen
+		Rectangle window = new Rectangle(screenX, screenY+1, TILESX, TILESY);
+		for (Point p : doors)
+			if (window.contains(p)) 
+				tiles[p.x-screenX][p.y-1-screenY] = Tiles.get(campus.getTile(p.x, p.y-1));
+				
 	}
 	
 	private class AnimateThread extends Thread
@@ -188,7 +191,9 @@ public class CampusPanel extends JPanel
 		g.drawImage(player, playerX*TILE, playerY*TILE, TILE, TILE, this); //player.paintIcon(this, g, playerX, playerY);
 		
 		g.setColor(Color.RED);
-		g.drawString("Destination: "+destination.x+","+destination.y, 15, 15);
+		g.drawString("Day: "+day.getDay(), 50, 15);
+		g.drawString("Class: "+day.getNextClassName(), 100, 15);
+		g.drawString("Destination: "+destination.x+","+destination.y, 14*50, 15);
 		
 		//TODO: draw arrow to class
 	}
@@ -202,8 +207,20 @@ public class CampusPanel extends JPanel
 				if ((screenX+playerX==destination.x) && (screenY+playerY-1==destination.y))
 				{	// destination door reached
 					System.out.println("FOUND CLASS");
-					//cardLayout.show(cardPanel, "BATTLE");
-					frame.switchPanel(BackToSchool.Screen.BATTLE);
+					
+					if (day.isMidtermNext())
+					{	System.out.println("MIDTERM");
+						frame.addPanel(new Battle(student, day.getNextClassName()), BackToSchool.Screen.BATTLE);
+						frame.switchPanel(BackToSchool.Screen.BATTLE);
+					}
+					else
+					{	System.out.println("CLASS");
+						//frame.addPanel(new Classroom(), BackToSchool.Screen.CLASS);
+						//frame.switchPanel(BackToSchool.Screen.CLASS);;
+						frame.addPanel(new Battle(student, day.getNextClassName()), BackToSchool.Screen.BATTLE);
+						frame.switchPanel(BackToSchool.Screen.BATTLE);
+					}
+					day.attendClass();
 				}
 				
 				if (campus.isTraversable(screenX+playerX, screenY+playerY-1))
@@ -266,8 +283,8 @@ public class CampusPanel extends JPanel
 			}
 			
 			// debug statements
-			System.out.println("Player: "+playerX+","+playerY);
-			System.out.println("Screen: "+screenX+","+screenY);
+			//System.out.println("Player: "+playerX+","+playerY);
+			//System.out.println("Screen: "+screenX+","+screenY);
 			
 		}
 	}
