@@ -1,9 +1,11 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 
 public class CampusPanel extends JPanel 
@@ -16,6 +18,10 @@ public class CampusPanel extends JPanel
 	private Image[][] tiles;
 	private Thread animate;
 	private Campus campus;
+	private Player student;
+	private Point destination;
+	private CardLayout cardLayout;
+	private JPanel cardPanel;
 	
 	public CampusPanel()
 	{
@@ -35,6 +41,7 @@ public class CampusPanel extends JPanel
 		} catch(IOException e){};
 		playerX = playerY = 5;
 		screenX = screenY = 0;
+		student = new Player();
 		
 		addKeyListener(new CampusListener());
 		setPreferredSize(new Dimension(PWIDTH,PHEIGHT));
@@ -46,6 +53,51 @@ public class CampusPanel extends JPanel
 		AnimateThread animate = new AnimateThread();
 		//animate.start();
 		
+		ArrayList<Point> doors = campus.getDoors();
+		destination = doors.get((int)(Math.random()*doors.size()));
+		
+		
+		//cardLayout = new CardLayout();
+		//cardPanel = new JPanel(cardLayout);
+		
+		//cardPanel.add(this, "CAMPUS");
+		//cardPanel.add(new Battle(student, "Humanities"), "BATTLE");
+		//add(cardPanel);
+		//cardLayout.show(cardPanel, "CAMPUS");
+		//this.getParent();
+	}
+	
+	public void grantCardLayout(JPanel cardP, CardLayout layout)
+	{
+		cardPanel = cardP;
+		cardLayout = layout;
+	}
+	
+	public static void main(String[] args)
+	{
+		CardLayout layout = new CardLayout();
+		JPanel cardPanel = new JPanel(layout);
+		
+		// campus panel
+		CampusPanel campus = new CampusPanel();
+		campus.grantCardLayout(cardPanel, layout);
+		cardPanel.add(campus , "CAMPUS");
+		
+		// battle
+		Player player = new Player();
+		cardPanel.add(new Battle(player, "Humanities"), "BATTLE");
+		
+		// classroom
+		cardPanel.add(new Classroom(), "CLASS");
+		
+		layout.show(cardPanel, "CAMPUS");
+		
+		// Frame setup
+		JFrame frame = new JFrame("Back to School");
+		frame.setContentPane(cardPanel);
+		frame.pack();
+		frame.setVisible(true);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
 	private class AnimateThread extends Thread
@@ -151,6 +203,11 @@ public class CampusPanel extends JPanel
 			}
 				
 		g.drawImage(player, playerX*TILE, playerY*TILE, TILE, TILE, this); //player.paintIcon(this, g, playerX, playerY);
+		
+		g.setColor(Color.RED);
+		g.drawString("Destination: "+destination.x+","+destination.y, 15, 15);
+		
+		//TODO: draw arrow to class
 	}
 	
 	public class CampusListener extends KeyAdapter
@@ -160,6 +217,12 @@ public class CampusPanel extends JPanel
 		{	
 			if(e.getKeyCode() == KeyEvent.VK_UP)
 			{
+				if ((screenX+playerX==destination.x) && (screenY+playerY-1==destination.y))
+				{	// destination door reached
+					System.out.println("FOUND CLASS");
+					cardLayout.show(cardPanel, "BATTLE");
+				}
+				
 				if (campus.isTraversable(screenX+playerX, screenY+playerY-1))
 				{	
 					int cHeight = campus.getHeight();
@@ -210,6 +273,19 @@ public class CampusPanel extends JPanel
 					repaint();
 				}
 			}
+			else if(e.getKeyCode() == KeyEvent.VK_B)
+			{
+				
+			}
+			else if(e.getKeyCode() == KeyEvent.VK_C)
+			{
+				
+			}
+			
+			// debug statements
+			System.out.println("Player: "+playerX+","+playerY);
+			System.out.println("Screen: "+screenX+","+screenY);
+			
 		}
 	}
 	
