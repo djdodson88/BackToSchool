@@ -1,8 +1,10 @@
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -22,6 +24,7 @@ public class FinalBattle extends JPanel {
 	ImageIcon splashLost;
 	BackToSchool frame;
 	JButton exit;
+	Random r;
 
 	// Student variable
 	ImageIcon student;
@@ -106,6 +109,7 @@ public class FinalBattle extends JPanel {
 		humBossTurn=false;
 		sciBossTurn=false;
 		mathBossTurn=false;
+		r = new Random();
 
 		//adding the attack button
 		button1 = new JButton("Attack");
@@ -157,6 +161,7 @@ public class FinalBattle extends JPanel {
 
 		// initializing variables
 		playerHealthLabel = new JLabel(playerHealth+"%");
+		playerHealthLabel.setFont(new Font("Serif", Font.PLAIN, 20));
 		creativityLabel = new JLabel("Creativity: "+player.getCreativity());
 		quantReasoningLabel = new JLabel("Quantative Reasoning: "+player.getQuantReasoning());
 		scientRigorLabel = new JLabel("Scientific Rigor: "+player.getSciRigor());
@@ -209,7 +214,8 @@ public class FinalBattle extends JPanel {
 		bossNameLabel = new JLabel("a boss");
 		bossSpecialAttackLabel = new JLabel("");
 		bossSpecialDefenseLabel = new JLabel("");
-		bossHealthLabel.setBounds(100,340,100,100);
+		bossHealthLabel.setBounds(140,340,100,100);
+		bossHealthLabel.setFont(new Font("Serif", Font.PLAIN, 20));
 		bossNameLabel.setBounds(100,420,200,30);
 		bossTypeLabel.setBounds(100,460,100,30);
 		bossSpecialAttackLabel.setBounds(100,500,200,30);
@@ -331,7 +337,7 @@ public class FinalBattle extends JPanel {
 			// if student touches the boss , tell him to go the other direction
 			if (mathBossX > 500) 
 			{
-				playerHealth-=(15-player.getQuantReasoning());
+				playerHealth-=(21-(player.getQuantReasoning()-r.nextInt(5)));
 
 				if(playerHealth<0)
 					playerHealthLabel.setText("0%");
@@ -365,7 +371,8 @@ public class FinalBattle extends JPanel {
 
 			if(attackY>200)
 			{
-				playerHealth-=(15-player.getCreativity());
+				playerHealth-=(21-(player.getCreativity()-r.nextInt(5)));
+				
 				if(playerHealth<0)
 					playerHealthLabel.setText("0%");
 				else
@@ -391,7 +398,7 @@ public class FinalBattle extends JPanel {
 
 			if(attackX>800)
 			{
-				playerHealth-=(15-player.getSciRigor());
+				playerHealth-=(21-(player.getSciRigor()-r.nextInt(5)));
 				if(playerHealth<0)
 					playerHealthLabel.setText("0%");
 				else
@@ -432,11 +439,11 @@ public class FinalBattle extends JPanel {
 			if(specialAttack)
 			{
 				if(bossChosen.equals("Science"))
-					sciBossHealth-=player.getCreativity()*15;
+					sciBossHealth-=((player.getSciRigor()*15)+r.nextInt(5));
 				else if(bossChosen.equals("Math"))
-					mathBossHealth-=player.getQuantReasoning()*15;
+					mathBossHealth-=((player.getQuantReasoning()*15)+r.nextInt(5));
 				else if(bossChosen.equals("Humanities"))
-					humBossHealth-=player.getSciRigor()*15;
+					humBossHealth-=	((player.getCreativity()*15)+r.nextInt(5));
 			}
 			else
 			{

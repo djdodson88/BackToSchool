@@ -1,9 +1,11 @@
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -23,6 +25,7 @@ public class Battle extends JPanel {
 	ImageIcon winScreen;
 	JButton exit;
 	boolean gameOver=false;
+	Random r;
 
 	// Student variables
 	ImageIcon student;
@@ -79,6 +82,7 @@ public class Battle extends JPanel {
 		this.setPreferredSize(new Dimension(800, 600));// setting the size
 		this.setBackground(Color.white);// color of background
 
+		r = new Random();
 		bossSubject=classSubject;
 		this.player = player;
 		playerHealth=100;
@@ -148,6 +152,7 @@ public class Battle extends JPanel {
 
 		//setting location of statistics
 		playerHealthLabel.setBounds(670,340,100,100);
+		playerHealthLabel.setFont(new Font("Serif", Font.PLAIN, 20));
 		creativityLabel.setBounds(620,380,150,100);
 		quantReasoningLabel.setBounds(620,420,150,100);
 		scientRigorLabel.setBounds(620,460,150,100);
@@ -160,7 +165,8 @@ public class Battle extends JPanel {
 		bossY=0;// y coordinate for boss
 
 		bossHealthLabel = new JLabel(bossHealth+"%");
-
+		bossHealthLabel.setFont(new Font("Serif", Font.PLAIN, 20));
+		
 		if(bossSubject.equals("Humanities")){
 			attackY=0;
 			attackX=600;
@@ -197,7 +203,7 @@ public class Battle extends JPanel {
 		}
 
 		//setting location of statistics
-		bossHealthLabel.setBounds(100,340,100,100);
+		bossHealthLabel.setBounds(140,340,100,100);
 		bossName.setBounds(100,420,200,30);
 		bossType.setBounds(100,460,100,30);
 		bossSpecialAttackLabel.setBounds(100,500,200,30);
@@ -245,7 +251,7 @@ public class Battle extends JPanel {
 
 				if(attackX>700)
 				{
-					playerHealth-=(21-player.getSciRigor());
+					playerHealth-=(21-(player.getSciRigor()-r.nextInt(5)));
 
 					playerHealthLabel.setText(playerHealth+"%");// inflict damage on players health
 					bossTimer.stop();
@@ -258,7 +264,7 @@ public class Battle extends JPanel {
 				// if student touches the boss , tell him to go the other direction
 				if (bossX > 500) 
 				{
-					playerHealth-=(21-player.getQuantReasoning());
+					playerHealth-=(21-(player.getQuantReasoning()-r.nextInt(5)));
 					playerHealthLabel.setText(playerHealth+"%");
 					xSpeed = -xSpeed;
 				}
@@ -277,7 +283,7 @@ public class Battle extends JPanel {
 
 				if(attackY>200)
 				{
-					playerHealth-=(21-player.getCreativity());
+					playerHealth-=(21-(player.getCreativity()-r.nextInt(5)));
 					//playerHealth-=100;
 					playerHealthLabel.setText(playerHealth+"%");
 					bossTimer.stop();
@@ -289,7 +295,7 @@ public class Battle extends JPanel {
 			if (playerHealth <= 0)
 			{
 				// BATTLE END (Loss)
-
+				playerHealthLabel.setText("0%");
 				System.out.println("You were vanquished by the "+ this.bossSubject + " midterm...");
 				repaint();
 				//cardLayout.show(cardPanel, "CAMPUS");
@@ -312,14 +318,14 @@ public class Battle extends JPanel {
 		{
 			if(specialAttack){
 				if(bossSubject=="Science")
-					bossHealth-=player.getSciRigor()*15;
+					bossHealth-=((player.getSciRigor()*15)+r.nextInt(5));
 				else if(bossSubject=="Math")
-					bossHealth-=player.getQuantReasoning()*15;
+					bossHealth-=((player.getQuantReasoning()*15)+r.nextInt(5));
 				else if(bossSubject=="Humanities")
-					bossHealth-=player.getCreativity()*15;
+					bossHealth-=((player.getCreativity()*15)+r.nextInt(5));
 			}
 			else
-				bossHealth-=18;
+				bossHealth-=18;// contains no luck
 
 			if(bossHealth<0)
 				bossHealthLabel.setText("0%");
