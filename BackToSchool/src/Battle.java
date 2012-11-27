@@ -415,11 +415,40 @@ public class Battle extends JPanel {
 		if(playerHealth<=0){
 			lostScreen.paintIcon(this, g, 0, 0);
 			exit.setVisible(true);
+			optionAButton.setVisible(false);
+			optionBButton.setVisible(false);
+			bossHealthLabel.setVisible(false);
+			bossName.setVisible(false);
+			bossType.setVisible(false);
+			bossSpecialAttackLabel.setVisible(false);
+			bossSpecialDefenseLabel.setVisible(false);
+			button1.setVisible(false);
+			playerHealthLabel.setVisible(false);
+			creativityLabel.setVisible(false);
+			quantReasoningLabel.setVisible(false);
+			scientRigorLabel.setVisible(false);
+			specializedAttackLabel.setVisible(false);
+			defaultAttackLabel.setVisible(false);
 		
 		}
 		else if(bossHealth<=0)
 		{
 			winScreen.paintIcon(this, g, 0, 0);
+			optionAButton.setVisible(false);
+			optionBButton.setVisible(false);
+			bossHealthLabel.setVisible(false);
+			bossName.setVisible(false);
+			bossType.setVisible(false);
+			bossSpecialAttackLabel.setVisible(false);
+			bossSpecialDefenseLabel.setVisible(false);
+			button1.setVisible(false);
+			playerHealthLabel.setVisible(false);
+			creativityLabel.setVisible(false);
+			quantReasoningLabel.setVisible(false);
+			scientRigorLabel.setVisible(false);
+			specializedAttackLabel.setVisible(false);
+			defaultAttackLabel.setVisible(false);
+			
 			exit.setVisible(true);	
 		}
 	}

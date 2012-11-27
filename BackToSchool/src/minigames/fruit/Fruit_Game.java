@@ -63,6 +63,8 @@ public class Fruit_Game extends JPanel implements Runnable{
 		
 		myActionMap.put("left", left);
 		myActionMap.put("right", right);
+		
+		
 		if(day>0 && day<4){
 			level = 1;// 1-3 depending on the level of the player
 			totalFruits=15;
@@ -168,7 +170,7 @@ public class Fruit_Game extends JPanel implements Runnable{
 			if(cordX>0)
 				cordX-=15;
 			
-			repaint();
+			//repaint();
 		}
 	}
 	
@@ -178,7 +180,7 @@ public class Fruit_Game extends JPanel implements Runnable{
 			if(cordX<400)
 				cordX+=15;
 			
-			repaint();
+			//repaint();
 		}
 	}
 	
