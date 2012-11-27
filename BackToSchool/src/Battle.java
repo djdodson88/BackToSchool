@@ -245,7 +245,7 @@ public class Battle extends JPanel {
 
 				if(attackX>700)
 				{
-					playerHealth-=(11-player.getSciRigor());
+					playerHealth-=(21-player.getSciRigor());
 
 					playerHealthLabel.setText(playerHealth+"%");// inflict damage on players health
 					bossTimer.stop();
@@ -258,7 +258,7 @@ public class Battle extends JPanel {
 				// if student touches the boss , tell him to go the other direction
 				if (bossX > 500) 
 				{
-					playerHealth-=(11-player.getQuantReasoning());
+					playerHealth-=(21-player.getQuantReasoning());
 					playerHealthLabel.setText(playerHealth+"%");
 					xSpeed = -xSpeed;
 				}
@@ -277,7 +277,7 @@ public class Battle extends JPanel {
 
 				if(attackY>200)
 				{
-					playerHealth-=(11-player.getCreativity());
+					playerHealth-=(21-player.getCreativity());
 					//playerHealth-=100;
 					playerHealthLabel.setText(playerHealth+"%");
 					bossTimer.stop();
@@ -312,14 +312,14 @@ public class Battle extends JPanel {
 		{
 			if(specialAttack){
 				if(bossSubject=="Science")
-					bossHealth-=player.getSciRigor()*5;
+					bossHealth-=player.getSciRigor()*15;
 				else if(bossSubject=="Math")
-					bossHealth-=player.getQuantReasoning()*5;
+					bossHealth-=player.getQuantReasoning()*15;
 				else if(bossSubject=="Humanities")
-					bossHealth-=player.getCreativity()*5;
+					bossHealth-=player.getCreativity()*15;
 			}
 			else
-				bossHealth-=6;
+				bossHealth-=18;
 
 			if(bossHealth<0)
 				bossHealthLabel.setText("0%");

@@ -331,7 +331,7 @@ public class FinalBattle extends JPanel {
 			// if student touches the boss , tell him to go the other direction
 			if (mathBossX > 500) 
 			{
-				playerHealth-=(11-player.getQuantReasoning());
+				playerHealth-=(15-player.getQuantReasoning());
 
 				if(playerHealth<0)
 					playerHealthLabel.setText("0%");
@@ -365,7 +365,7 @@ public class FinalBattle extends JPanel {
 
 			if(attackY>200)
 			{
-				playerHealth-=(11-player.getCreativity());
+				playerHealth-=(15-player.getCreativity());
 				if(playerHealth<0)
 					playerHealthLabel.setText("0%");
 				else
@@ -391,7 +391,7 @@ public class FinalBattle extends JPanel {
 
 			if(attackX>800)
 			{
-				playerHealth-=(11-player.getSciRigor());
+				playerHealth-=(15-player.getSciRigor());
 				if(playerHealth<0)
 					playerHealthLabel.setText("0%");
 				else
@@ -432,20 +432,20 @@ public class FinalBattle extends JPanel {
 			if(specialAttack)
 			{
 				if(bossChosen.equals("Science"))
-					sciBossHealth-=player.getCreativity()*10;
+					sciBossHealth-=player.getCreativity()*15;
 				else if(bossChosen.equals("Math"))
-					mathBossHealth-=player.getQuantReasoning()*10;
+					mathBossHealth-=player.getQuantReasoning()*15;
 				else if(bossChosen.equals("Humanities"))
-					humBossHealth-=player.getSciRigor()*10;
+					humBossHealth-=player.getSciRigor()*15;
 			}
 			else
 			{
 				if(bossChosen.equals("Science"))
-					sciBossHealth-=11;
+					sciBossHealth-=18;
 				else if(bossChosen.equals("Math"))
-					mathBossHealth-=11;
+					mathBossHealth-=18;
 				else if(bossChosen.equals("Humanities"))
-					humBossHealth-=11;
+					humBossHealth-=18;
 			}
 
 
