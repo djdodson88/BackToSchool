@@ -12,7 +12,7 @@ import java.util.Random;
 import javax.imageio.ImageIO;
 import javax.swing.*;  
 
-public class Fruit_Game extends JPanel implements KeyListener,Runnable{  
+public class Fruit_Game extends JPanel implements Runnable{  
 	BufferedImage basket;
 	BufferedImage banana;
 	BufferedImage bomb;
@@ -40,7 +40,6 @@ public class Fruit_Game extends JPanel implements KeyListener,Runnable{
 	public Fruit_Game(int day) {
 		this.setPreferredSize(new Dimension(550, 450));
 		this.setFocusable(true);   // Allow this panel to get focus.
-		this.addKeyListener(this);
 		//this.setSize(550,450);
 		earnedPercentage=0;
 		this.setBackground(Color.white);
@@ -50,6 +49,20 @@ public class Fruit_Game extends JPanel implements KeyListener,Runnable{
 		X=0;
 		Y=0;
 		
+		InputMap myInputMap = new InputMap();
+		ActionMap myActionMap = new ActionMap();
+		left left = new left();
+		right right = new right();
+		
+		myInputMap = this.getInputMap(WHEN_IN_FOCUSED_WINDOW);
+		
+		myInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0, false), "left");
+		myInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, false), "right");
+		
+		myActionMap = this.getActionMap();
+		
+		myActionMap.put("left", left);
+		myActionMap.put("right", right);
 		if(day>0 && day<4){
 			level = 1;// 1-3 depending on the level of the player
 			totalFruits=15;
@@ -115,7 +128,7 @@ public class Fruit_Game extends JPanel implements KeyListener,Runnable{
 		}
 		
 		//associate the keyboard listener with this JFrame
-		addKeyListener(this);
+		
 	}
 	
 	public void paintComponent(Graphics g)
@@ -148,35 +161,25 @@ public class Fruit_Game extends JPanel implements KeyListener,Runnable{
 			g.drawImage(background, 0, 0, this);
 		}
 	}
-		
 	
-	public void keyPressed(KeyEvent ke) {	
-		switch (ke.getKeyCode()) {
-		//if the right arrow in keyboard is pressed...
-		case KeyEvent.VK_RIGHT: {
-			if(cordX<400)
-				cordX+=15;
-		}
-		break;
-		//if the left arrow in keyboard is pressed...
-		case KeyEvent.VK_LEFT: {
+	private class left extends AbstractAction{
+		public void actionPerformed(ActionEvent e)
+		{
 			if(cordX>0)
 				cordX-=15;
+			
+			repaint();
 		}
-		break;
+	}
+	
+	public class right extends AbstractAction{
+		public void actionPerformed(ActionEvent e)
+		{
+			if(cordX<400)
+				cordX+=15;
+			
+			repaint();
 		}
-		repaint();
-	}
-
-	
-	public void keyReleased(KeyEvent ke) {
-		// TODO Auto-generated method stub
-
-	}
-
-	
-	public void keyTyped(KeyEvent ke) {
-		// TODO Auto-generated method stub
 	}
 	
 	public void wait(int n){
