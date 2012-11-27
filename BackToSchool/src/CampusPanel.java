@@ -18,6 +18,7 @@ public class CampusPanel extends JPanel
 	private Image[][] tiles;
 	private Thread animate;
 	private Campus campus;
+	private Tiles tileFactory;
 	private Player student;
 	private Point destination;
 	private CardLayout cardLayout;
@@ -31,6 +32,7 @@ public class CampusPanel extends JPanel
 		
 		campus = new Campus();
 		tiles = new Image[TILESX][TILESY];
+		tileFactory = new Tiles();
 			
 		try { 
 			player = ImageIO.read(new File("art/school/student.png"));
@@ -68,7 +70,7 @@ public class CampusPanel extends JPanel
 				for (int j=0; j<TILESY; j++)
 				{	Tile tile = campus.getTile(screenX+i, screenY+j);
 					if (tile != null)
-						tiles[i][j] = Tiles.get(tile);
+						tiles[i][j] = tileFactory.get(tile);
 				}
 		}
 		
@@ -83,7 +85,7 @@ public class CampusPanel extends JPanel
 		Rectangle window = new Rectangle(screenX, screenY+1, TILESX, TILESY);
 		for (Point p : doors)
 			if (window.contains(p)) 
-				tiles[p.x-screenX][p.y-1-screenY] = Tiles.get(campus.getTile(p.x, p.y-1));
+				tiles[p.x-screenX][p.y-1-screenY] = tileFactory.get(campus.getTile(p.x, p.y-1));
 				
 	}
 	
@@ -132,7 +134,7 @@ public class CampusPanel extends JPanel
 		screenY++;
 		// load in new tiles from campus
 		for (int i=0; i<TILESX; i++)
-			tiles[i][TILESY-1] = Tiles.get(campus.getTile(i+screenX, (TILESY-1)+screenY));
+			tiles[i][TILESY-1] = tileFactory.get(campus.getTile(i+screenX, (TILESY-1)+screenY));
 	}
 
 	private void shiftLeft() 
@@ -146,7 +148,7 @@ public class CampusPanel extends JPanel
 			screenX--;
 		
 			for (int j=0; j<TILESY; j++)
-				tiles[0][j] = Tiles.get(campus.getTile(screenX, j+screenY));
+				tiles[0][j] = tileFactory.get(campus.getTile(screenX, j+screenY));
 		}
 	}
 	
@@ -161,7 +163,7 @@ public class CampusPanel extends JPanel
 			screenY--;
 
 			for (int i=0; i<TILESX; i++)
-				tiles[i][0] = Tiles.get(campus.getTile(i+screenX,screenY));
+				tiles[i][0] = tileFactory.get(campus.getTile(i+screenX,screenY));
 		}
 	}
 	
@@ -174,7 +176,7 @@ public class CampusPanel extends JPanel
 		screenX++;
 		
 		for (int j=0; j<TILESY; j++)
-			tiles[TILESX-1][j] = Tiles.get(campus.getTile((TILESX-1)+screenX, j+screenY));
+			tiles[TILESX-1][j] = tileFactory.get(campus.getTile((TILESX-1)+screenX, j+screenY));
 	}
 	
 	public void paintComponent(Graphics g)

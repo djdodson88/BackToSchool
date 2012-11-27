@@ -1,97 +1,110 @@
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.*;
+
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 public class Tiles 
 {	
-	public static Image get(Tile t)
+	private BufferedImage corner, grass, land, fork, roadh, roadv, roof, wall, door, treeTop, treeTrunk, 
+				  signHum, signMath, signSci;
+	
+	public Tiles()
+	{
+		try 
+		{	corner = ImageIO.read(new File("art/school/roadcorner.jpg"));
+			grass = ImageIO.read(new File("art/school/grass.jpg"));
+			land = ImageIO.read(new File("art/school/land.jpg"));
+			fork = ImageIO.read(new File("art/school/roadfork.jpg"));
+			roadh = ImageIO.read(new File("art/school/road-side.jpg"));
+			roadv = ImageIO.read(new File("art/school/road.jpg"));
+			roof = ImageIO.read(new File("art/school/wallroof.jpg"));
+			wall = ImageIO.read(new File("art/school/wall.jpg"));
+			door = ImageIO.read(new File("art/school/door.jpg"));
+			treeTop = ImageIO.read(new File("art/school/tree_top.jpg"));
+			treeTrunk = ImageIO.read(new File("art/school/treetrunk.jpg"));
+			signMath = ImageIO.read(new File("art/school/math_sign.jpg"));
+			signSci = ImageIO.read(new File("art/school/science_sign.jpg"));
+			signHum = ImageIO.read(new File("art/school/humanities.jpg"));
+		} 
+		catch (IOException e) 
+		{	e.printStackTrace();
+		}	
+	}
+	
+	public Image get(Tile t)
 	{
 		BufferedImage tile = null;
-		boolean rotate = true;
-		try {	
-			switch (t.getType())
-			{
-				case CORNER:
-				{	tile = ImageIO.read(new File("art/school/roadcorner.jpg"));
-					break;	
-				}
-				case GRASS:
-				{	tile = ImageIO.read(new File("art/school/grass.jpg"));
-					break;	
-				}
-				case LAND:
-				{	tile = ImageIO.read(new File("art/school/land.jpg"));
-					break;	
-				}
-				case FORK:
-				{	tile = ImageIO.read(new File("art/school/roadfork.jpg"));
-					break;	
-				}
-				case ROADH:
-				{	tile = ImageIO.read(new File("art/school/road-side.jpg"));
-					break;	
-				}
-				case ROADV:
-				{	tile = ImageIO.read(new File("art/school/road.jpg"));
-					break;	
-				}
-				case ROOF:
-				{	tile = ImageIO.read(new File("art/school/wallroof.jpg"));
-					break;	
-				}
-				case WALL:
-				{	tile = ImageIO.read(new File("art/school/wall.jpg"));
-					break;	
-				}
-				case DOOR:
-				{	tile = ImageIO.read(new File("art/school/door.jpg"));
-					break;
-				}
-				case TREE:
-				{	if (t.getDirection() == Tile.Direction.UP) 
-						tile = ImageIO.read(new File("art/school/tree_top.jpg"));
-					else
-						tile = ImageIO.read(new File("art/school/treetrunk.jpg"));
-					rotate = false;
-					break;
-				}
-				case SIGN:
-				{
-					switch (t.getDirection())
-					{
-						case LEFT: 
-						{	tile = ImageIO.read(new File("art/school/math_sign.jpg"));
-							break;
-						}
-						case RIGHT:
-						{	tile = ImageIO.read(new File("art/school/science_sign.jpg"));
-							break;
-						}
-						default:
-						{	tile = ImageIO.read(new File("art/school/humanities.jpg"));
-							break;
-						}
-					}		
-					rotate = false;
-					break;
-				}
-				default:
-				{	tile = ImageIO.read(new File("art/school/land.jpg"));
-					break;	
-				}
-			}
-		} 
-		catch (IOException e)
-		{	//TODO: any exception handling 
-			
-		}
-		
-		//TODO: any image manipulation
-		if (rotate)
+	
+		switch (t.getType())
 		{
-			
+			case CORNER:
+			{	tile = corner;
+				break;	
+			}
+			case GRASS:
+			{	tile = grass;
+				break;	
+			}
+			case LAND:
+			{	tile = land;
+				break;	
+			}
+			case FORK:
+			{	tile = fork;
+				break;	
+			}
+			case ROADH:
+			{	tile = roadh;
+				break;	
+			}
+			case ROADV:
+			{	tile = roadv;
+				break;	
+			}
+			case ROOF:
+			{	tile = roof;
+				break;	
+			}
+			case WALL:
+			{	tile = wall;
+				break;	
+			}
+			case DOOR:
+			{	tile = door;
+				break;
+			}
+			case TREE:
+			{	if (t.getDirection() == Tile.Direction.UP) 
+					tile = treeTop;
+				else
+					tile = treeTrunk;
+				break;	
+			}
+			case SIGN:
+			{
+				switch (t.getDirection())
+				{
+					case LEFT: 
+					{	tile = signMath;
+						break;
+					}
+					case RIGHT:
+					{	tile = signSci;
+						break;
+					}
+					default:
+					{	tile = signHum;
+						break;
+					}
+				}		
+				break;
+			}
+			default:
+			{	tile = land;
+				break;	
+			}
 		}
 		return tile;
 	}
