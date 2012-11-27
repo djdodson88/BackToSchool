@@ -98,7 +98,7 @@ public class Battle extends JPanel {
 		
 		exit = new JButton("Exit");
 		exit.addActionListener(new exitButtonListener());
-		exit.setBounds(300,100,100,50); 
+		exit.setBounds(350,400,100,50); 
 		exit.setVisible(false);
 		exit.setBackground(null);
 		exit.setOpaque(false);

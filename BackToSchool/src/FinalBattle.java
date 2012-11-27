@@ -8,6 +8,7 @@ import java.util.Random;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -144,7 +145,7 @@ public class FinalBattle extends JPanel {
 		
 		exit = new JButton("Exit");
 		exit.addActionListener(new exitButtonListener());
-		exit.setBounds(300,100,100,50); 
+		exit.setBounds(350,400,100,50); 
 		exit.setVisible(false);
 		exit.setBackground(null);
 		exit.setOpaque(false);
@@ -263,14 +264,7 @@ public class FinalBattle extends JPanel {
 		background.paintIcon(this,g,0,0);
 		student.paintIcon(this, g, studentX, studentY);
 		
-		if(mathBossHealth<=0&&humBossHealth<=0&&sciBossHealth<=0){
-			splashWin.paintIcon(this, g, 0, 0);
-			exit.setVisible(true);
-		}
-		else if(playerHealth<=0){
-			splashLost.paintIcon(this,g,0,0);
-			exit.setVisible(true);
-		}
+		
 
 		if(attackPressed)
 			backpack.paintIcon(this, g, backpackX,backpackY);
@@ -291,6 +285,54 @@ public class FinalBattle extends JPanel {
 			humAttack1.paintIcon(this,g,attackX,attackY);
 			humAttack1.paintIcon(this,g,attackX+30,attackY+30);
 			humAttack1.paintIcon(this,g,attackX+60,attackY);
+		}
+		
+		if(mathBossHealth<=0&&humBossHealth<=0&&sciBossHealth<=0){
+			splashWin.paintIcon(this, g, 0, 0);
+			exit.setVisible(true);
+			bossSpecialAttackLabel.setVisible(false);
+			bossSpecialDefenseLabel.setVisible(false);
+			bossNameLabel.setVisible(false);
+			bossTypeLabel.setVisible(false);
+			bossHealthLabel.setVisible(false);
+			button1.setVisible(false);
+			optionAButton.setVisible(false);
+			optionBButton.setVisible(false);
+			humBossButton.setVisible(false);
+			sciBossButton.setVisible(false);
+			mathBossButton.setVisible(false);
+			creativityLabel.setVisible(false);
+			quantReasoningLabel.setVisible(false);
+			scientRigorLabel.setVisible(false);
+			specializedAttackLabel.setVisible(false);
+			defaultAttackLabel.setVisible(false);
+			optionAButton.setVisible(false);
+			playerHealthLabel.setVisible(false);
+			
+			
+		}
+		else if(playerHealth<=0){
+			splashLost.paintIcon(this,g,0,0);
+			bossSpecialAttackLabel.setVisible(false);
+			bossSpecialDefenseLabel.setVisible(false);
+			bossNameLabel.setVisible(false);
+			bossTypeLabel.setVisible(false);
+			bossHealthLabel.setVisible(false);
+			button1.setVisible(false);
+			optionAButton.setVisible(false);
+			optionBButton.setVisible(false);
+			playerHealthLabel.setVisible(false);
+			optionBButton.setVisible(false);
+			humBossButton.setVisible(false);
+			sciBossButton.setVisible(false);
+			mathBossButton.setVisible(false);
+			creativityLabel.setVisible(false);
+			quantReasoningLabel.setVisible(false);
+			scientRigorLabel.setVisible(false);
+			specializedAttackLabel.setVisible(false);
+			defaultAttackLabel.setVisible(false);
+			
+			exit.setVisible(true);
 		}
 	}
 
