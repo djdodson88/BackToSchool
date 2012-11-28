@@ -1,3 +1,4 @@
+import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -21,11 +22,18 @@ public class Classroom extends JPanel{
 
 	private BufferedImage backgroundImg;
 	private static boolean done;
+	private JLayeredPane lpane;
+	BackToSchool frame;
 	
 	public Classroom()
 	{
-		// Pass through day
 		setup();
+	
+	}
+	
+	protected void sendFrame(BackToSchool frame) 
+	{
+		this.frame = frame;
 	}
 
 	public void paintComponent(Graphics g)
@@ -54,7 +62,7 @@ public class Classroom extends JPanel{
 		JPanel miniSplash = new MiniSplash(game);
 		JPanel minigame = new JPanel();
 
-		game = 4; // Override random for testing
+		//game = 4; // Override random for testing
 		
 		JFrame frame = new JFrame("Back to School: Classroom");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -26,6 +26,8 @@ public class CampusPanel extends JPanel
 	private BackToSchool frame;
 	private Day day;
 	
+	private Image playerUp, playerDown, playerLeft, playerRight;
+	
 	public CampusPanel()
 	{
 		//TODO: more elaborate instatiation
@@ -35,7 +37,12 @@ public class CampusPanel extends JPanel
 		tileFactory = new Tiles();
 			
 		try { 
-			player = ImageIO.read(new File("art/school/student.png"));
+			player = ImageIO.read(new File("art/characters/student.png"));
+			playerUp = ImageIO.read(new File("art/characters/student_backside.png"));
+			playerDown = ImageIO.read(new File("art/characters/student.png"));
+			playerLeft = ImageIO.read(new File("art/characters/student_leftside.png"));
+			playerRight = ImageIO.read(new File("art/characters/student_rightside.png"));
+			
 		} catch(IOException e){};
 		
 		student = new Player();
@@ -206,6 +213,7 @@ public class CampusPanel extends JPanel
 		{	
 			if(e.getKeyCode() == KeyEvent.VK_UP)
 			{
+				player = playerUp;
 				if ((screenX+playerX==destination.x) && (screenY+playerY-1==destination.y))
 				{	// destination door reached
 					System.out.println("FOUND CLASS");
@@ -217,7 +225,7 @@ public class CampusPanel extends JPanel
 					}
 					else
 					{	System.out.println("CLASS");
-						//frame.addPanel(new Classroom(), BackToSchool.Screen.CLASS);
+						//frame.addPanel(new ClassroomPane(), BackToSchool.Screen.CLASS);
 						//frame.switchPanel(BackToSchool.Screen.CLASS);;
 						frame.addPanel(new Battle(student, day.getNextClassName()), BackToSchool.Screen.BATTLE);
 						frame.switchPanel(BackToSchool.Screen.BATTLE);
@@ -227,6 +235,7 @@ public class CampusPanel extends JPanel
 				
 				if (campus.isTraversable(screenX+playerX, screenY+playerY-1))
 				{	
+					
 					int cHeight = campus.getHeight();
 					if ((playerY-1>PADY-1 && playerY-1<(TILESY-PADY)) || screenY == 0
 							|| ((screenY == cHeight-TILESY) && playerY-1>=(TILESY-PADY)) )
@@ -238,6 +247,7 @@ public class CampusPanel extends JPanel
 			}
 			else if(e.getKeyCode() == KeyEvent.VK_LEFT)
 			{	
+				player = playerLeft;
 				if (campus.isTraversable(screenX+playerX-1, screenY+playerY))
 				{	
 					int cWidth = campus.getWidth();
@@ -251,6 +261,7 @@ public class CampusPanel extends JPanel
 			}
 			else if(e.getKeyCode() == KeyEvent.VK_DOWN)
 			{	
+				player = playerDown;
 				if (campus.isTraversable(screenX+playerX, screenY+playerY+1))
 				{	
 					int cHeight = campus.getHeight();
@@ -264,6 +275,7 @@ public class CampusPanel extends JPanel
 			}
 			else if(e.getKeyCode() == KeyEvent.VK_RIGHT)
 			{	
+				player = playerRight;
 				if (campus.isTraversable(screenX+playerX+1, screenY+playerY))
 				{	
 					int cWidth = campus.getWidth();

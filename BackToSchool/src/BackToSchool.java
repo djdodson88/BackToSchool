@@ -1,4 +1,6 @@
 import java.awt.CardLayout;
+
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -11,7 +13,7 @@ public class BackToSchool extends JFrame
 	private CampusPanel campus;
 	private Battle battle;
 	private FinalBattle finalBattle;
-	private Classroom classroom;
+	private ClassroomPane classroom;
 	
 	public BackToSchool(CardLayout layout, JPanel panel)
 	{
@@ -26,7 +28,7 @@ public class BackToSchool extends JFrame
 	}
 	
 	// add panels to the CardLayout panel through this
-	protected void addPanel(JPanel panel, Screen screen)
+	protected void addPanel(JComponent panel, Screen screen)
 	{
 		cardPanel.add(panel, screen.name());
 		
@@ -36,8 +38,8 @@ public class BackToSchool extends JFrame
 				campus.sendFrame(this);
 				break;
 			case CLASS:
-				classroom = (Classroom)panel;
-				//classroom.sendFrame(this);
+				classroom = (ClassroomPane)panel;
+				classroom.sendFrame(this);
 				break;
 			case BATTLE:
 				battle = (Battle)panel;
