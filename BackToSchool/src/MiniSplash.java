@@ -13,20 +13,23 @@ import java.awt.font.TextLayout;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
-
 
 public class MiniSplash extends JPanel implements ActionListener
 {
-	private boolean nxtScreen, finished, kill;
+	private boolean nxtScreen, finished;
 	private BufferedImage binderBg, bulletpoint;
 	private int game, numScreen;
 	private JButton button, previous, skipButton;
+	private BackToSchool gameframe;
+	private int day;
 
-	public MiniSplash(int type)
+	public MiniSplash(BackToSchool frame)
 	{
 		/* Game Key
 		 * 1 = Fruit
@@ -35,9 +38,13 @@ public class MiniSplash extends JPanel implements ActionListener
 		 * 4 = Tile Puzzle
 		 * 5 = Beer Pong
 		 */
-		game = type;
-
+		gameframe = frame;
 		skipButton = new JButton("Skip");
+
+		Random generator = new Random();
+		game = generator.nextInt(4) + 1; // 1-4
+
+		game = 3; //testing
 		
 		switch(game)
 		{
@@ -57,12 +64,13 @@ public class MiniSplash extends JPanel implements ActionListener
 		}
 
 		finished = false;
-		kill = false;
+
 
 		setup();
+
 		this.setLayout(null);
 		this.add(button);
-		
+
 		if(!button.getText().equals("Start Game"))
 		{
 			this.add(skipButton);
@@ -75,10 +83,15 @@ public class MiniSplash extends JPanel implements ActionListener
 			button.setBounds(200, 250, 100, 30);
 		}
 		button.addActionListener(this);
-		
+
 		this.setVisible(true);
 
 
+	}
+
+	public void setDay(int day)
+	{
+		this.day = day;
 	}
 
 	private void drawString(Graphics g, String text, int x, int y)
@@ -132,7 +145,7 @@ public class MiniSplash extends JPanel implements ActionListener
 		Font font = new Font("Arial", Font.PLAIN, 12);
 
 		drawString(g, setInstructions(), 60, 42);
-		
+
 	}
 
 	private void setup()
@@ -165,12 +178,12 @@ public class MiniSplash extends JPanel implements ActionListener
 		else if(game == 2)
 		{
 			gameTitle = "Warehouse Keeper";
-			instructions += gameTitle + "\n";
+			instructions += gameTitle + "\n\n";
 			instructions += "Instructions: \n";
 			instructions += ";liUse the <left>, <right>, <up>, <down> keys to move the player\n";
 			instructions += ";liMove the boxes to the pink dots\n";
 			instructions += ";liYou may use the UNDO stack 10 times\n";
-			
+
 		}
 		else if(game == 3)
 		{
@@ -188,7 +201,7 @@ public class MiniSplash extends JPanel implements ActionListener
 			{
 
 				instructions = "Instructions:\n";
-				instructions += "\n \n ;liNavigate the grid by moving highlight square with arrow keys \n";
+				instructions += "\n ;liNavigate the grid by moving highlight square with arrow keys \n";
 				instructions += ";liFill in the grid with numbers with number keys \n";
 				instructions += ";liUse the <delete> key to clear cell entry,\n;li;indent you may also replace current cell\n;indent with another number key\n";
 				instructions += ";liPress enter with attempted solution to see if correct \n";
@@ -203,37 +216,33 @@ public class MiniSplash extends JPanel implements ActionListener
 			instructions += "Instructions: \n";
 			instructions += ";li Click the mouse to move the tile over\n";
 			instructions += ";li Arrange the puzzle into the correct order.";
-			
+
 		}
 		return instructions;
 	}
 
-	public boolean isDone()
-	{
-		return kill;
+
+
+	private void switchPanels()
+	{		
+		gameframe.addPanel(new ClassroomPanel(game, day), BackToSchool.Screen.CLASS);
+		gameframe.switchPanel(BackToSchool.Screen.CLASS);
 	}
 
 	public void actionPerformed(ActionEvent e) {
 		Object src = e.getSource();
 
+
+		//switch Panels and instantiate minigames here.
+
 		if(src == skipButton)
 		{
-			this.setVisible(false);
-			kill = true;
+			switchPanels();
 		}
 		else if(src == button)
 		{
-			if(game == 1)
-			{
-				this.setVisible(false);
-				kill = true;
-			}
-			else if(game == 2)
-			{
-				this.setVisible(false);
-				kill = true;
-			}
-			else if(game == 3)
+
+			if(game == 3)
 			{
 				if(!finished)
 				{
@@ -246,18 +255,15 @@ public class MiniSplash extends JPanel implements ActionListener
 				}
 				else
 				{
-					this.setVisible(false);
-					kill = true;
+					switchPanels();
+
 				}
 			}
-			else if(game == 4)
+			else 
 			{
-				this.setVisible(false);
-				kill = true;
+				switchPanels();
 			}
-			
-
 		}
-	}
 
+	}
 }

@@ -225,10 +225,13 @@ public class CampusPanel extends JPanel
 					}
 					else
 					{	System.out.println("CLASS");
-						//frame.addPanel(new ClassroomPane(), BackToSchool.Screen.CLASS);
-						//frame.switchPanel(BackToSchool.Screen.CLASS);;
-						frame.addPanel(new Battle(student, day.getNextClassName()), BackToSchool.Screen.BATTLE);
-						frame.switchPanel(BackToSchool.Screen.BATTLE);
+						MiniSplashPane miniSplash = new MiniSplashPane(frame, day.getDay());
+						
+						frame.addPanel(miniSplash, BackToSchool.Screen.MINISPLASH);
+						frame.switchPanel(BackToSchool.Screen.MINISPLASH);
+						
+						//frame.addPanel(new Battle(student, day.getNextClassName()), BackToSchool.Screen.BATTLE);
+						//frame.switchPanel(BackToSchool.Screen.BATTLE);
 					}
 					day.attendClass();
 				}

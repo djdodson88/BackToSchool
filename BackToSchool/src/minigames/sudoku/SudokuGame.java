@@ -144,6 +144,8 @@ public class SudokuGame extends JPanel implements ActionListener{
 				gameTimer = new Clock(40);
 			}
 
+			gameTimer = new Clock(3); //testing
+			
 			currentAnswer = new int[4][4];
 		}
 		else
@@ -152,8 +154,8 @@ public class SudokuGame extends JPanel implements ActionListener{
 			fourxfour = false;
 			sq_x = 15;
 			sq_y = 16;
-			//gameTimer = new Clock(3);
-			gameTimer = new Clock(150);
+			gameTimer = new Clock(3); //testing
+			//gameTimer = new Clock(150);
 			currentAnswer = new int[9][9];
 
 		}

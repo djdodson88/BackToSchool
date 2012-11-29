@@ -7,13 +7,14 @@ import javax.swing.JPanel;
 
 public class BackToSchool extends JFrame
 {
-	protected enum Screen{CAMPUS, BATTLE, FINALBATTLE, CLASS};
+	protected enum Screen{CAMPUS, BATTLE, FINALBATTLE, CLASS, MINISPLASH};
 	private CardLayout cardLayout;
 	private JPanel cardPanel;
 	private CampusPanel campus;
 	private Battle battle;
 	private FinalBattle finalBattle;
-	private ClassroomPane classroom;
+	private ClassroomPanel classroom;
+	private MiniSplashPane miniSplash;
 	
 	public BackToSchool(CardLayout layout, JPanel panel)
 	{
@@ -23,8 +24,10 @@ public class BackToSchool extends JFrame
 		battle = null;
 		finalBattle = null;
 		classroom = null;
+		miniSplash = null;
+		
 		cardLayout = layout;
-		cardPanel = panel;	
+		cardPanel = panel;
 	}
 	
 	// add panels to the CardLayout panel through this
@@ -38,8 +41,11 @@ public class BackToSchool extends JFrame
 				campus.sendFrame(this);
 				break;
 			case CLASS:
-				classroom = (ClassroomPane)panel;
+				classroom = (ClassroomPanel) panel;
 				classroom.sendFrame(this);
+				break;
+			case MINISPLASH:
+				miniSplash = (MiniSplashPane)panel;
 				break;
 			case BATTLE:
 				battle = (Battle)panel;
@@ -64,13 +70,17 @@ public class BackToSchool extends JFrame
 			case CLASS:
 				classroom.requestFocus();
 				break;
+			case MINISPLASH:
+				miniSplash.requestFocus();
+				break;
 			case BATTLE:
 				battle.requestFocus();
 				break;
 			case FINALBATTLE:
 				finalBattle.requestFocus();
 				break;
-		}		
+		}
+		
 	}
 	
 	public static void main(String[] args)

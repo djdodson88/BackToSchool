@@ -17,55 +17,45 @@ import minigames.tiles.PuzzlePanel;
 import minigames.warehouse.WareHouseKeeper;
 
 
-public class ClassroomPane extends JLayeredPane{
+public class ClassroomPanel extends JPanel{
 
 
 	private BufferedImage backgroundImg;
 	private static boolean done;
 	private BackToSchool frame;
+	private int game;
 	
-	public ClassroomPane()
+	public ClassroomPanel(int game, int day)
 	{
+
 		setup();
 		
-
-		int game;
-		
-		Random generator = new Random();
-		game = generator.nextInt(4) + 1; // 1-4
-		JPanel miniSplash = new MiniSplash(game);
 		JPanel minigame = new JPanel();
 
-		game = 2; // Override random for testing
+		//game = 2; // Override random for testing
 		
+		setLayout(null);
 		this.setPreferredSize(new Dimension(800,600));
 		
 		this.setBounds(0, 0, 800, 600);
 
-		miniSplash.setBounds(50,50, 500, 300);
-		
-		this.add(miniSplash);
-		this.moveToFront(miniSplash);
-		
-		//splashLoop((MiniSplash) miniSplash); // loops until splash screen finishes
-		
 		switch(game)
 		{
 		
 		case 1:
-			minigame = new Fruit_Game(9);
+			minigame = new Fruit_Game(day);
 			break;
 		case 2:
 			//Warehouse
-			minigame = new WareHouseKeeper(1); 
+			minigame = new WareHouseKeeper(day); 
 		
 			break;
 		case 3:
-			minigame = new SudokuGame(2);
+			minigame = new SudokuGame(day);
 			break;
 		case 4:
 			//Tiles
-			minigame = new PuzzlePanel(1); 
+			minigame = new PuzzlePanel(day); 
 			break;
 		case 5:
 			//Beer Pong
@@ -76,7 +66,6 @@ public class ClassroomPane extends JLayeredPane{
 		minigame.setBounds(26, 32, 550, 450);
 		
 		this.add(minigame);
-		this.moveToFront(minigame);
 		minigame.requestFocusInWindow();
 	
 	}
@@ -108,7 +97,9 @@ public class ClassroomPane extends JLayeredPane{
 		
 		JFrame frame = new JFrame("Back to School: Classroom");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.add(new ClassroomPane());
+		int game = 1;
+		
+		frame.add(new ClassroomPanel(game, 1));
 	
 		frame.setPreferredSize(new Dimension(800,600));
 		frame.setVisible(true);
@@ -116,12 +107,5 @@ public class ClassroomPane extends JLayeredPane{
 		
 	}
 	
-	private void splashLoop(MiniSplash splash)
-	{
-		while(!splash.isDone())
-		{
-			System.out.print(""); // workaround for now
-		}
-		
-	}
+
 }
