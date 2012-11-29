@@ -34,6 +34,7 @@ public class Fruit_Game extends JPanel implements Runnable{
 	Graphics graphics;
 	Timer timer;
 	int life;
+	JButton exit;
 	static int totalFruits;
 	static int counter;
 
@@ -78,13 +79,26 @@ public class Fruit_Game extends JPanel implements Runnable{
 			totalFruits=30;
 		}
 		
+		setLayout(null);
 		totalScore=0;// used to keep the score
 		loadImages();// load the images for the game
-		score = new JLabel("0");
+		
+		score = new JLabel("");
+		score.setBounds(220,0,300,50);
+		score.setFont(new Font("Serif", Font.PLAIN, 20));
+		
 		earnedPercentageLabel = new JLabel();
-		earnedPercentageLabel.setBounds(0,100,100,100);
+		earnedPercentageLabel.setBounds(215,30,300,50);
+		earnedPercentageLabel.setFont(new Font("Serif", Font.PLAIN, 25));
+		
+		exit = new JButton("Exit");
+		exit.setBounds(250,200,100,30);
+		exit.addActionListener(new exitButtonListener());
+		exit.setVisible(false);
+		
 		this.add(score,BorderLayout.SOUTH);
 		this.add(earnedPercentageLabel);
+		this.add(exit);
 		this.setVisible(true);
 		startAnimation();
 	}
@@ -232,6 +246,15 @@ public class Fruit_Game extends JPanel implements Runnable{
     	}
     }
 	
+	private class exitButtonListener implements ActionListener
+	{
+		public void actionPerformed(ActionEvent event)
+		{
+			System.out.println("Pressed Exit Button");
+			
+		}	
+	}
+	
 	public void checkHit(){
 		if(cordX-70<X && cordX+70>X)
 		{
@@ -255,10 +278,12 @@ public class Fruit_Game extends JPanel implements Runnable{
 		if(!(life>0)){
 			earnedPercentage=1;
 			earnedPercentageLabel.setText(" You earned: "+earnedPercentage+"%");
+			exit.setVisible(true);
 		}
 		else if(!(totalFruits>counter)){
 			earnedPercentage=5;
 			earnedPercentageLabel.setText(" You earned: "+earnedPercentage+"%");
+			exit.setVisible(true);
 		}
 			
 	}
