@@ -1,11 +1,16 @@
+package main;
+
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
@@ -25,41 +30,57 @@ public class ClassroomPanel extends JPanel{
 	private BackToSchool frame;
 	private int game;
 	
-	public ClassroomPanel(int game, int day)
+	private SudokuGame sudoku;
+	private Fruit_Game fruit;
+	private WareHouseKeeper warehouse;
+	private PuzzlePanel tiles;
+	private BeerPong beer;
+	
+	private JButton default_exit; //for testing day structure, etc
+	
+	public ClassroomPanel(int game, int day, BackToSchool frame)
 	{
 
+		this.frame = frame;
+		
 		setup();
 		
 		JPanel minigame = new JPanel();
-
-		//game = 2; // Override random for testing
 		
 		setLayout(null);
 		this.setPreferredSize(new Dimension(800,600));
-		
 		this.setBounds(0, 0, 800, 600);
 
 		switch(game)
 		{
 		
 		case 1:
-			minigame = new Fruit_Game(day);
+			fruit = new Fruit_Game(day);
+			fruit.getFrame(frame);		
+			minigame = fruit;
 			break;
 		case 2:
 			//Warehouse
-			minigame = new WareHouseKeeper(day); 
+			warehouse = new WareHouseKeeper(day);
+			minigame = warehouse;
 		
 			break;
 		case 3:
-			minigame = new SudokuGame(day);
+			sudoku = new SudokuGame(day);
+			sudoku.getFrame(frame);
+			minigame = sudoku;
+			
 			break;
 		case 4:
 			//Tiles
-			minigame = new PuzzlePanel(day); 
+			tiles = new PuzzlePanel(day);
+			minigame = tiles;
 			break;
 		case 5:
 			//Beer Pong
-			minigame = new BeerPong();
+			// TO DO: Day parameter to control difficulty
+			beer = new BeerPong();
+			minigame = beer;
 			break;
 		}
 		
@@ -68,11 +89,6 @@ public class ClassroomPanel extends JPanel{
 		this.add(minigame);
 		minigame.requestFocusInWindow();
 	
-	}
-
-	protected void sendFrame(BackToSchool frame) 
-	{
-		this.frame = frame;
 	}
 
 
@@ -99,7 +115,7 @@ public class ClassroomPanel extends JPanel{
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		int game = 1;
 		
-		frame.add(new ClassroomPanel(game, 1));
+		//frame.add(new ClassroomPanel(game, 1));
 	
 		frame.setPreferredSize(new Dimension(800,600));
 		frame.setVisible(true);

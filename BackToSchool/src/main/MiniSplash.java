@@ -1,23 +1,18 @@
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
+package main;
+
+
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.font.FontRenderContext;
-import java.awt.font.TextLayout;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
 public class MiniSplash extends JPanel implements ActionListener
@@ -29,6 +24,8 @@ public class MiniSplash extends JPanel implements ActionListener
 	private BackToSchool gameframe;
 	private int day;
 
+	private ImageIcon start, skip, exit, next;
+	
 	public MiniSplash(BackToSchool frame)
 	{
 		/* Game Key
@@ -38,40 +35,43 @@ public class MiniSplash extends JPanel implements ActionListener
 		 * 4 = Tile Puzzle
 		 * 5 = Beer Pong
 		 */
+		
+		setup();
 		gameframe = frame;
-		skipButton = new JButton("Skip");
+		skipButton = new JButton(skip);
 
 		Random generator = new Random();
-		game = generator.nextInt(4) + 1; // 1-4
+		game = generator.nextInt(5) + 1; // 1-4
 
 		game = 3; //testing
 		
 		switch(game)
 		{
 		case 1:
-			button = new JButton("Start Game");
+			button = new JButton(start);
 			break;
 		case 2:
-			button = new JButton("Start Game");
+			button = new JButton(start);
 			break;
 		case 3:
-			button = new JButton("Next Screen");
+			nxtScreen = true;
+			button = new JButton(next);
 			numScreen = 1;
 			break;
 		case 4:
-			button = new JButton("Start Game");
+			button = new JButton(start);
+			break;
+		case 5:
+			button = new JButton(start);
 			break;
 		}
 
 		finished = false;
 
-
-		setup();
-
 		this.setLayout(null);
 		this.add(button);
 
-		if(!button.getText().equals("Start Game"))
+		if(nxtScreen)
 		{
 			this.add(skipButton);
 			button.setBounds(150, 250, 100, 30);
@@ -88,7 +88,7 @@ public class MiniSplash extends JPanel implements ActionListener
 
 
 	}
-
+	
 	public void setDay(int day)
 	{
 		this.day = day;
@@ -151,6 +151,10 @@ public class MiniSplash extends JPanel implements ActionListener
 	private void setup()
 	{
 
+		start = new ImageIcon("art/buttons/start_btn.jpg");
+		skip = new ImageIcon("art/buttons/skip_btn.jpg");
+		exit = new ImageIcon("art/buttons/exit_btn.jpg"); //eventually will be removed
+		next = new ImageIcon("art/buttons/next_btn.jpg");
 		try {
 			binderBg = ImageIO.read(new File("art/classroom/splash.jpg"));
 			bulletpoint = ImageIO.read(new File("art/classroom/bulletpoint.png"));
@@ -218,6 +222,13 @@ public class MiniSplash extends JPanel implements ActionListener
 			instructions += ";li Arrange the puzzle into the correct order.";
 
 		}
+		else if (game == 5)
+		{
+			gameTitle = "Beer Pong";
+			instructions += gameTitle + "\n";
+			instructions += "Instructions: \n";
+			
+		}
 		return instructions;
 	}
 
@@ -225,7 +236,9 @@ public class MiniSplash extends JPanel implements ActionListener
 
 	private void switchPanels()
 	{		
-		gameframe.addPanel(new ClassroomPanel(game, day), BackToSchool.Screen.CLASS);
+		ClassroomPanel classroom = new ClassroomPanel(game, day, gameframe);
+		
+		gameframe.addPanel(classroom, BackToSchool.Screen.CLASS);
 		gameframe.switchPanel(BackToSchool.Screen.CLASS);
 	}
 
@@ -249,7 +262,9 @@ public class MiniSplash extends JPanel implements ActionListener
 					numScreen++;
 					finished = true;
 
-					button.setText("Start Game");
+		
+					button.setIcon(start);
+					
 
 					repaint();
 				}

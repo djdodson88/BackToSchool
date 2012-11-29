@@ -1,4 +1,6 @@
 package minigames.sudoku;
+
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
@@ -12,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Timer;
 
+import main.BackToSchool;
 
 public class SudokuGame extends JPanel implements ActionListener{
 
@@ -19,8 +22,9 @@ public class SudokuGame extends JPanel implements ActionListener{
 	private BufferedImage nineBynine_grid;
 	private BufferedImage colorSq;
 	private BufferedImage colorSq_thin;
-	
-	
+
+	BackToSchool frame;
+
 	// Game Related
 	private int[][] currentAnswer;
 	private int[][] setup;
@@ -39,9 +43,8 @@ public class SudokuGame extends JPanel implements ActionListener{
 	// Coordinates
 	private int sq_x;
 	private int sq_y;
-	
-	private JButton exit;
 
+	private JButton exit;
 
 
 
@@ -59,10 +62,10 @@ public class SudokuGame extends JPanel implements ActionListener{
 		sevenKey sevenKey = new sevenKey();
 		eightKey eightKey = new eightKey();
 		nineKey nineKey = new nineKey();
-		
+
 		delete delete = new delete();
 		enter enter = new enter();
-		
+
 		up up = new up();
 		down down = new down();
 		left left = new left();
@@ -109,7 +112,7 @@ public class SudokuGame extends JPanel implements ActionListener{
 		// Miscellaneous
 		myActionMap.put("enter", enter);
 		myActionMap.put("delete", delete);
-		
+
 		setLayout(null);
 
 		gameSol = new SudokuSol(day);
@@ -119,12 +122,14 @@ public class SudokuGame extends JPanel implements ActionListener{
 
 		setBackground(new Color(58,54,55));
 
-		exit = new JButton("Exit");
+		exit = new JButton(new ImageIcon("art/buttons/exit_btn.jpg"));
 
 		this.add(exit);
-		exit.setBounds( 427, 250, 100, 20);
+		exit.setBounds( 427, 250, 100, 30);
+		exit.addActionListener(this);
+
 		exit.setVisible(false);
-		
+
 		setFocusable(true);
 		isRunning = true;
 
@@ -145,7 +150,7 @@ public class SudokuGame extends JPanel implements ActionListener{
 			}
 
 			gameTimer = new Clock(3); //testing
-			
+
 			currentAnswer = new int[4][4];
 		}
 		else
@@ -165,6 +170,24 @@ public class SudokuGame extends JPanel implements ActionListener{
 		gameLoop();
 
 	}
+
+	public void getFrame(BackToSchool frame)
+	{
+		this.frame = frame;
+	}
+
+	public void actionPerformed(ActionEvent e) {
+
+		Object src = e.getSource();
+
+		if(src == exit)
+		{
+			frame.switchPanel(BackToSchool.Screen.CAMPUS);
+			
+		}
+
+	}
+
 
 	public void paintComponent(Graphics g)
 	{
@@ -246,7 +269,7 @@ public class SudokuGame extends JPanel implements ActionListener{
 						g.setColor(Color.RED);
 						g.drawString(String.valueOf(currentAnswer[row][col]), posx+dx, posy+dy);
 					}
-				
+
 					dx += 95;
 				}
 				dx = 0;
@@ -688,7 +711,7 @@ public class SudokuGame extends JPanel implements ActionListener{
 
 		}
 	}
-	
+
 	private class delete extends AbstractAction{
 		public void actionPerformed(ActionEvent e)
 		{
@@ -767,8 +790,8 @@ public class SudokuGame extends JPanel implements ActionListener{
 			}
 		}
 	}
-	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
 
-	}
+
 }
+
+

@@ -1,3 +1,5 @@
+package main;
+
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -92,7 +94,7 @@ public class Battle extends JPanel {
 		setDown=false;
 
 		//adding the attack button
-		button1 = new JButton("Attack");
+		button1 = new JButton(new ImageIcon("art/buttons/attack_btn.jpg"));
 		button1.addActionListener(new AttackButtonListener());
 		button1.setBounds(400,510,100,30);
 		

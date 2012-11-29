@@ -1,3 +1,5 @@
+package main;
+
 
 public class Day {
 	private int day, nextClass;

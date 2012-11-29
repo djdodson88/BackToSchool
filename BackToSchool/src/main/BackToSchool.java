@@ -1,3 +1,5 @@
+package main;
+
 import java.awt.CardLayout;
 
 import javax.swing.JComponent;
@@ -7,7 +9,7 @@ import javax.swing.JPanel;
 
 public class BackToSchool extends JFrame
 {
-	protected enum Screen{CAMPUS, BATTLE, FINALBATTLE, CLASS, MINISPLASH};
+	public enum Screen{CAMPUS, BATTLE, FINALBATTLE, CLASS, MINISPLASH};
 	private CardLayout cardLayout;
 	private JPanel cardPanel;
 	private CampusPanel campus;
@@ -42,7 +44,6 @@ public class BackToSchool extends JFrame
 				break;
 			case CLASS:
 				classroom = (ClassroomPanel) panel;
-				classroom.sendFrame(this);
 				break;
 			case MINISPLASH:
 				miniSplash = (MiniSplashPane)panel;
@@ -59,7 +60,7 @@ public class BackToSchool extends JFrame
 	}
 	
 	// Call from panels to switch (can also add panel-specific setup method calls here)
-	protected void switchPanel(Screen screen)
+	public void switchPanel(Screen screen)
 	{
 		cardLayout.show(cardPanel, screen.name());
 		switch (screen)

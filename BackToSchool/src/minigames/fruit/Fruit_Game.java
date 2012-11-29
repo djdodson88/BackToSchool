@@ -12,6 +12,8 @@ import java.util.Random;
 import javax.imageio.ImageIO;
 import javax.swing.*;  
 
+import main.BackToSchool;
+
 public class Fruit_Game extends JPanel implements Runnable{  
 	BufferedImage basket;
 	BufferedImage banana;
@@ -38,7 +40,10 @@ public class Fruit_Game extends JPanel implements Runnable{
 	static int totalFruits;
 	static int counter;
 
+	BackToSchool frame;
+	
 	public Fruit_Game(int day) {
+		
 		this.setPreferredSize(new Dimension(550, 450));
 		this.setFocusable(true);   // Allow this panel to get focus.
 		//this.setSize(550,450);
@@ -91,7 +96,7 @@ public class Fruit_Game extends JPanel implements Runnable{
 		earnedPercentageLabel.setBounds(215,30,300,50);
 		earnedPercentageLabel.setFont(new Font("Serif", Font.PLAIN, 25));
 		
-		exit = new JButton("Exit");
+		exit = new JButton(new ImageIcon("art/buttons/exit_btn.jpg"));
 		exit.setBounds(250,200,100,30);
 		exit.addActionListener(new exitButtonListener());
 		exit.setVisible(false);
@@ -101,6 +106,12 @@ public class Fruit_Game extends JPanel implements Runnable{
 		this.add(exit);
 		this.setVisible(true);
 		startAnimation();
+	}
+	
+	public void getFrame(BackToSchool frame)
+	{
+		this.frame = frame;
+		
 	}
 	
 	public void startAnimation(){
@@ -250,7 +261,8 @@ public class Fruit_Game extends JPanel implements Runnable{
 	{
 		public void actionPerformed(ActionEvent event)
 		{
-			System.out.println("Pressed Exit Button");
+			frame.switchPanel(BackToSchool.Screen.CAMPUS);
+			//System.out.println("Pressed Exit Button");
 			
 		}	
 	}
