@@ -247,7 +247,7 @@ public class Battle extends JPanel {
 			// -------------------Science boss atack-----------------------//
 			if(bossSubject.equals("Science"))
 			{
-				attackX+=xSpeed;
+				attackX+=12;
 
 				if(attackX>700)
 				{
@@ -262,7 +262,7 @@ public class Battle extends JPanel {
 			{
 				bossX += xSpeed;
 				// if student touches the boss , tell him to go the other direction
-				if (bossX > 500) 
+				if (bossX > 350) 
 				{
 					playerHealth-=(21-(player.getQuantReasoning()-r.nextInt(5)));
 					playerHealthLabel.setText(playerHealth+"%");
@@ -279,9 +279,9 @@ public class Battle extends JPanel {
 			}
 			else if(bossSubject.equals("Humanities"))
 			{
-				attackY += xSpeed;
+				attackY += 1;
 
-				if(attackY>200)
+				if(attackY>50)
 				{
 					playerHealth-=(21-(player.getCreativity()-r.nextInt(5)));
 					//playerHealth-=100;
@@ -409,6 +409,8 @@ public class Battle extends JPanel {
 				humAttack1.paintIcon(this,g,attackX,attackY);
 				humAttack1.paintIcon(this,g,attackX+30,attackY+30);
 				humAttack1.paintIcon(this,g,attackX+60,attackY);
+				student.paintIcon(this, g, studentX, studentY);
+				
 			}
 		}
 		
@@ -515,7 +517,7 @@ public class Battle extends JPanel {
 		}
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("Back To School: Battle Mode");
-		Battle battle = new Battle(new Player(),"Humanities");
+		Battle battle = new Battle(new Player(),"Math");
 		frame.setSize(800,600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// frame.add(battle);

@@ -285,6 +285,7 @@ public class FinalBattle extends JPanel {
 			humAttack1.paintIcon(this,g,attackX,attackY);
 			humAttack1.paintIcon(this,g,attackX+30,attackY+30);
 			humAttack1.paintIcon(this,g,attackX+60,attackY);
+			student.paintIcon(this, g, studentX, studentY);
 		}
 		
 		if(mathBossHealth<=0&&humBossHealth<=0&&sciBossHealth<=0){
@@ -374,8 +375,11 @@ public class FinalBattle extends JPanel {
 	}
 	public void moveBoss(){
 		if(mathBossTurn){
+
 			mathBossX += xSpeed;
+
 			mathBossY -= ySpeed;
+			
 			// if student touches the boss , tell him to go the other direction
 			if (mathBossX > 500) 
 			{
@@ -409,9 +413,9 @@ public class FinalBattle extends JPanel {
 			}
 		}
 		else if(humBossTurn){
-			attackY += xSpeed;
+			attackY += 1;
 
-			if(attackY>200)
+			if(attackY>50)
 			{
 				playerHealth-=(21-(player.getCreativity()-r.nextInt(5)));
 				
@@ -436,7 +440,7 @@ public class FinalBattle extends JPanel {
 		}
 		else if(sciBossTurn)
 		{
-			attackX+=xSpeed;
+			attackX+=12;
 
 			if(attackX>800)
 			{
