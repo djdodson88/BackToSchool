@@ -12,13 +12,15 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Timer;
 
+
 public class SudokuGame extends JPanel implements ActionListener{
 
 	private BufferedImage fourByfour_grid;
 	private BufferedImage nineBynine_grid;
 	private BufferedImage colorSq;
 	private BufferedImage colorSq_thin;
-
+	
+	
 	// Game Related
 	private int[][] currentAnswer;
 	private int[][] setup;
@@ -37,13 +39,14 @@ public class SudokuGame extends JPanel implements ActionListener{
 	// Coordinates
 	private int sq_x;
 	private int sq_y;
+	
+	private JButton exit;
 
 
 
 
 	public SudokuGame(int day)
 	{
-
 		InputMap myInputMap = new InputMap();
 		ActionMap myActionMap = new ActionMap();
 
@@ -106,7 +109,8 @@ public class SudokuGame extends JPanel implements ActionListener{
 		// Miscellaneous
 		myActionMap.put("enter", enter);
 		myActionMap.put("delete", delete);
-
+		
+		setLayout(null);
 
 		gameSol = new SudokuSol(day);
 		gameStatus = "In Progress"; // Default until <Enter> Pressed
@@ -115,7 +119,12 @@ public class SudokuGame extends JPanel implements ActionListener{
 
 		setBackground(new Color(58,54,55));
 
+		exit = new JButton("Exit");
 
+		this.add(exit);
+		exit.setBounds( 427, 250, 100, 20);
+		exit.setVisible(false);
+		
 		setFocusable(true);
 		isRunning = true;
 
@@ -143,6 +152,7 @@ public class SudokuGame extends JPanel implements ActionListener{
 			fourxfour = false;
 			sq_x = 15;
 			sq_y = 16;
+			//gameTimer = new Clock(3);
 			gameTimer = new Clock(150);
 			currentAnswer = new int[9][9];
 
@@ -176,6 +186,8 @@ public class SudokuGame extends JPanel implements ActionListener{
 		{
 			isRunning = false;
 			gameStatus = "Game Over";
+			exit.setVisible(true);
+
 		}
 		g.drawString(String.valueOf(timeLeft), 420, 100);
 

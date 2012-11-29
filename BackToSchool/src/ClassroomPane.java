@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
+import minigames.beerpong.BeerPong;
 import minigames.fruit.Fruit_Game;
 import minigames.sudoku.SudokuGame;
 import minigames.tiles.PuzzlePanel;
@@ -35,7 +36,7 @@ public class ClassroomPane extends JLayeredPane{
 		JPanel miniSplash = new MiniSplash(game);
 		JPanel minigame = new JPanel();
 
-		game = 1; // Override random for testing
+		game = 2; // Override random for testing
 		
 		this.setPreferredSize(new Dimension(800,600));
 		
@@ -65,6 +66,10 @@ public class ClassroomPane extends JLayeredPane{
 		case 4:
 			//Tiles
 			minigame = new PuzzlePanel(1); 
+			break;
+		case 5:
+			//Beer Pong
+			minigame = new BeerPong();
 			break;
 		}
 		
