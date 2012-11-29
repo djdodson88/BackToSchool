@@ -18,12 +18,16 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.InputMap;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 import javax.swing.Timer;
 import javax.swing.colorchooser.ColorSelectionModel;
 
@@ -93,6 +97,30 @@ public class WareHouseKeeper extends JPanel
 	        }
     	};
     	t = new Timer(delay, taskPerformer);
+    	
+    	InputMap myInputMap = new InputMap();
+		ActionMap myActionMap = new ActionMap();
+    	
+    	up up = new up();
+		down down = new down();
+		left left = new left();
+		right right = new right();
+		comma comma = new comma();
+		myInputMap = this.getInputMap(WHEN_IN_FOCUSED_WINDOW);
+		
+		myInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0, false), "up");
+		myInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_COMMA,0,false), "comma");
+		myInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0, false), "down");
+		myInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0, false), "left");
+		myInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, false), "right");
+		
+		myActionMap = this.getActionMap();
+		
+		myActionMap.put("up", up);
+		myActionMap.put("down", down);
+		myActionMap.put("left", left);
+		myActionMap.put("right", right);
+		myActionMap.put("comma", comma);
     	
     	setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         
@@ -220,8 +248,8 @@ public class WareHouseKeeper extends JPanel
         setBackground( new Color(199,188,136));      
 
         initLevel(currentLevel);
-        KeyListener listener = new MyKeyListener();    
-        addKeyListener(listener );
+//        KeyListener listener = new MyKeyListener();    
+//        addKeyListener(listener );
         setPreferredSize(new Dimension(550,450));
         
         add(Box.createHorizontalGlue() );
@@ -315,119 +343,126 @@ public class WareHouseKeeper extends JPanel
         
     }
     
-    private class MyKeyListener implements KeyListener{
-            
-            
-            public void keyPressed(KeyEvent e) {
-            if(!isGameOver)
-            {
-                if(e.getKeyCode() == KeyEvent.VK_LEFT)
+    private class comma extends AbstractAction{
+    	public void actionPerformed(ActionEvent e)
+    	{
+    		if(!isGameOver)
+    			initLevel(9);
+    	}
+    }
+    
+    private class up extends AbstractAction{
+		public void actionPerformed(ActionEvent e)
+		{
+			if(!isGameOver)
+			{
+				 if( spriteX > 0 && nums[spriteX - 1][spriteY] == 0 )
+                 {
+                     stack.push(nums);
+                     nums[spriteX][spriteY] = 0;
+                     nums[spriteX - 1][spriteY] = 3;
+                     spriteX--;
+                     moveCount++;
+
+                 }
+                 else if( spriteX > 1 && nums[spriteX - 1][spriteY] == 2 && nums[spriteX - 2][spriteY] == 0 )
+                 {
+                     stack.push(nums);
+                     nums[spriteX][spriteY] = 0;
+                     nums[spriteX - 1][spriteY] = 3;
+                     nums[spriteX - 2][spriteY] = 2;
+                     spriteX--;
+                     moveCount++;
+
+                 }
+				 
+				 reDraw();
+			}
+		}
+    }
+    private class down extends AbstractAction{
+		public void actionPerformed(ActionEvent e)
+		{
+			if(!isGameOver){
+				if( spriteX < nums.length-1 && nums[spriteX + 1][spriteY] == 0 )
+				{
+					stack.push(nums);
+					nums[spriteX][spriteY] = 0;
+					nums[spriteX + 1][spriteY] = 3;
+					spriteX++;
+					moveCount++;
+
+				}
+				else if( spriteX < nums.length-2 && nums[spriteX + 1][spriteY] == 2 && nums[spriteX + 2][spriteY] == 0 )
+				{
+					stack.push(nums);
+					nums[spriteX][spriteY] = 0;
+					nums[spriteX + 1][spriteY] = 3;
+					nums[spriteX + 2][spriteY] = 2;
+					spriteX++;
+					moveCount++;
+
+				}
+				
+				reDraw();
+			}
+		}
+    }
+    private class left extends AbstractAction{
+		public void actionPerformed(ActionEvent e)
+		{
+			if(!isGameOver)
+			{
+				 if( spriteY > 0 && nums[spriteX][spriteY - 1] == 0 )
+                 {
+                     stack.push(nums);
+                     nums[spriteX][spriteY] = 0;
+                     nums[spriteX][spriteY-1] = 3;
+                     spriteY--;
+                     moveCount++;
+
+                 }
+                 else if ( spriteY > 1 && nums[spriteX][spriteY - 1] == 2 && nums[spriteX][spriteY - 2] == 0 )
+                 {
+                     stack.push(nums);
+                     nums[spriteX][spriteY] = 0;
+                     nums[spriteX][spriteY-1] = 3;
+                     nums[spriteX][spriteY-2] = 2;
+                     spriteY--; 
+                     moveCount++;
+
+                 }  
+				 reDraw();
+			}
+		}
+    }
+    private class right extends AbstractAction{
+		public void actionPerformed(ActionEvent e)
+		{
+			if(!isGameOver)
+			{
+				if( spriteY < nums[0].length-1 && nums[spriteX][spriteY + 1] == 0 )
                 {
-                    if( spriteY > 0 && nums[spriteX][spriteY - 1] == 0 )
-                    {
-                        stack.push(nums);
-                        nums[spriteX][spriteY] = 0;
-                        nums[spriteX][spriteY-1] = 3;
-                        spriteY--;
-                        moveCount++;
+                    stack.push(nums);
+                    nums[spriteX][spriteY] = 0;
+                    nums[spriteX][spriteY + 1] = 3;
+                    spriteY = spriteY + 1;
+                    moveCount++;
 
-                    }
-                    else if ( spriteY > 1 && nums[spriteX][spriteY - 1] == 2 && nums[spriteX][spriteY - 2] == 0 )
-                    {
-                        stack.push(nums);
-                        nums[spriteX][spriteY] = 0;
-                        nums[spriteX][spriteY-1] = 3;
-                        nums[spriteX][spriteY-2] = 2;
-                        spriteY--; 
-                        moveCount++;
-
-                    }                    
-                }                                        
-               
-                if(e.getKeyCode() == KeyEvent.VK_RIGHT)
-                {
-                    if( spriteY < nums[0].length-1 && nums[spriteX][spriteY + 1] == 0 )
-                    {
-                        stack.push(nums);
-                        nums[spriteX][spriteY] = 0;
-                        nums[spriteX][spriteY + 1] = 3;
-                        spriteY = spriteY + 1;
-                        moveCount++;
-
-                    }
-                    else if( spriteY < nums[0].length-2 && nums[spriteX][spriteY + 1] == 2 && nums[spriteX][spriteY + 2] == 0 )
-                    {
-                        stack.push(nums);
-                        nums[spriteX][spriteY] = 0;
-                        nums[spriteX][spriteY + 1] = 3;
-                        nums[spriteX][spriteY + 2] = 2;
-                        spriteY++;
-                        moveCount++;
-
-                    }                
-                }                              
-                
-                
-                if(e.getKeyCode() == KeyEvent.VK_UP)
-                {
-                    if( spriteX > 0 && nums[spriteX - 1][spriteY] == 0 )
-                    {
-                        stack.push(nums);
-                        nums[spriteX][spriteY] = 0;
-                        nums[spriteX - 1][spriteY] = 3;
-                        spriteX--;
-                        moveCount++;
-
-                    }
-                    else if( spriteX > 1 && nums[spriteX - 1][spriteY] == 2 && nums[spriteX - 2][spriteY] == 0 )
-                    {
-                        stack.push(nums);
-                        nums[spriteX][spriteY] = 0;
-                        nums[spriteX - 1][spriteY] = 3;
-                        nums[spriteX - 2][spriteY] = 2;
-                        spriteX--;
-                        moveCount++;
-
-                    }
                 }
-                
-                if(e.getKeyCode() == KeyEvent.VK_DOWN)
+                else if( spriteY < nums[0].length-2 && nums[spriteX][spriteY + 1] == 2 && nums[spriteX][spriteY + 2] == 0 )
                 {
-                    if( spriteX < nums.length-1 && nums[spriteX + 1][spriteY] == 0 )
-                    {
-                        stack.push(nums);
-                        nums[spriteX][spriteY] = 0;
-                        nums[spriteX + 1][spriteY] = 3;
-                        spriteX++;
-                        moveCount++;
-
-                    }
-                    else if( spriteX < nums.length-2 && nums[spriteX + 1][spriteY] == 2 && nums[spriteX + 2][spriteY] == 0 )
-                    {
-                        stack.push(nums);
-                        nums[spriteX][spriteY] = 0;
-                        nums[spriteX + 1][spriteY] = 3;
-                        nums[spriteX + 2][spriteY] = 2;
-                        spriteX++;
-                        moveCount++;
-
-                    }
+                    stack.push(nums);
+                    nums[spriteX][spriteY] = 0;
+                    nums[spriteX][spriteY + 1] = 3;
+                    nums[spriteX][spriteY + 2] = 2;
+                    spriteY++;
+                    moveCount++;
                 }
-                
-                if(e.getKeyCode() == KeyEvent.VK_COMMA)
-                    initLevel(9);
-                reDraw();
-            }
-            }//End of method keyPressed
-            
-            
-            public void keyTyped(KeyEvent e) {              
-            }
-
-            
-            public void keyReleased(KeyEvent e) {                
-            }
-    };
+				reDraw();
+			}
+		}
+    }
     
     private void printNums(){
         System.out.println();
