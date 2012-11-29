@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 
 public class BackToSchool extends JFrame
 {
-	public enum Screen{CAMPUS, BATTLE, FINALBATTLE, CLASS, MINISPLASH};
+	public enum Screen{CAMPUS, BATTLE, FINALBATTLE, CLASS, MINISPLASH, WELCOME};
 	private CardLayout cardLayout;
 	private JPanel cardPanel;
 	private CampusPanel campus;
@@ -17,6 +17,7 @@ public class BackToSchool extends JFrame
 	private FinalBattle finalBattle;
 	private ClassroomPanel classroom;
 	private MiniSplashPane miniSplash;
+	private Welcome welcome;
 	
 	public BackToSchool(CardLayout layout, JPanel panel)
 	{
@@ -27,6 +28,7 @@ public class BackToSchool extends JFrame
 		finalBattle = null;
 		classroom = null;
 		miniSplash = null;
+		welcome = null;
 		
 		cardLayout = layout;
 		cardPanel = panel;
@@ -56,6 +58,11 @@ public class BackToSchool extends JFrame
 				finalBattle = (FinalBattle)panel;
 				//finalBattle.sendFrame(this);
 				break;
+			case WELCOME:
+				welcome  = (Welcome)panel;
+				welcome.sendFrame(this);
+				break;
+				
 		}	
 	}
 	
@@ -80,6 +87,9 @@ public class BackToSchool extends JFrame
 			case FINALBATTLE:
 				finalBattle.requestFocus();
 				break;
+			case WELCOME:
+				welcome.requestFocus();
+				break;
 		}
 		
 	}
@@ -90,10 +100,23 @@ public class BackToSchool extends JFrame
 		JPanel cards = new JPanel(layout);
 		BackToSchool frame = new BackToSchool(layout, cards);
 		
+		frame.addPanel(new Welcome(), Screen.WELCOME);
 		frame.addPanel(new CampusPanel(), Screen.CAMPUS);
 		frame.setContentPane(cards);
-		frame.switchPanel(Screen.CAMPUS);
 		
+		// Testing
+		int welcome = 0;	
+		welcome = 1; //uncomment if you want to see welcome screen
+		
+		if(welcome == 1)
+		{
+			frame.switchPanel(Screen.WELCOME); 	
+		}
+		else
+		{
+			frame.switchPanel(Screen.CAMPUS);	
+		}
+			
 		frame.pack();
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
