@@ -43,7 +43,7 @@ public class MiniSplash extends JPanel implements ActionListener
 		Random generator = new Random();
 		game = generator.nextInt(5) + 1; // 1-4
 
-		game = 3; //testing
+		//game = 3; //testing
 		
 		switch(game)
 		{
