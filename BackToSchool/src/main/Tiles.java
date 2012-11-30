@@ -3,6 +3,7 @@ package main;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -10,13 +11,14 @@ import javax.swing.ImageIcon;
 public class Tiles 
 {	
 	private BufferedImage corner, grass, land, fork, roadh, roadv, roof, wall, door, treeTop, treeTrunk, 
-				  signHum, signMath, signSci;
+				  signHum, signMath, signSci, flower;
 	
 	public Tiles()
 	{
 		try 
 		{	corner = ImageIO.read(new File("art/school/roadcorner.jpg"));
 			grass = ImageIO.read(new File("art/school/grass.jpg"));
+			flower = ImageIO.read(new File("art/school/flower.jpg"));
 			land = ImageIO.read(new File("art/school/land.jpg"));
 			fork = ImageIO.read(new File("art/school/roadfork.jpg"));
 			roadh = ImageIO.read(new File("art/school/road-side.jpg"));
@@ -46,7 +48,22 @@ public class Tiles
 				break;	
 			}
 			case GRASS:
-			{	tile = grass;
+			{	
+				Random r = new Random();
+				int choose = r.nextInt(10)+1;
+			
+				if(choose <= 8)
+				{
+					tile = land;
+				}
+				else if (choose == 9)
+				{
+					tile = flower;
+				}
+				else
+				{
+					tile = grass;
+				}
 				break;	
 			}
 			case LAND:
@@ -104,7 +121,8 @@ public class Tiles
 				break;
 			}
 			default:
-			{	tile = land;
+			{	
+				tile = land;
 				break;	
 			}
 		}

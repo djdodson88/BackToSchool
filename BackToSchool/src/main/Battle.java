@@ -87,8 +87,10 @@ public class Battle extends JPanel {
 		r = new Random();
 		bossSubject=classSubject;
 		this.player = player;
+		//playerHealth = 0;
 		playerHealth=100;
 		bossHealth=100;
+		//bossHealth = 0;
 		background = new ImageIcon("art/battle/battle.jpg");
 		specialAttack=false;
 		setDown=false;
@@ -214,8 +216,8 @@ public class Battle extends JPanel {
 
 		//--------------------- End of Boss Variables-----------------------------//
 
-		lostScreen = new ImageIcon("art/battle/Lost.png");
-		winScreen = new ImageIcon("art/battle/Win.png");
+		lostScreen = new ImageIcon("art/battle/Lost.jpg");
+		winScreen = new ImageIcon("art/battle/Win.jpg");
 		// adding components to the jpanel
 		//
 		this.add(bossName);
@@ -298,7 +300,7 @@ public class Battle extends JPanel {
 			{
 				// BATTLE END (Loss)
 				playerHealthLabel.setText("0%");
-				System.out.println("You were vanquished by the "+ this.bossSubject + " midterm...");
+				//System.out.println("You were vanquished by the "+ this.bossSubject + " midterm...");
 				repaint();
 				//cardLayout.show(cardPanel, "CAMPUS");
 				
