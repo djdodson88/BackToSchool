@@ -115,9 +115,9 @@ public class FinalBattle extends JPanel {
 		r = new Random();
 
 		//adding the attack button
-		button1 = new JButton("Attack");
+		button1 = new JButton(new ImageIcon("art/buttons/attack_btn.jpg"));
 		//button1.addActionListener(new ButtonListener());
-		button1.setBounds(400,510,100,30);
+		button1.setBounds(420,510,100,30);
 		button1.addActionListener(new AttackButtonListener());
 
 		//attacking menu
@@ -212,17 +212,19 @@ public class FinalBattle extends JPanel {
 		mathBossX=0;
 		mathBossY=250;
 
-		bossHealthLabel = new JLabel("Choose");
-		bossTypeLabel = new JLabel("to attack");
-		bossNameLabel = new JLabel("a boss");
-		bossSpecialAttackLabel = new JLabel("");
-		bossSpecialDefenseLabel = new JLabel("");
-		bossHealthLabel.setBounds(140,340,100,100);
+		bossHealthLabel = new JLabel();
+		bossTypeLabel = new JLabel();
+		bossNameLabel = new JLabel();
+		bossSpecialAttackLabel = new JLabel();
+		bossSpecialDefenseLabel = new JLabel();
+		
 		bossHealthLabel.setFont(new Font("Serif", Font.PLAIN, 20));
-		bossNameLabel.setBounds(100,420,200,30);
-		bossTypeLabel.setBounds(100,460,100,30);
-		bossSpecialAttackLabel.setBounds(100,500,200,30);
-		bossSpecialDefenseLabel.setBounds(100,540,250,30);
+		
+		bossHealthLabel.setBounds(140,340,100,100);
+		bossNameLabel.setBounds(90,410,200,30);
+		bossTypeLabel.setBounds(90,440,100,30);
+		bossSpecialAttackLabel.setBounds(90,470,200,30);
+		bossSpecialDefenseLabel.setBounds(90,500,250,30);
 
 		lastBossToGo="";
 		//--------------------End of Bosses Variables

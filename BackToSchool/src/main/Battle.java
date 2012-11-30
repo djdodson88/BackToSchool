@@ -96,7 +96,7 @@ public class Battle extends JPanel {
 		//adding the attack button
 		button1 = new JButton(new ImageIcon("art/buttons/attack_btn.jpg"));
 		button1.addActionListener(new AttackButtonListener());
-		button1.setBounds(400,510,100,30);
+		button1.setBounds(420,510,100,30);
 		
 		exit = new JButton("Exit");
 		exit.addActionListener(new exitButtonListener());
@@ -155,9 +155,9 @@ public class Battle extends JPanel {
 		//setting location of statistics
 		playerHealthLabel.setBounds(670,340,100,100);
 		playerHealthLabel.setFont(new Font("Serif", Font.PLAIN, 20));
-		creativityLabel.setBounds(620,380,150,100);
-		quantReasoningLabel.setBounds(620,420,150,100);
-		scientRigorLabel.setBounds(620,460,150,100);
+		creativityLabel.setBounds(620,380,160,100);
+		quantReasoningLabel.setBounds(620,420,160,100);
+		scientRigorLabel.setBounds(620,460,160,100);
 		//---------------------End of Player Variables---------------------------//
 
 		//----------------------- Boss Variables----------------------------------//
@@ -206,10 +206,10 @@ public class Battle extends JPanel {
 
 		//setting location of statistics
 		bossHealthLabel.setBounds(140,340,100,100);
-		bossName.setBounds(100,420,200,30);
-		bossType.setBounds(100,460,100,30);
-		bossSpecialAttackLabel.setBounds(100,500,200,30);
-		bossSpecialDefenseLabel.setBounds(100,540,250,30);
+		bossName.setBounds(90,410,200,30);
+		bossType.setBounds(90,440,100,30);
+		bossSpecialAttackLabel.setBounds(90,470,200,30);
+		bossSpecialDefenseLabel.setBounds(90,500,250,30);
 		//bossStory.setBounds(100,500,100,10);
 
 		//--------------------- End of Boss Variables-----------------------------//
