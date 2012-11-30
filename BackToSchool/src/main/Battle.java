@@ -32,6 +32,8 @@ public class Battle extends JPanel {
 	// Student variables
 	ImageIcon student;
 	ImageIcon backpack;
+	ImageIcon pencil1;
+	ImageIcon pencil2;
 	int backpackX;
 	int backpackY;
 	int studentX;
@@ -63,6 +65,8 @@ public class Battle extends JPanel {
 	ImageIcon humAttack1;
 	ImageIcon humAttack2;
 	ImageIcon humAttack3;
+	ImageIcon explosion;
+	ImageIcon explosion2;
 	int attackX;
 	int attackY;
 	int bossX;
@@ -141,6 +145,8 @@ public class Battle extends JPanel {
 		//----------------------Player Variables--------------------------------//
 		student = new ImageIcon("art/characters/student_leftside.png"); // loading image
 		backpack = new ImageIcon("art/battle/backpack.png");
+		pencil1 = new ImageIcon("art/battle/pencil.png");
+		pencil2 = new ImageIcon("art/battle/pencil.png");
 		studentX=600;// x coordinate for student
 		studentY=200;// y coordinate for student
 		backpackX=600;
@@ -205,6 +211,9 @@ public class Battle extends JPanel {
 			bossSpecialDefenseLabel = new JLabel("Special Defense: Bias Data");
 			//bossStory = new JLabel("");
 		}
+		
+		explosion = new ImageIcon("art/battle/explosion.png");
+		explosion2 = new ImageIcon("art/battle/explosion.png");
 
 		//setting location of statistics
 		bossHealthLabel.setBounds(140,340,100,100);
@@ -316,8 +325,13 @@ public class Battle extends JPanel {
 	private void movePlayer(){
 		backpackX -= xSpeed;
 		backpackY -= 1;
+		
+		if(specialAttack)
+		{
+			backpackX-=6;
+		}
 
-		//if the student reaches to the origin, make him stop
+		//if backpack reaces boss
 		if(backpackX < 190)
 		{
 			if(specialAttack){
@@ -367,15 +381,8 @@ public class Battle extends JPanel {
 			}
 			else
 			{
-				// BATTLE END (victor)
-				//lostScreen.paintIcon(this, graphics, 0, 0);
-				System.out.println("You dominated the "+ this.bossSubject + " midterm!");
-
+				//System.out.println("You dominated the "+ this.bossSubject + " midterm!");
 				repaint();
-				
-
-				//cardLayout.show(cardPanel, "CAMPUS");
-				//frame.switchPanel(BackToSchool.Screen.CAMPUS);
 			}
 		}	
 	}
@@ -394,9 +401,26 @@ public class Battle extends JPanel {
 		background.paintIcon(this,g,0,0);
 		student.paintIcon(this, g, studentX, studentY);
 		boss.paintIcon(this, g, bossX, bossY);
-
-		if(attackPressed)
-			backpack.paintIcon(this, g, backpackX,backpackY);
+		
+		if(attackPressed){
+			if(!specialAttack){
+				backpack.paintIcon(this, g, backpackX,backpackY);
+				//System.out.println(backpackX);
+				if(backpackX<230)
+					explosion.paintIcon(this,g,180,100);
+			}
+			else
+			{
+				pencil1.paintIcon(this,g,backpackX-40,200);
+				pencil2.paintIcon(this,g,backpackX-10,250);
+				
+				if(backpackX<210)
+				{
+					explosion2.paintIcon(this,g,150,180);
+					explosion.paintIcon(this,g,170,230);
+				}
+			}
+		}
 
 		if(optionA)
 			scribble.paintIcon(this, g, 395, 400);
@@ -521,7 +545,7 @@ public class Battle extends JPanel {
 		}
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("Back To School: Battle Mode");
-		Battle battle = new Battle(new Player(),"Math");
+		Battle battle = new Battle(new Player(),"Humanities");
 		frame.setSize(800,600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// frame.add(battle);

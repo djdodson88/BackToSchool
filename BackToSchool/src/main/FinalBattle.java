@@ -42,6 +42,8 @@ public class FinalBattle extends JPanel {
 	JLabel quantReasoningLabel;
 	JLabel scientRigorLabel;
 	Timer timer;
+	ImageIcon pencil;
+	ImageIcon pencil2;
 	Player player;
 
 	// Attack Menu variables
@@ -92,6 +94,8 @@ public class FinalBattle extends JPanel {
 	boolean sciBossTurn;
 	boolean mathBossTurn;
 	String lastBossToGo;
+	ImageIcon explosion;
+	ImageIcon explosion2;
 
 	public FinalBattle(Player player)
 	{
@@ -169,6 +173,9 @@ public class FinalBattle extends JPanel {
 		quantReasoningLabel = new JLabel("Quantative Reasoning: "+player.getQuantReasoning());
 		scientRigorLabel = new JLabel("Scientific Rigor: "+player.getSciRigor());
 		backpack = new ImageIcon("art/battle/backpack.png");
+		
+		pencil = new ImageIcon("art/battle/pencil.png");
+		pencil2 = new ImageIcon("art/battle/pencil.png");
 
 		//setting location of statistics
 		playerHealthLabel.setBounds(670,340,100,100);
@@ -226,6 +233,8 @@ public class FinalBattle extends JPanel {
 		bossSpecialAttackLabel.setBounds(90,470,200,30);
 		bossSpecialDefenseLabel.setBounds(90,500,250,30);
 
+		explosion = new ImageIcon("art/battle/explosion.png");
+		explosion2 = new ImageIcon("art/battle/explosion.png");
 		lastBossToGo="";
 		//--------------------End of Bosses Variables
 		
@@ -268,10 +277,42 @@ public class FinalBattle extends JPanel {
 		background.paintIcon(this,g,0,0);
 		student.paintIcon(this, g, studentX, studentY);
 		
+		if(attackPressed){
 		
-
-		if(attackPressed)
-			backpack.paintIcon(this, g, backpackX,backpackY);
+			if(specialAttack)
+			{
+				pencil.paintIcon(this,g,backpackX-15,backpackY);
+				pencil2.paintIcon(this,g,backpackX+5,backpackY+40);
+				
+				if(backpackX<230){
+					if(bossChosen.equals("Science")){
+						explosion.paintIcon(this, g, 180, 100);
+						explosion2.paintIcon(this, g, 180, 140);
+					}
+					else if(bossChosen.equals("Math")){
+						explosion.paintIcon(this, g, 200, 280);
+						explosion2.paintIcon(this, g, 180, 240);
+					}
+					else if(bossChosen.equals("Humanities")){
+						explosion.paintIcon(this, g, 220, 0);
+						explosion2.paintIcon(this, g, 230, 40);
+					}
+				}
+			}
+			else
+			{
+				backpack.paintIcon(this, g, backpackX,backpackY);
+				
+				if(backpackX<230){
+					if(bossChosen.equals("Science"))
+						explosion.paintIcon(this, g, 180, 100);
+					else if(bossChosen.equals("Math"))
+						explosion.paintIcon(this, g, 180, 250);
+					else if(bossChosen.equals("Humanities"))
+						explosion.paintIcon(this, g, 200, 0);
+				}
+			}
+		}
 
 		if(optionA)
 			scribble.paintIcon(this, g, 395, 400);
