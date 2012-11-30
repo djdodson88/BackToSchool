@@ -172,9 +172,9 @@ public class FinalBattle extends JPanel {
 
 		//setting location of statistics
 		playerHealthLabel.setBounds(670,340,100,100);
-		creativityLabel.setBounds(620,380,150,100);
-		quantReasoningLabel.setBounds(620,420,150,100);
-		scientRigorLabel.setBounds(620,460,150,100);
+		creativityLabel.setBounds(620,380,160,100);
+		quantReasoningLabel.setBounds(620,420,160,100);
+		scientRigorLabel.setBounds(620,460,160,100);
 		//---------------------End of Player Variables---------------------------//
 
 		//---------------------Bosses Variables------------------------------------//
