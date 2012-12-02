@@ -32,6 +32,10 @@ public class FinalBattle extends JPanel {
 	// Student variable
 	ImageIcon student;
 	ImageIcon backpack;
+	boolean drawConfused1;
+	boolean drawConfused2;
+	ImageIcon confusedStudent1;
+	ImageIcon confusedStudent2;
 	int studentX;
 	int studentY;
 	int backpackX;
@@ -176,6 +180,12 @@ public class FinalBattle extends JPanel {
 		
 		pencil = new ImageIcon("art/battle/pencil.png");
 		pencil2 = new ImageIcon("art/battle/pencil.png");
+		
+		confusedStudent1 = new ImageIcon("art/characters/confused_student.png");
+		confusedStudent2 = new ImageIcon("art/characters/confused_student2.png");
+		
+		drawConfused1=false;
+		drawConfused2=false;
 
 		//setting location of statistics
 		playerHealthLabel.setBounds(670,340,100,100);
@@ -275,7 +285,18 @@ public class FinalBattle extends JPanel {
 		super.paintComponent(g);
 		graphics=g;
 		background.paintIcon(this,g,0,0);
-		student.paintIcon(this, g, studentX, studentY);
+		
+		if(drawConfused1)
+		{
+			confusedStudent1.paintIcon(this, g, studentX, studentY);
+		}
+		else if(drawConfused2)
+		{
+			confusedStudent2.paintIcon(this, g, studentX, studentY);
+		}
+		else{
+			student.paintIcon(this, g, studentX, studentY);
+		}
 		
 		if(attackPressed){
 		
@@ -428,6 +449,8 @@ public class FinalBattle extends JPanel {
 			// if student touches the boss , tell him to go the other direction
 			if (mathBossX > 500) 
 			{
+				drawConfused1=true;
+				drawConfused2=false;
 				playerHealth-=(21-(player.getQuantReasoning()-r.nextInt(5)));
 
 				if(playerHealth<0)
@@ -440,6 +463,8 @@ public class FinalBattle extends JPanel {
 			// if the student reaches to the origin, make him stop
 			else if(mathBossX < 4)
 			{
+				drawConfused1=false;
+				drawConfused2=false;
 				bossTimer.stop();
 				xSpeed=5;
 				ySpeed=1;
@@ -456,12 +481,19 @@ public class FinalBattle extends JPanel {
 				mathBossButton.setBounds(0,250,130,140); 
 				lastBossToGo="Math";
 			}
+			else if(mathBossX>450 && mathBossX<480)
+			{
+				drawConfused1=false;
+				drawConfused2=true;
+			}
 		}
 		else if(humBossTurn){
 			attackY += 1;
 
 			if(attackY>50)
 			{
+				drawConfused1=false;
+				drawConfused2=false;
 				playerHealth-=(21-(player.getCreativity()-r.nextInt(5)));
 				
 				if(playerHealth<0)
@@ -482,6 +514,10 @@ public class FinalBattle extends JPanel {
 				bossSpecialAttackLabel.setText("");
 				bossSpecialDefenseLabel.setText("");
 			}
+			else if(attackY>10){
+				drawConfused2=true;
+				drawConfused1=false;
+			}
 		}
 		else if(sciBossTurn)
 		{
@@ -489,6 +525,8 @@ public class FinalBattle extends JPanel {
 
 			if(attackX>800)
 			{
+				drawConfused1=false;
+				drawConfused2=false;
 				playerHealth-=(21-(player.getSciRigor()-r.nextInt(5)));
 				if(playerHealth<0)
 					playerHealthLabel.setText("0%");
@@ -507,6 +545,15 @@ public class FinalBattle extends JPanel {
 				sciBossButton.setBounds(0,110,130,140); 
 				mathBossButton.setBounds(0,250,130,140); 
 				lastBossToGo="Science";
+			}
+			else if(attackX>550 && attackX<580){
+				drawConfused1=true;
+				drawConfused2=false;
+			}
+			else if(attackX>=600)
+			{
+				drawConfused1=false;
+				drawConfused2=true;
 			}
 		}
 		
