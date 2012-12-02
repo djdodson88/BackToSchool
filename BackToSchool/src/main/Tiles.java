@@ -49,26 +49,16 @@ public class Tiles
 			}
 			case GRASS:
 			{	
-				Random r = new Random();
-				int choose = r.nextInt(10)+1;
-			
-				if(choose <= 8)
-				{
-					tile = land;
-				}
-				else if (choose == 9)
-				{
-					tile = flower;
-				}
-				else
-				{
-					tile = grass;
-				}
+				tile = grass;
 				break;	
 			}
 			case LAND:
 			{	tile = land;
 				break;	
+			}
+			case FLOWER:
+			{	tile = flower;
+				break;
 			}
 			case FORK:
 			{	tile = fork;

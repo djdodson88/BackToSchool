@@ -38,20 +38,21 @@ public class CampusPanel extends JPanel
 		tiles = new Image[TILESX][TILESY];
 		tileFactory = new Tiles();
 			
-		try { 
-			player = ImageIO.read(new File("art/characters/student.png"));
-			playerUp = ImageIO.read(new File("art/characters/student_backside.png"));
+		try 
+		{	playerUp = ImageIO.read(new File("art/characters/student_backside.png"));
 			playerDown = ImageIO.read(new File("art/characters/student.png"));
 			playerLeft = ImageIO.read(new File("art/characters/student_leftside.png"));
-			playerRight = ImageIO.read(new File("art/characters/student_rightside.png"));
-			
-		} catch(IOException e){};
+			playerRight = ImageIO.read(new File("art/characters/student_rightside.png"));	
+		} 
+		catch(IOException e){};
 		
 		student = new Player();
+		player = playerDown;
 		day = new Day(1);
 		continueClasses();
 		
 		addKeyListener(new CampusListener());
+		addMouseListener(new CampusMouseListener());
 		setPreferredSize(new Dimension(PWIDTH,PHEIGHT));
 		setBackground(Color.RED);
 		setFocusable(true);
@@ -104,11 +105,12 @@ public class CampusPanel extends JPanel
 		{
 			while (animating)
 			{
-				try {
-					sleep(500);
+				try 
+				{	sleep(500);
 					repaint();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+				} 
+				catch (InterruptedException e) 
+				{	e.printStackTrace();
 				}
 			}
 		}
@@ -249,15 +251,14 @@ public class CampusPanel extends JPanel
 				
 				if (campus.isTraversable(screenX+playerX, screenY+playerY-1))
 				{	
-					
 					int cHeight = campus.getHeight();
 					if ((playerY-1>PADY-1 && playerY-1<(TILESY-PADY)) || screenY == 0
 							|| ((screenY == cHeight-TILESY) && playerY-1>=(TILESY-PADY)) )
 						playerY--;
 					else
 						updateTiles(Direction.UP);
-					repaint();
 				}
+				repaint();
 			}
 			else if(e.getKeyCode() == KeyEvent.VK_LEFT)
 			{	
@@ -270,8 +271,8 @@ public class CampusPanel extends JPanel
 						playerX--;
 					else
 						updateTiles(Direction.LEFT);
-					repaint();
 				}
+				repaint();
 			}
 			else if(e.getKeyCode() == KeyEvent.VK_DOWN)
 			{	
@@ -284,8 +285,8 @@ public class CampusPanel extends JPanel
 						playerY++;
 					else
 						updateTiles(Direction.DOWN);
-					repaint();
 				}
+				repaint();
 			}
 			else if(e.getKeyCode() == KeyEvent.VK_RIGHT)
 			{	
@@ -298,8 +299,8 @@ public class CampusPanel extends JPanel
 						playerX++;
 					else
 						updateTiles(Direction.RIGHT);
-					repaint();
 				}
+				repaint();
 			}
 			else if(e.getKeyCode() == KeyEvent.VK_B)
 			{
@@ -326,7 +327,7 @@ public class CampusPanel extends JPanel
 			int yIndex = click.y/TILE;
 			
 			Tile clicked = campus.getTile(xIndex, yIndex);
-			
+			System.out.println("Clicked: " + xIndex + "," + yIndex);
 		}
 	}
 
