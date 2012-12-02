@@ -38,24 +38,37 @@ public class Fruit_Game extends JPanel implements Runnable{
 	int life;
 	JButton exit;
 	static int totalFruits;
-	static int counter;
-
+	int counter;
 	BackToSchool frame;
 	private main.Player student;
 	private int className;
 	
 	public Fruit_Game(int day) {
-		
+		timer = null;
 		this.setPreferredSize(new Dimension(550, 450));
 		this.setFocusable(true);   // Allow this panel to get focus.
-		//this.setSize(550,450);
+		totalScore=0;// used to keep the score
 		earnedPercentage=0;
 		this.setBackground(Color.white);
 		currentItem="apple";
 		bombsHit=0;
+		counter=0;
 		life=3;
 		X=0;
 		Y=0;
+		
+		if(day>0 && day<=3){
+			level = 1;// 1-3 depending on the level of the player
+			totalFruits=15;
+		}
+		else if(day>=4 && day<=7){
+			level = 2;
+			totalFruits=20;
+		}
+		else if(day>=8){
+			level = 3;
+			totalFruits=30;
+		}
 		
 		InputMap myInputMap = new InputMap();
 		ActionMap myActionMap = new ActionMap();
@@ -72,25 +85,10 @@ public class Fruit_Game extends JPanel implements Runnable{
 		myActionMap.put("left", left);
 		myActionMap.put("right", right);
 		
-		
-		if(day>0 && day<4){
-			level = 1;// 1-3 depending on the level of the player
-			totalFruits=15;
-		}
-		else if(day>3 && day<8){
-			level = 2;
-			totalFruits=20;
-		}
-		else if(day>7 && day< 11){
-			level = 3;
-			totalFruits=30;
-		}
-		
 		setLayout(null);
-		totalScore=0;// used to keep the score
 		loadImages();// load the images for the game
 		
-		score = new JLabel("");
+		score = new JLabel();
 		score.setBounds(220,0,300,50);
 		score.setFont(new Font("Serif", Font.PLAIN, 20));
 		
@@ -120,15 +118,17 @@ public class Fruit_Game extends JPanel implements Runnable{
 		// if timer hasnt started
 		Random r = new Random();
 		X=r.nextInt(400);
-		if(timer==null)
-		{
-			//System.out.println("Start");
-			Y=0;
-			// create new timer
-			timer = new Timer(50, new TimerListener());
-			timer.start();
-		}
-		//sSystem.out.println("Running");
+		Y=0;
+		// create new timer
+		timer = new Timer(50, new TimerListener());
+		timer.start();
+//		if(timer==null)
+//		{
+//			Y=0;
+//			// create new timer
+//			timer = new Timer(50, new TimerListener());
+//			timer.start();
+//		}
 	}
 
 	public void loadImages() {
@@ -367,15 +367,12 @@ public class Fruit_Game extends JPanel implements Runnable{
 			score.setVisible(false);
 			earnedPercentageLabel.setText(" You earned: "+earnedPercentage+" exp");
 			exit.setVisible(true);
-			
-			
 		}
 		else if(!(totalFruits>counter)){
 			setEarnedPercentage();
 			score.setVisible(false);
 			earnedPercentageLabel.setText(" You earned: "+earnedPercentage+" exp");
 			exit.setVisible(true);
-			
 		}
 			
 	}
