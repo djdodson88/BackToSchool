@@ -24,12 +24,15 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.InputMap;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.Timer;
 import javax.swing.colorchooser.ColorSelectionModel;
+
+import main.BackToSchool;
 
 
 public class WareHouseKeeper extends JPanel
@@ -39,8 +42,12 @@ public class WareHouseKeeper extends JPanel
     JPanel p;
     JPanel controlPanel;
     
+    BackToSchool frame;
+    
     int [][] nums;   
     int [][] dots;
+    
+    JButton exit;
     
     JLabel welldone;
     JLabel levelLabel;
@@ -91,6 +98,7 @@ public class WareHouseKeeper extends JPanel
 	        		t.stop();
 	        		isGameOver = true;
 	        		resultLabel.setText("Time over :(");
+	        		exit.setVisible(true);
 	            	resultLabel.setVisible(true);
 	        	}
 	        	controlPanel.repaint();
@@ -187,6 +195,10 @@ public class WareHouseKeeper extends JPanel
         
         p = new JPanel();
         
+        exit = new JButton(new ImageIcon("art/buttons/exit_btn.jpg"));
+        exit.setVisible(false);
+    	exit.addActionListener(new exitButtonListener());
+        
         controlPanel = new JPanel();
         controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.Y_AXIS));
         
@@ -201,6 +213,7 @@ public class WareHouseKeeper extends JPanel
         //controlPanel.add(restart);
         controlPanel.add( Box.createRigidArea( new Dimension(5,25)) );
         //controlPanel.add(welldone);
+        
         controlPanel.add(countLabel);
         controlPanel.add( Box.createRigidArea( new Dimension(5,25)) );
         controlPanel.add(undo);        
@@ -209,6 +222,8 @@ public class WareHouseKeeper extends JPanel
         controlPanel.add( Box.createRigidArea( new Dimension(5,25)) );
         controlPanel.add(resultLabel);
         controlPanel.add(Box.createVerticalGlue() );
+        controlPanel.add(exit);
+        controlPanel.add( Box.createRigidArea( new Dimension(5,25)) );
         
         controlPanel.addMouseListener( new MouseAdapter() {
             @Override
@@ -263,7 +278,11 @@ public class WareHouseKeeper extends JPanel
     
     
     }//End of the default constructor
-    
+    public void getFrame(BackToSchool frame)
+	{
+		this.frame = frame;
+		
+	}
 	public void getPlayer(main.Player student)
 	{
 		this.student = student;
@@ -354,6 +373,7 @@ public class WareHouseKeeper extends JPanel
         	   isGameOver = true;
         	   t.stop();
         	   resultLabel.setText("You won!");
+        	   exit.setVisible(true);
         	   resultLabel.setVisible(true);
            }
            
@@ -496,6 +516,15 @@ public class WareHouseKeeper extends JPanel
 			}
 		}
     }
+    
+    private class exitButtonListener implements ActionListener
+	{
+		public void actionPerformed(ActionEvent event)
+		{
+			increaseStats();
+			frame.switchPanel(BackToSchool.Screen.CAMPUS);
+		}	
+	}
     
     private void printNums(){
         System.out.println();
