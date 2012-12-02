@@ -286,6 +286,8 @@ public class WareHouseKeeper extends JPanel
     
     
     }//End of the default constructor
+   
+    
     public void getFrame(BackToSchool frame)
 	{
 		this.frame = frame;

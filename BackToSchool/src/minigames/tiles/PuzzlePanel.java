@@ -4,6 +4,8 @@ import java.awt.event.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import javax.swing.*;
 
+import main.BackToSchool;
+
 public class PuzzlePanel extends JPanel
 {
 	private ImageIcon[][] puzzle;
@@ -19,6 +21,7 @@ public class PuzzlePanel extends JPanel
 	//Game
 	private main.Player student;
 	private int className;
+	private main.BackToSchool frame;
 	
 	public PuzzlePanel(int day)
 	{
@@ -94,6 +97,11 @@ public class PuzzlePanel extends JPanel
 		requestFocus();
 	}
 	
+	public void getFrame(BackToSchool frame)
+	{
+		this.frame = frame;
+		
+	}
 	public void getPlayer(main.Player student)
 	{
 		this.student = student;

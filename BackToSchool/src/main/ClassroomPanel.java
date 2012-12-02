@@ -69,8 +69,12 @@ public class ClassroomPanel extends JPanel{
 			minigame = fruit;
 			break;
 		case 2:
+			
 			//Warehouse
 			warehouse = new WareHouseKeeper(dayCnt);
+			warehouse.getFrame(frame);
+			warehouse.getPlayer(student);
+			warehouse.getClassSubject(day.getNextClass());
 			minigame = warehouse;
 		
 			break;
@@ -78,14 +82,18 @@ public class ClassroomPanel extends JPanel{
 			sudoku = new SudokuGame(dayCnt);
 			sudoku.getPlayer(student);
 			sudoku.getClassSubject(day.getNextClass());
-			
 			sudoku.getFrame(frame);
+			
 			minigame = sudoku;
 			
 			break;
 		case 4:
 			//Tiles
 			tiles = new PuzzlePanel(dayCnt);
+			tiles.getFrame(frame);
+			tiles.getPlayer(student);
+			tiles.getClassSubject(day.getNextClass());
+			
 			minigame = tiles;
 			break;
 		case 5:
