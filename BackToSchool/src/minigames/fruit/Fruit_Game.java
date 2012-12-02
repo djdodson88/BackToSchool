@@ -32,7 +32,7 @@ public class Fruit_Game extends JPanel implements Runnable{
 	int totalScore;
 	JLabel score;
 	JLabel earnedPercentageLabel;
-	int earnedPercentage;
+	double earnedPercentage;
 	Graphics graphics;
 	Timer timer;
 	int life;
@@ -93,11 +93,11 @@ public class Fruit_Game extends JPanel implements Runnable{
 		score.setFont(new Font("Serif", Font.PLAIN, 20));
 		
 		earnedPercentageLabel = new JLabel();
-		earnedPercentageLabel.setBounds(215,30,300,50);
+		earnedPercentageLabel.setBounds(200,150,300,50);
 		earnedPercentageLabel.setFont(new Font("Serif", Font.PLAIN, 25));
 		
 		exit = new JButton(new ImageIcon("art/buttons/exit_btn.jpg"));
-		exit.setBounds(250,200,100,30);
+		exit.setBounds(250,210,100,30);
 		exit.addActionListener(new exitButtonListener());
 		exit.setVisible(false);
 		
@@ -189,13 +189,60 @@ public class Fruit_Game extends JPanel implements Runnable{
 		}
 	}
 	
+	public void setEarnedPercentage(){
+		if(level==1)
+		{
+			//score.setText(Double.toString(totalScore));
+			if(totalScore<5 && life==0) // lose and caught only 1-4 fruits
+				earnedPercentage=0.1;
+			else if(totalScore>=5 && totalScore<10) // lose but caught 5 to 9 fruits
+				earnedPercentage=0.2;
+			else if(totalScore>=10 && totalScore<14) // lose but caught 10-14 fruits
+				earnedPercentage=0.3;
+			else if(totalScore>=14 && life<3) // win but lost lifes
+				earnedPercentage=0.4;
+			else if(totalScore>14 && life>2) // perfect score
+				earnedPercentage=0.5;
+		}
+		else if(level==2)
+		{
+			//score.setText(Double.toString(totalScore));
+			if(totalScore<7 && life==0) //lose and caught only 1-6 fruits
+				earnedPercentage=0.1;
+			else if(totalScore>=7 && totalScore<14) //lose and caught 7-13 fruits
+				earnedPercentage=0.2;
+			else if(totalScore>=14 && totalScore<19) //lose and caught 14-19 fruits
+				earnedPercentage=0.3;
+			else if(totalScore>=19 && life<3) //win and lost lifes
+				earnedPercentage=0.4;
+			else if(totalScore>19 && life>2)// perfect score
+				earnedPercentage=0.5;
+		}
+		else if(level==3)
+		{
+			//score.setText(Double.toString(totalScore));
+			if(totalScore<10 && life==0)
+				earnedPercentage=0.1;
+			else if(totalScore>=10 && totalScore<20)
+				earnedPercentage=0.2;
+			else if(totalScore>=20 && totalScore<29)
+				earnedPercentage=0.3;
+			else if(totalScore>=29 && life<3)
+				earnedPercentage=0.4;
+			else if(totalScore>29 && life>2)
+				earnedPercentage=0.5;
+		}
+	}
+	
+	public double getEarnedPercentage(){
+		return earnedPercentage;
+	}
+	
 	private class left extends AbstractAction{
 		public void actionPerformed(ActionEvent e)
 		{
 			if(cordX>0)
 				cordX-=15;
-			
-			//repaint();
 		}
 	}
 	
@@ -204,8 +251,6 @@ public class Fruit_Game extends JPanel implements Runnable{
 		{
 			if(cordX<400)
 				cordX+=15;
-			
-			//repaint();
 		}
 	}
 	
@@ -262,8 +307,6 @@ public class Fruit_Game extends JPanel implements Runnable{
 		public void actionPerformed(ActionEvent event)
 		{
 			frame.switchPanel(BackToSchool.Screen.CAMPUS);
-			//System.out.println("Pressed Exit Button");
-			
 		}	
 	}
 	
@@ -271,7 +314,6 @@ public class Fruit_Game extends JPanel implements Runnable{
 		if(cordX-70<X && cordX+70>X)
 		{
 			if(currentItem.equals("bomb")){
-    			totalScore-=2;
     			life--;
 			}
     		else{
@@ -288,13 +330,17 @@ public class Fruit_Game extends JPanel implements Runnable{
 		score.setText("Score: "+Integer.toString(totalScore)+"/"+totalFruits+"  Life:"+(life));
 		
 		if(!(life>0)){
-			earnedPercentage=1;
-			earnedPercentageLabel.setText(" You earned: "+earnedPercentage+"%");
+			setEarnedPercentage();
+			score.setVisible(false);
+			earnedPercentageLabel.setText(" You earned: "+earnedPercentage+" exp");
 			exit.setVisible(true);
+			
 		}
 		else if(!(totalFruits>counter)){
-			earnedPercentage=5;
-			earnedPercentageLabel.setText(" You earned: "+earnedPercentage+"%");
+			setEarnedPercentage();
+			score.setVisible(false);
+			earnedPercentageLabel.
+			setText(" You earned: "+earnedPercentage+" exp");
 			exit.setVisible(true);
 		}
 			
