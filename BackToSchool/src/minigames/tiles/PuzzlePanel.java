@@ -15,6 +15,11 @@ public class PuzzlePanel extends JPanel
 	private static int PWIDTH=550, PHEIGHT=450, TILE=100;
 	private boolean finished;
 	
+	
+	//Game
+	private main.Player student;
+	private int className;
+	
 	public PuzzlePanel(int day)
 	{
 		// LOAD IN ALL IMAGES
@@ -88,6 +93,37 @@ public class PuzzlePanel extends JPanel
 		setBackground(Color.gray);
 		requestFocus();
 	}
+	
+	public void getPlayer(main.Player student)
+	{
+		this.student = student;
+	}
+	
+	public void getClassSubject(int type)
+	{
+		className = type;
+	}
+	
+	
+	public void increaseStats()
+	{
+		switch(className-1)
+		{
+		case 0:
+			
+			student.increaseSciRigor(0);
+			break;
+		case 1:
+			student.increaseCreativit(0);
+			break;
+		case 2:
+			student.increaseQuantReasoning(0);
+			break;
+		}
+		
+		
+	}
+	
 	
 	private void newPuzzle()
 	{

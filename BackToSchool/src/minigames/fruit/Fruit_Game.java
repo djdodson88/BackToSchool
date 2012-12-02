@@ -41,6 +41,8 @@ public class Fruit_Game extends JPanel implements Runnable{
 	static int counter;
 
 	BackToSchool frame;
+	private main.Player student;
+	private int className;
 	
 	public Fruit_Game(int day) {
 		
@@ -238,6 +240,36 @@ public class Fruit_Game extends JPanel implements Runnable{
 		return earnedPercentage;
 	}
 	
+	public void getPlayer(main.Player student)
+	{
+		this.student = student;
+	}
+	
+	public void getClassSubject(int type)
+	{
+		className = type;
+	}
+	
+	
+	public void increaseStats()
+	{
+		switch(className-1)
+		{
+		case 0:
+			student.increaseSciRigor(earnedPercentage);
+			break;
+		case 1:
+			student.increaseCreativit(earnedPercentage);
+			break;
+		case 2:
+			student.increaseQuantReasoning(earnedPercentage);
+			break;
+		}
+		
+		
+	}
+
+	
 	private class left extends AbstractAction{
 		public void actionPerformed(ActionEvent e)
 		{
@@ -306,6 +338,7 @@ public class Fruit_Game extends JPanel implements Runnable{
 	{
 		public void actionPerformed(ActionEvent event)
 		{
+			increaseStats();
 			frame.switchPanel(BackToSchool.Screen.CAMPUS);
 		}	
 	}
@@ -335,13 +368,14 @@ public class Fruit_Game extends JPanel implements Runnable{
 			earnedPercentageLabel.setText(" You earned: "+earnedPercentage+" exp");
 			exit.setVisible(true);
 			
+			
 		}
 		else if(!(totalFruits>counter)){
 			setEarnedPercentage();
 			score.setVisible(false);
-			earnedPercentageLabel.
-			setText(" You earned: "+earnedPercentage+" exp");
+			earnedPercentageLabel.setText(" You earned: "+earnedPercentage+" exp");
 			exit.setVisible(true);
+			
 		}
 			
 	}
