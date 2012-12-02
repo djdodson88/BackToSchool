@@ -545,7 +545,7 @@ public class Battle extends JPanel {
 		}
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("Back To School: Battle Mode");
-		Battle battle = new Battle(new Player(),"Humanities");
+		Battle battle = new Battle(new Player(),"Math");
 		frame.setSize(800,600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// frame.add(battle);

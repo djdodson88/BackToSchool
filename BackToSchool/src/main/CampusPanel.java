@@ -209,6 +209,13 @@ public class CampusPanel extends JPanel
 		//TODO: draw arrow to class
 	}
 	
+	public void printStudentStats()
+	{
+		System.out.println("Stats:");
+		System.out.println("Math: " + student.getQuantReasoning());
+		System.out.println("Science: " + student.getSciRigor());
+		System.out.println("Creativity: " + student.getCreativity());
+	}
 	public class CampusListener extends KeyAdapter
 	{	
 		public void keyPressed(KeyEvent e)
@@ -227,7 +234,7 @@ public class CampusPanel extends JPanel
 					}
 					else
 					{	System.out.println("CLASS");
-						MiniSplashPane miniSplash = new MiniSplashPane(frame, day.getDay());
+						MiniSplashPane miniSplash = new MiniSplashPane(frame, student, day);
 						
 						frame.addPanel(miniSplash, BackToSchool.Screen.MINISPLASH);
 						frame.switchPanel(BackToSchool.Screen.MINISPLASH);
@@ -236,6 +243,8 @@ public class CampusPanel extends JPanel
 						//frame.switchPanel(BackToSchool.Screen.BATTLE);
 					}
 					day.attendClass();
+					printStudentStats();
+					
 				}
 				
 				if (campus.isTraversable(screenX+playerX, screenY+playerY-1))

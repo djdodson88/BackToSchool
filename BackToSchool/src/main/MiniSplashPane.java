@@ -25,7 +25,7 @@ public class MiniSplashPane extends JLayeredPane implements ActionListener
 	
 	private JButton default_exit; //for testing day structure, etc
 	
-	public MiniSplashPane(BackToSchool frame, int day)
+	public MiniSplashPane(BackToSchool frame, Player student, Day day)
 	{
 		/* NOTE:
 		 * needs to be instantiated with frame as parameter, 
@@ -37,7 +37,8 @@ public class MiniSplashPane extends JLayeredPane implements ActionListener
 		this.frame = frame;
 		
 		splash = new MiniSplash(frame);
-		splash.setDay(day); //set difficulty
+		splash.setDay(day); // pass day for access of day statistics
+		splash.getPlayer(student); // get player for statistics
 		
 		JPanel miniSplash = splash;
 		

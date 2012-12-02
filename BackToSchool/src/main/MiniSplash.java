@@ -22,8 +22,10 @@ public class MiniSplash extends JPanel implements ActionListener
 	private int game, numScreen;
 	private JButton button, previous, skipButton;
 	private BackToSchool gameframe;
-	private int day;
+	private Day day;
 
+	private Player student;
+	
 	private ImageIcon start, skip, exit, next;
 	
 	public MiniSplash(BackToSchool frame)
@@ -89,11 +91,16 @@ public class MiniSplash extends JPanel implements ActionListener
 
 	}
 	
-	public void setDay(int day)
+	public void getPlayer(Player student)
+	{
+		this.student = student;
+	}
+	
+	public void setDay(Day day)
 	{
 		this.day = day;
 	}
-
+	
 	private void drawString(Graphics g, String text, int x, int y)
 	{
 		for(String line: text.split("\n"))
@@ -236,7 +243,7 @@ public class MiniSplash extends JPanel implements ActionListener
 
 	private void switchPanels()
 	{		
-		ClassroomPanel classroom = new ClassroomPanel(game, day, gameframe);
+		ClassroomPanel classroom = new ClassroomPanel(student, game, day, gameframe);
 		
 		gameframe.addPanel(classroom, BackToSchool.Screen.CLASS);
 		gameframe.switchPanel(BackToSchool.Screen.CLASS);

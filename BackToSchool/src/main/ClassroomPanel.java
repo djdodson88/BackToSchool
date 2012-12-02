@@ -29,6 +29,7 @@ public class ClassroomPanel extends JPanel{
 	private static boolean done;
 	private BackToSchool frame;
 	private int game;
+	private int dayCnt;
 	
 	private SudokuGame sudoku;
 	private Fruit_Game fruit;
@@ -36,12 +37,16 @@ public class ClassroomPanel extends JPanel{
 	private PuzzlePanel tiles;
 	private BeerPong beer;
 	
+	private Player student;
+	
 	private JButton default_exit; //for testing day structure, etc
 	
-	public ClassroomPanel(int game, int day, BackToSchool frame)
+	public ClassroomPanel(Player player, int game, Day day, BackToSchool frame)
 	{
 
 		this.frame = frame;
+		student = player;
+		dayCnt = day.getDay();
 		
 		setup();
 		
@@ -55,25 +60,28 @@ public class ClassroomPanel extends JPanel{
 		{
 		
 		case 1:
-			fruit = new Fruit_Game(day);
+			fruit = new Fruit_Game(dayCnt);
 			fruit.getFrame(frame);		
 			minigame = fruit;
 			break;
 		case 2:
 			//Warehouse
-			warehouse = new WareHouseKeeper(day);
+			warehouse = new WareHouseKeeper(dayCnt);
 			minigame = warehouse;
 		
 			break;
 		case 3:
-			sudoku = new SudokuGame(day);
+			sudoku = new SudokuGame(dayCnt);
+			sudoku.getPlayer(student);
+			sudoku.getClassSubject(day.getNextClass());
+			
 			sudoku.getFrame(frame);
 			minigame = sudoku;
 			
 			break;
 		case 4:
 			//Tiles
-			tiles = new PuzzlePanel(day);
+			tiles = new PuzzlePanel(dayCnt);
 			minigame = tiles;
 			break;
 		case 5:

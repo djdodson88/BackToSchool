@@ -45,7 +45,14 @@ public class SudokuGame extends JPanel implements ActionListener{
 	private int sq_y;
 
 	private JButton exit;
+	
+	//Game Statistics
+	private double stats;
+	private boolean statsUpdated;
+	private int className; // int key -> name
 
+	// Debug
+	private main.Player student;
 
 
 	public SudokuGame(int day)
@@ -117,7 +124,9 @@ public class SudokuGame extends JPanel implements ActionListener{
 
 		gameSol = new SudokuSol(day);
 		gameStatus = "In Progress"; // Default until <Enter> Pressed
-
+		stats = 0;
+		statsUpdated = false;
+		
 		setup = gameSol.gridToShow();
 
 		setBackground(new Color(58,54,55));
@@ -171,9 +180,72 @@ public class SudokuGame extends JPanel implements ActionListener{
 
 	}
 
+	public void getPlayer(main.Player student)
+	{
+		this.student = student;
+	}
+	
+	public void getClassSubject(int type)
+	{
+		className = type;
+	}
 	public void getFrame(BackToSchool frame)
 	{
 		this.frame = frame;
+	}
+	
+	public void increaseStats(int win)
+	{
+		/*
+		 * Stat levels based on time
+		 * 
+		 * Level:
+		 * Lost (default)
+		 * Win1 (1) 
+		 * Win2 (2)
+		 * Win3 (3) (Max Increase)
+		 */
+		
+		win = 0;
+		
+		switch(win)
+		{
+		case 0:
+			stats = 0.1;
+			break;
+		case 1:
+			stats = 0.3;
+			break;
+		case 2:
+			stats = 0.4;
+			break;
+		case 3:
+			stats = 0.5;
+			break;
+		}
+		
+		/*
+		 * Humanities: first
+		 * Science: second
+		 * Creativity: third
+		 */
+		
+		// nextDay - 1 to get current day
+		System.out.println(className);
+		switch(className-1)
+		{
+		case 0: //day 3 resets to nextDay to 1, so 1-1 = 0
+			student.increaseSciRigor(stats);
+			break;
+		case 1:
+			student.increaseCreativit(stats);
+			break;
+		case 2:
+			student.increaseQuantReasoning(stats);
+			break;
+		}
+
+		statsUpdated = true;
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -211,6 +283,11 @@ public class SudokuGame extends JPanel implements ActionListener{
 		{
 			isRunning = false;
 			gameStatus = "Game Over";
+			
+			if(!statsUpdated)
+			{
+				increaseStats(0); // Lose
+			}
 			exit.setVisible(true);
 
 		}
@@ -365,9 +442,7 @@ public class SudokuGame extends JPanel implements ActionListener{
 	{
 		// Image Setup
 		try {
-
-
-
+			
 			if(fourxfour)
 			{
 				fourByfour_grid = ImageIO.read(new File("art/sudoku/4x4grid.jpg"));
@@ -615,6 +690,10 @@ public class SudokuGame extends JPanel implements ActionListener{
 					gameStatus = "Success!";
 					gameTimer.timeStop();
 					isRunning = false;
+					
+					//Assess score based on time
+					int win = 0; // win type
+					increaseStats(win);
 				}
 				else
 				{
