@@ -44,6 +44,7 @@ public class ClassroomPanel extends JPanel{
 	public ClassroomPanel(Player player, int game, Day day, BackToSchool frame)
 	{
 
+		System.out.println("new classroom");
 		this.frame = frame;
 		student = player;
 		dayCnt = day.getDay();
@@ -62,6 +63,9 @@ public class ClassroomPanel extends JPanel{
 		case 1:
 			fruit = new Fruit_Game(dayCnt);
 			fruit.getFrame(frame);		
+			fruit.getPlayer(student);
+			fruit.getClassSubject(day.getNextClass());
+			
 			minigame = fruit;
 			break;
 		case 2:

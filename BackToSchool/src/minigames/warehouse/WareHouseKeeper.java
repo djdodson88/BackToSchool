@@ -74,6 +74,8 @@ public class WareHouseKeeper extends JPanel
     int spriteX;
     int spriteY;
     
+    private main.Player student;
+    private int className;
     
     public WareHouseKeeper(int day){
     	//setMaximumSize(new Dimension(550,450));
@@ -261,6 +263,37 @@ public class WareHouseKeeper extends JPanel
     
     
     }//End of the default constructor
+    
+	public void getPlayer(main.Player student)
+	{
+		this.student = student;
+	}
+	
+	public void getClassSubject(int type)
+	{
+		className = type;
+	}
+	
+	
+	public void increaseStats()
+	{
+		switch(className-1)
+		{
+		case 0:
+			
+			student.increaseSciRigor(0);
+			break;
+		case 1:
+			student.increaseCreativit(0);
+			break;
+		case 2:
+			student.increaseQuantReasoning(0);
+			break;
+		}
+		
+		
+	}
+    
     
     private void initLevel(int lvl){
     	isGameOver = false;
