@@ -60,7 +60,7 @@ public class MiniSplashPane extends JLayeredPane
 				});
 		
 		subPanel = new MiniSplash();
-		
+		subPanel.setBounds(50,60,500,300);
 		add(subPanel);
 		moveToFront(subPanel);
 		
@@ -122,7 +122,7 @@ public class MiniSplashPane extends JLayeredPane
 			Random generator = new Random();
 			game = generator.nextInt(5) + 1; // 1-4
 
-			game = 3; //testing
+			//game = 3; //testing
 			switch(game)
 			{
 			case 1:
