@@ -3,7 +3,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import javax.swing.*;
-
 import main.BackToSchool;
 import main.Player;
 import main.Day;

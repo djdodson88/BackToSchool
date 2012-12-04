@@ -24,12 +24,15 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.InputMap;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.Timer;
 import javax.swing.colorchooser.ColorSelectionModel;
+
+import main.BackToSchool;
 
 
 public class WareHouseKeeper extends JPanel
@@ -39,10 +42,15 @@ public class WareHouseKeeper extends JPanel
     JPanel p;
     JPanel controlPanel;
     
+    BackToSchool frame;
+    
     int [][] nums;   
     int [][] dots;
     
+    JButton exit;
+    
     JLabel welldone;
+    JLabel experience;
     JLabel levelLabel;
     JLabel restart;
     JLabel undo;
@@ -58,6 +66,8 @@ public class WareHouseKeeper extends JPanel
     ImageIcon groundDot;
     ImageIcon boxDot;
     ImageIcon guyDot;
+    
+    double earnedPercentage;
     
     boolean isGameOver;
     int currentLevel;
@@ -79,7 +89,7 @@ public class WareHouseKeeper extends JPanel
     
     public WareHouseKeeper(int day){
     	//setMaximumSize(new Dimension(550,450));
-    	
+    	earnedPercentage=0;
     	int delay = 1000; //milliseconds
     	ActionListener taskPerformer = new ActionListener() {
 	        public void actionPerformed(ActionEvent evt) {
@@ -90,7 +100,10 @@ public class WareHouseKeeper extends JPanel
 	        	{
 	        		t.stop();
 	        		isGameOver = true;
+	        		earnedPercentage=0.1;
 	        		resultLabel.setText("Time over :(");
+	        		 experience.setText("Exp: "+earnedPercentage);
+	        		exit.setVisible(true);
 	            	resultLabel.setVisible(true);
 	        	}
 	        	controlPanel.repaint();
@@ -170,6 +183,7 @@ public class WareHouseKeeper extends JPanel
         undo.setFont(new Font("Comic Sans MS", Font.PLAIN, 12));
         undo.setForeground(Color.black);
 
+        experience = new JLabel();
         
         countLabel = new JLabel(  );
         countLabel.setForeground(Color.black);
@@ -187,6 +201,10 @@ public class WareHouseKeeper extends JPanel
         
         p = new JPanel();
         
+        exit = new JButton(new ImageIcon("art/buttons/exit_btn.jpg"));
+        exit.setVisible(false);
+    	exit.addActionListener(new exitButtonListener());
+        
         controlPanel = new JPanel();
         controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.Y_AXIS));
         
@@ -201,6 +219,7 @@ public class WareHouseKeeper extends JPanel
         //controlPanel.add(restart);
         controlPanel.add( Box.createRigidArea( new Dimension(5,25)) );
         //controlPanel.add(welldone);
+        
         controlPanel.add(countLabel);
         controlPanel.add( Box.createRigidArea( new Dimension(5,25)) );
         controlPanel.add(undo);        
@@ -209,6 +228,10 @@ public class WareHouseKeeper extends JPanel
         controlPanel.add( Box.createRigidArea( new Dimension(5,25)) );
         controlPanel.add(resultLabel);
         controlPanel.add(Box.createVerticalGlue() );
+        controlPanel.add(exit);
+        controlPanel.add( Box.createRigidArea( new Dimension(5,25)) );
+        controlPanel.add(experience);
+        controlPanel.add( Box.createRigidArea( new Dimension(5,25)) );
         
         controlPanel.addMouseListener( new MouseAdapter() {
             @Override
@@ -263,7 +286,13 @@ public class WareHouseKeeper extends JPanel
     
     
     }//End of the default constructor
+   
     
+    public void getFrame(BackToSchool frame)
+	{
+		this.frame = frame;
+		
+	}
 	public void getPlayer(main.Player student)
 	{
 		this.student = student;
@@ -280,18 +309,15 @@ public class WareHouseKeeper extends JPanel
 		switch(className-1)
 		{
 		case 0:
-			
-			student.increaseSciRigor(0);
+			student.increaseSciRigor(earnedPercentage);
 			break;
 		case 1:
-			student.increaseCreativit(0);
+			student.increaseCreativit(earnedPercentage);
 			break;
 		case 2:
-			student.increaseQuantReasoning(0);
+			student.increaseQuantReasoning(earnedPercentage);
 			break;
 		}
-		
-		
 	}
     
     
@@ -318,6 +344,21 @@ public class WareHouseKeeper extends JPanel
         p.setLayout( new GridLayout(yLen,xLen) );
         p.setMaximumSize(new Dimension(xLen*25, yLen*25));
         reDraw();
+    }
+    
+    public void setEarnedPercentage(){
+    	if(timeRemains>=45)
+    		earnedPercentage=0.5;
+    	else if(timeRemains>=30)
+    		earnedPercentage=0.4;
+    	else if(timeRemains>=15)
+    		earnedPercentage=0.3;
+    	else
+    		earnedPercentage=0.2;
+    }
+    
+    public double getEarnedPercentage(){
+    	return earnedPercentage;
     }
     
     private void reDraw()
@@ -353,7 +394,10 @@ public class WareHouseKeeper extends JPanel
            {
         	   isGameOver = true;
         	   t.stop();
+        	   setEarnedPercentage();
         	   resultLabel.setText("You won!");
+        	   experience.setText("Exp: "+earnedPercentage);
+        	   exit.setVisible(true);
         	   resultLabel.setVisible(true);
            }
            
@@ -496,6 +540,15 @@ public class WareHouseKeeper extends JPanel
 			}
 		}
     }
+    
+    private class exitButtonListener implements ActionListener
+	{
+		public void actionPerformed(ActionEvent event)
+		{
+			increaseStats();
+			frame.switchPanel(BackToSchool.Screen.CAMPUS);
+		}	
+	}
     
     private void printNums(){
         System.out.println();

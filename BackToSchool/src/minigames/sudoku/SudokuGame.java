@@ -39,6 +39,7 @@ public class SudokuGame extends JPanel implements ActionListener{
 	private Timer timer;
 	private Clock gameTimer;
 	private long timeLeft;
+	private int initialTime;
 
 	// Coordinates
 	private int sq_x;
@@ -151,14 +152,16 @@ public class SudokuGame extends JPanel implements ActionListener{
 
 			if(day >=3)
 			{
-				gameTimer = new Clock(20);
+				initialTime = 20;
+				gameTimer = new Clock(initialTime);
 			}
 			else
 			{
-				gameTimer = new Clock(40);
+				initialTime = 40;
+				gameTimer = new Clock(initialTime);
 			}
 
-			gameTimer = new Clock(3); //testing
+			//gameTimer = new Clock(3); //testing
 
 			currentAnswer = new int[4][4];
 		}
@@ -168,7 +171,8 @@ public class SudokuGame extends JPanel implements ActionListener{
 			fourxfour = false;
 			sq_x = 15;
 			sq_y = 16;
-			gameTimer = new Clock(3); //testing
+			initialTime = 3;
+			gameTimer = new Clock(initialTime); //testing
 			//gameTimer = new Clock(150);
 			currentAnswer = new int[9][9];
 
@@ -206,7 +210,7 @@ public class SudokuGame extends JPanel implements ActionListener{
 		 * Win3 (3) (Max Increase)
 		 */
 		
-		win = 0;
+		//win = 0;
 		
 		switch(win)
 		{
@@ -231,7 +235,6 @@ public class SudokuGame extends JPanel implements ActionListener{
 		 */
 		
 		// nextDay - 1 to get current day
-		System.out.println(className);
 		switch(className-1)
 		{
 		case 0: //day 3 resets to nextDay to 1, so 1-1 = 0
@@ -579,6 +582,7 @@ public class SudokuGame extends JPanel implements ActionListener{
 		return arrayIndex;
 	}
 
+	//Fix bindings a bit more
 	private class oneKey extends AbstractAction{
 		public void actionPerformed(ActionEvent e)
 		{
@@ -693,7 +697,33 @@ public class SudokuGame extends JPanel implements ActionListener{
 					
 					//Assess score based on time
 					int win = 0; // win type
-					increaseStats(win);
+					
+					if(gameTimer.timeRemaining() >= initialTime*0.80)
+					{
+						// 100 to 80%
+						win =3;
+					}
+					else if(gameTimer.timeRemaining() >= initialTime*0.50)
+					{
+						// 50 to 80%
+						win = 2;
+					}
+					else if(gameTimer.timeRemaining() >= initialTime*0.30)
+					{
+						// 30 to 50 %
+						win = 1;
+					}
+					else
+					{
+						//0 to 30%
+						win = 0;
+					}
+					
+					if(!statsUpdated)
+					{
+						increaseStats(win); 
+					}
+					exit.setVisible(true);
 				}
 				else
 				{
