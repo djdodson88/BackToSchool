@@ -35,14 +35,11 @@ public class ClassroomPanel extends JLayeredPane
 	private PuzzlePanel tiles;
 	private BeerPong beer;
 	
-	private Player student;
-	
 	private JButton default_exit; //for testing day structure, etc
 	
 	public ClassroomPanel(Player player, int game, Day day, BackToSchool frame)
 	{
 		System.out.println("new classroom");
-		student = player;
 		dayCnt = day.getDay();
 		
 		setup();
@@ -59,7 +56,7 @@ public class ClassroomPanel extends JLayeredPane
 		case 1:
 			fruit = new Fruit_Game(dayCnt);
 			fruit.getFrame(frame);		
-			fruit.getPlayer(student);
+			fruit.getPlayer(player);
 			fruit.getClassSubject(day.getNextClass());
 			
 			minigame = fruit;
@@ -72,7 +69,7 @@ public class ClassroomPanel extends JLayeredPane
 			break;
 		case 3:
 			sudoku = new SudokuGame(dayCnt);
-			sudoku.getPlayer(student);
+			sudoku.getPlayer(player);
 			sudoku.getClassSubject(day.getNextClass());
 			
 			sudoku.getFrame(frame);
@@ -81,7 +78,7 @@ public class ClassroomPanel extends JLayeredPane
 			break;
 		case 4:
 			//Tiles
-			tiles = new PuzzlePanel(dayCnt);
+			tiles = new PuzzlePanel(player, day, frame);
 			minigame = tiles;
 			break;
 		case 5:

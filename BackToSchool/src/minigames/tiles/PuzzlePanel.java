@@ -3,6 +3,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import javax.swing.*;
+
+import main.BackToSchool;
 import main.Player;
 import main.Day;
 
@@ -18,11 +20,13 @@ public class PuzzlePanel extends JPanel
 	private boolean finished;
 	private Player player;
 	private Day day;
+	private BackToSchool frame;
 	
-	public PuzzlePanel(Player student, Day current)
+	public PuzzlePanel(Player student, Day current, BackToSchool frame)
 	{
 		player = student;
 		day = current;
+		this.frame = frame;
 		
 		// LOAD IN ALL IMAGES
 		one = new ImageIcon("art/tilePuzzle/1.png");
