@@ -3,6 +3,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import javax.swing.*;
+import main.Player;
+import main.Day;
 
 public class PuzzlePanel extends JPanel
 {
@@ -11,17 +13,17 @@ public class PuzzlePanel extends JPanel
 		eleven, twelve, thirteen, fourteen, fifteen, sixteen, blank;
 	private Rectangle oneR, twoR, threeR, fourR, fiveR, sixR, sevenR, eightR, nineR, tenR, 
 		elevenR, twelveR, thirteenR, fourteenR, fifteenR, sixteenR;
-	private int day, indexI, indexJ, xPad, yPad;
+	private int indexI, indexJ, xPad, yPad;
 	private static int PWIDTH=550, PHEIGHT=450, TILE=100;
 	private boolean finished;
+	private Player player;
+	private Day day;
 	
-	
-	//Game
-	private main.Player student;
-	private int className;
-	
-	public PuzzlePanel(int day)
+	public PuzzlePanel(Player student, Day current)
 	{
+		player = student;
+		day = current;
+		
 		// LOAD IN ALL IMAGES
 		one = new ImageIcon("art/tilePuzzle/1.png");
 		two = new ImageIcon("art/tilePuzzle/2.png");
@@ -42,13 +44,13 @@ public class PuzzlePanel extends JPanel
 		blank = new ImageIcon("art/tilePuzzle/blank.png");
 	
 		// SET UP BOUNDS BASED ON DIFFICULTY
-		this.day = day;
-		if (day <= 3)
+		int dayNum = day.getDay();
+		if (dayNum <= 3)
 		{
 			indexI = indexJ = 3;
 			eleven = blank;
 		}
-		else if (day > 3 && day <=6)
+		else if (dayNum > 3 && dayNum <=6)
 		{	indexI = 4;
 			indexJ = 3;
 			twelve = blank;
@@ -94,40 +96,20 @@ public class PuzzlePanel extends JPanel
 		requestFocus();
 	}
 	
-	public void getPlayer(main.Player student)
-	{
-		this.student = student;
-	}
-	
-	public void getClassSubject(int type)
-	{
-		className = type;
-	}
-	
-	
 	public void increaseStats()
 	{
-		switch(className-1)
-		{
-		case 0:
-			
-			student.increaseSciRigor(0);
-			break;
-		case 1:
-			student.increaseCreativit(0);
-			break;
-		case 2:
-			student.increaseQuantReasoning(0);
-			break;
-		}
+		String course = day.getNextClassName();
 		
-		
+		if (course == "Science")
+			player.increaseSciRigor(0);
+		else if (course == "Humanities")
+			player.increaseCreativit(0);
+		else if (course == "Mathematics")
+			player.increaseQuantReasoning(0);
 	}
 	
-	
 	private void newPuzzle()
-	{
-		
+	{	
 		LinkedBlockingQueue<ImageIcon> queue = new LinkedBlockingQueue<ImageIcon>();
 		queue.add(one);
 		queue.add(two);
@@ -141,13 +123,13 @@ public class PuzzlePanel extends JPanel
 
 		indexI=indexJ=2;
 		
-		if (day > 3)
+		if (day.getDay() > 3)
 		{	queue.add(four);		
 			queue.add(eight);
 			queue.add(twelve);
 			indexI = 3;
 		}
-		if (day > 6)
+		if (day.getDay() > 6)
 		{
 			queue.add(thirteen);		
 			queue.add(fourteen);
@@ -192,11 +174,11 @@ public class PuzzlePanel extends JPanel
 		if (puzzle[0][0]==one && puzzle[1][0]==two && puzzle[2][0]==three &&
 			puzzle[0][1]==five && puzzle[1][1]==six && puzzle[2][1]==seven &&
 			puzzle[0][2]==nine && puzzle[1][2]==ten && puzzle[2][2]==eleven)
-		{	if (day <= 3)
+		{	if (day.getDay() <= 3)
 				return true;
-			else if ((day>3 && day<=6) && (puzzle[3][0]==four && puzzle[3][1]==eight && puzzle[3][2] == twelve))
+			else if ((day.getDay()>3 && day.getDay()<=6) && (puzzle[3][0]==four && puzzle[3][1]==eight && puzzle[3][2] == twelve))
 				return true;
-			else if ((day>6) && puzzle[0][3]==thirteen && puzzle[1][3]==fourteen && puzzle[2][3]==fifteen && puzzle[3][3]==sixteen)
+			else if ((day.getDay()>6) && puzzle[0][3]==thirteen && puzzle[1][3]==fourteen && puzzle[2][3]==fifteen && puzzle[3][3]==sixteen)
 				return true;
 		}
 		return false;
