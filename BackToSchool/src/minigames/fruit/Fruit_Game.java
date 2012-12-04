@@ -13,6 +13,8 @@ import javax.imageio.ImageIO;
 import javax.swing.*;  
 
 import main.BackToSchool;
+import main.Day;
+import main.Player;
 
 public class Fruit_Game extends JPanel implements Runnable{  
 	BufferedImage basket;
@@ -39,11 +41,18 @@ public class Fruit_Game extends JPanel implements Runnable{
 	JButton exit;
 	static int totalFruits;
 	int counter;
-	BackToSchool frame;
-	private main.Player student;
 	private int className;
+	private BackToSchool frame;
+	private Player student;
+	private Day day;
 	
-	public Fruit_Game(int day) {
+	
+	public Fruit_Game(Player player, Day current, BackToSchool frame) {
+		
+		student = player;
+		this.frame = frame;
+		day = current;
+		
 		timer = null;
 		this.setPreferredSize(new Dimension(550, 450));
 		this.setFocusable(true);   // Allow this panel to get focus.
@@ -57,6 +66,7 @@ public class Fruit_Game extends JPanel implements Runnable{
 		X=0;
 		Y=0;
 		
+		int day = current.getDay();
 		if(day>0 && day<=3){
 			level = 1;// 1-3 depending on the level of the player
 			totalFruits=15;
@@ -106,12 +116,6 @@ public class Fruit_Game extends JPanel implements Runnable{
 		this.add(exit);
 		this.setVisible(true);
 		startAnimation();
-	}
-	
-	public void getFrame(BackToSchool frame)
-	{
-		this.frame = frame;
-		
 	}
 	
 	public void startAnimation(){
@@ -239,37 +243,23 @@ public class Fruit_Game extends JPanel implements Runnable{
 	public double getEarnedPercentage(){
 		return earnedPercentage;
 	}
-	
-	public void getPlayer(main.Player student)
-	{
-		this.student = student;
-	}
-	
-	public void getClassSubject(int type)
-	{
-		className = type;
-	}
-	
-	
+		
 	public void increaseStats()
 	{
-		switch(className-1)
+		switch(day.getNextCourse())
 		{
-		case 0:
+		case SCIENCE:
 			student.increaseSciRigor(earnedPercentage);
 			break;
-		case 1:
+		case HUMANITIES:
 			student.increaseCreativit(earnedPercentage);
 			break;
-		case 2:
+		default:
 			student.increaseQuantReasoning(earnedPercentage);
 			break;
-		}
-		
-		
+		}	
 	}
 
-	
 	private class left extends AbstractAction{
 		public void actionPerformed(ActionEvent e)
 		{
@@ -389,7 +379,11 @@ public class Fruit_Game extends JPanel implements Runnable{
 	         public void run() {
 	            // Set up main window (using Swing's Jframe)
 	            JFrame frame = new JFrame("Fruit Catching Game");
-	            Fruit_Game fg = new Fruit_Game(1);
+
+	            CardLayout layout = new CardLayout();
+				JPanel cards = new JPanel(layout);
+	    		BackToSchool b2sFrame = new BackToSchool(layout, cards);       
+	            Fruit_Game fg = new Fruit_Game(new Player(), new Day(1), b2sFrame);
 	            frame.setSize(550,450);
 	            frame.setBackground(Color.green);
 	            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

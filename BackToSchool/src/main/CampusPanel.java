@@ -3,6 +3,8 @@ package main;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+import main.Day.Course;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -70,7 +72,7 @@ public class CampusPanel extends JPanel
 	{
 		ArrayList<Point> doors;
 		
-		if (day.getNextClass() == 1)
+		if (day.getNextCourse().ordinal() == 0) // first class (could hardcode as HUMANITIES)
 		{
 			playerX = playerY = 5;
 			screenX = screenY = 0;
@@ -94,7 +96,7 @@ public class CampusPanel extends JPanel
 			doors.remove(destination);	// remove last used door (no two classes in same place in a row)
 		
 		destination = doors.get((int)(Math.random()*doors.size()));
-		campus.addSign(destination, day.getNextClassName());
+		campus.addSign(destination, day.getNextCourse());
 		
 		// Update any sign tiles currently onscreen
 		Rectangle window = new Rectangle(screenX, screenY+1, TILESX, TILESY);
@@ -216,7 +218,7 @@ public class CampusPanel extends JPanel
 		//TODO: draw arrow to class
 		g.setColor(Color.RED);
 		g.drawString("Day: "+day.getDay(), 50, 15);
-		g.drawString("Class: "+day.getNextClassName(), 100, 15);
+		g.drawString("Class: "+day.getNextCourseName(), 100, 15);
 		g.drawString("Destination: "+destination.x+","+destination.y, 14*50, 15);		
 	}
 	
@@ -251,7 +253,7 @@ public class CampusPanel extends JPanel
 					
 					if (day.isMidtermNext())
 					{	System.out.println("MIDTERM");
-						frame.addPanel(new Battle(student, day.getNextClassName()), BackToSchool.Screen.BATTLE);
+						frame.addPanel(new Battle(student, day.getNextCourseName()), BackToSchool.Screen.BATTLE);
 						frame.switchPanel(BackToSchool.Screen.BATTLE);
 					}
 					else

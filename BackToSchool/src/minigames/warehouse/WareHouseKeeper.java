@@ -6,6 +6,7 @@
 package minigames.warehouse;
  
 
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -33,6 +34,8 @@ import javax.swing.Timer;
 import javax.swing.colorchooser.ColorSelectionModel;
 
 import main.BackToSchool;
+import main.Day;
+import main.Player;
 
 
 public class WareHouseKeeper extends JPanel
@@ -41,8 +44,6 @@ public class WareHouseKeeper extends JPanel
 	Timer t;
     JPanel p;
     JPanel controlPanel;
-    
-    BackToSchool frame;
     
     int [][] nums;   
     int [][] dots;
@@ -84,10 +85,16 @@ public class WareHouseKeeper extends JPanel
     int spriteX;
     int spriteY;
     
-    private main.Player student;
-    private int className;
+    private Player student;
+    private Day day;
+    private BackToSchool frame;
     
-    public WareHouseKeeper(int day){
+    public WareHouseKeeper(Player player, Day current, BackToSchool frame){
+    	
+    	student = player;
+    	day = current;
+    	this.frame = frame;
+    	
     	//setMaximumSize(new Dimension(550,450));
     	earnedPercentage=0;
     	int delay = 1000; //milliseconds
@@ -269,7 +276,7 @@ public class WareHouseKeeper extends JPanel
             }
         });
         
-        currentLevel = day;
+        currentLevel = day.getDay();
         setBackground( new Color(199,188,136));      
 
         initLevel(currentLevel);
@@ -286,35 +293,18 @@ public class WareHouseKeeper extends JPanel
     
     
     }//End of the default constructor
-   
-    
-    public void getFrame(BackToSchool frame)
-	{
-		this.frame = frame;
-		
-	}
-	public void getPlayer(main.Player student)
-	{
-		this.student = student;
-	}
-	
-	public void getClassSubject(int type)
-	{
-		className = type;
-	}
-	
 	
 	public void increaseStats()
 	{
-		switch(className-1)
+		switch(day.getNextCourse())
 		{
-		case 0:
+		case SCIENCE:
 			student.increaseSciRigor(earnedPercentage);
 			break;
-		case 1:
+		case HUMANITIES:
 			student.increaseCreativit(earnedPercentage);
 			break;
-		case 2:
+		default:
 			student.increaseQuantReasoning(earnedPercentage);
 			break;
 		}
@@ -572,7 +562,10 @@ public class WareHouseKeeper extends JPanel
     
     public static void main (String[] args){
         System.out.println("test");   
-        WareHouseKeeper game = new WareHouseKeeper(1);
+        CardLayout layout = new CardLayout();
+		JPanel cards = new JPanel(layout);
+		BackToSchool frame = new BackToSchool(layout, cards);
+        WareHouseKeeper game = new WareHouseKeeper(new Player(), new Day(1), frame);
         JFrame fr = new JFrame();
         fr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         fr.setVisible(true);

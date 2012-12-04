@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.util.Timer;
 
 import main.BackToSchool;
+import main.Day;
+import main.Player;
 
 public class SudokuGame extends JPanel implements ActionListener{
 
@@ -23,7 +25,9 @@ public class SudokuGame extends JPanel implements ActionListener{
 	private BufferedImage colorSq;
 	private BufferedImage colorSq_thin;
 
-	BackToSchool frame;
+	private BackToSchool frame;
+	private Player student;
+	private Day day;
 
 	// Game Related
 	private int[][] currentAnswer;
@@ -52,12 +56,13 @@ public class SudokuGame extends JPanel implements ActionListener{
 	private boolean statsUpdated;
 	private int className; // int key -> name
 
-	// Debug
-	private main.Player student;
 
-
-	public SudokuGame(int day)
+	public SudokuGame(Player player, Day current, BackToSchool frame)
 	{
+		this.frame = frame;
+		student = player;
+		day = current;
+		
 		InputMap myInputMap = new InputMap();
 		ActionMap myActionMap = new ActionMap();
 
@@ -123,7 +128,7 @@ public class SudokuGame extends JPanel implements ActionListener{
 
 		setLayout(null);
 
-		gameSol = new SudokuSol(day);
+		gameSol = new SudokuSol(day.getDay());
 		gameStatus = "In Progress"; // Default until <Enter> Pressed
 		stats = 0;
 		statsUpdated = false;
@@ -143,14 +148,14 @@ public class SudokuGame extends JPanel implements ActionListener{
 		setFocusable(true);
 		isRunning = true;
 
-		if(day <= 6)
+		if(day.getDay() <= 6)
 		{
 			// FOUR BY FOUR GRID (LVL 1&2)
 			fourxfour = true;
 			sq_x = 20;
 			sq_y = 13;
 
-			if(day >=3)
+			if(day.getDay() >=3)
 			{
 				initialTime = 20;
 				gameTimer = new Clock(initialTime);
@@ -182,20 +187,6 @@ public class SudokuGame extends JPanel implements ActionListener{
 		gameTimer.start();
 		gameLoop();
 
-	}
-
-	public void getPlayer(main.Player student)
-	{
-		this.student = student;
-	}
-	
-	public void getClassSubject(int type)
-	{
-		className = type;
-	}
-	public void getFrame(BackToSchool frame)
-	{
-		this.frame = frame;
 	}
 	
 	public void increaseStats(int win)
@@ -235,15 +226,15 @@ public class SudokuGame extends JPanel implements ActionListener{
 		 */
 		
 		// nextDay - 1 to get current day
-		switch(className-1)
+		switch(day.getNextCourse())
 		{
-		case 0: //day 3 resets to nextDay to 1, so 1-1 = 0
+		case SCIENCE: //day 3 resets to nextDay to 1, so 1-1 = 0
 			student.increaseSciRigor(stats);
 			break;
-		case 1:
+		case HUMANITIES:
 			student.increaseCreativit(stats);
 			break;
-		case 2:
+		default:
 			student.increaseQuantReasoning(stats);
 			break;
 		}

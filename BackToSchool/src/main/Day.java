@@ -2,10 +2,12 @@ package main;
 
 
 public class Day {
-	private int day, nextClass;
+	public enum Course {HUMANITIES, MATH, SCIENCE};
+	private int day;
+	private double midtermScore;
 	private boolean humMidterm, mathMidterm, sciMidterm, finalBattle;
 	private boolean humAttend, mathAttend, sciAttend;
-	private double midtermScore;
+	private Course nextCourse;
 	
 	public Day(int d)
 	{
@@ -26,7 +28,7 @@ public class Day {
 		
 		humAttend = mathAttend = sciAttend = false;
 		
-		nextClass = 1;
+		nextCourse = Course.HUMANITIES;
 	}
 	
 	public int getDay()
@@ -34,71 +36,70 @@ public class Day {
 		return day;	
 	}
 	
-	public int getNextClass()
+	public Course getNextCourse()
 	{
-		return nextClass;
+		return nextCourse;
 	}
 	
-	public String getNextClassName()
+	public String getNextCourseName()
 	{
-		switch (nextClass)
+		switch (nextCourse)
 		{
-			case 1:
+			case HUMANITIES:
 				return "Humanities";
-			case 2: 
+			case MATH: 
 				return "Math";
-			case 3: 
+			default: 
 				return "Science";
-			default:
-				return "Humanities";
 		}
 	}
 	
 	public void attendClass()
 	{
-		switch (nextClass)
+		switch (nextCourse)
 		{
-			case 1:
+			case HUMANITIES:
 				humAttend = true;
+				nextCourse = Course.MATH;
 				break;
-			case 2:
+			case MATH:
 				mathAttend = true;
+				nextCourse = Course.SCIENCE;
 				break;
-			case 3:
+			case SCIENCE:
 				sciAttend = true;
+				nextDay();
 				break;
-		}
-		
-		nextClass++;
-		
-		if (nextClass == 4)
-		{
-			System.out.println("You start a new day!");
-			nextDay();
 		}
 	}
 	
 	public void missClass()
 	{
-		nextClass++;
-		
-		if (nextClass == 4)
+		switch (nextCourse)
 		{
-			System.out.println("You start a new day!");
-			nextDay();
+			case HUMANITIES:
+				nextCourse = Course.MATH;
+				break;
+			case MATH:
+				nextCourse = Course.SCIENCE;
+				break;
+			case SCIENCE:
+				nextDay();
+				break;
 		}
 	}
 	
 	public boolean isMidtermNext()
 	{
-		if (nextClass==1 && humMidterm)
-			return true;
-		else if (nextClass==2 && mathMidterm)
-			return true;
-		else if (nextClass==3 && sciMidterm)
-			return true;
-		
-		return false;
+		switch (nextCourse)
+		{
+			case HUMANITIES:
+				return humMidterm;
+			case MATH:
+				return  mathMidterm;
+			default:
+				return sciMidterm;
+		}
 	}
 	
 	public boolean isHumMidtermDay()

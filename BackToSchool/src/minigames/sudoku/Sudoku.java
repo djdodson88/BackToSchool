@@ -2,6 +2,9 @@ package minigames.sudoku;
 
 import java.awt.*;
 import javax.swing.*;
+import main.BackToSchool;
+import main.Day;
+import main.Player;
 
 
 public class Sudoku extends JFrame{
@@ -17,7 +20,12 @@ public class Sudoku extends JFrame{
 		JFrame frame = new JFrame("");
 		frame.setPreferredSize(new Dimension(550,450));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.add(new SudokuGame(3));
+		
+		
+		CardLayout layout = new CardLayout();
+		JPanel cards = new JPanel(layout);
+		BackToSchool b2sFrame = new BackToSchool(layout, cards);
+		frame.add(new SudokuGame(new Player(), new Day(1), b2sFrame));
 		frame.setResizable(false);
 		frame.pack();
 		frame.setVisible(true);

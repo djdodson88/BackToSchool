@@ -50,31 +50,23 @@ public class ClassroomPanel extends JLayeredPane
 		this.setPreferredSize(new Dimension(800,600));
 		this.setBounds(0, 0, 800, 600);
 
+		//game = 1;		// for testing (doesn't change splash screens preceeding, of course)
 		switch(game)
 		{
 		
 		case 1:
-			fruit = new Fruit_Game(dayCnt);
-			fruit.getFrame(frame);		
-			fruit.getPlayer(player);
-			fruit.getClassSubject(day.getNextClass());
-			
+			fruit = new Fruit_Game(player, day, frame);
 			minigame = fruit;
 			break;
 		case 2:
 			//Warehouse
-			warehouse = new WareHouseKeeper(dayCnt);
+			warehouse = new WareHouseKeeper(player, day, frame);
 			minigame = warehouse;
 		
 			break;
 		case 3:
-			sudoku = new SudokuGame(dayCnt);
-			sudoku.getPlayer(player);
-			sudoku.getClassSubject(day.getNextClass());
-			
-			sudoku.getFrame(frame);
+			sudoku = new SudokuGame(player, day, frame);
 			minigame = sudoku;
-			
 			break;
 		case 4:
 			//Tiles

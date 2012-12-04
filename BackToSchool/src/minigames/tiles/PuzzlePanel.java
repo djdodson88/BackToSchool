@@ -100,15 +100,19 @@ public class PuzzlePanel extends JPanel
 	}
 	
 	public void increaseStats()
-	{
-		String course = day.getNextClassName();
-		
-		if (course == "Science")
-			player.increaseSciRigor(0);
-		else if (course == "Humanities")
-			player.increaseCreativit(0);
-		else if (course == "Mathematics")
-			player.increaseQuantReasoning(0);
+	{	
+		switch (day.getNextCourse())
+		{
+			case HUMANITIES:
+				player.increaseCreativit(0);
+				break;
+			case MATH:
+				player.increaseQuantReasoning(0);
+				break;
+			default:
+				player.increaseSciRigor(0);
+				break;
+		}	
 	}
 	
 	private void newPuzzle()

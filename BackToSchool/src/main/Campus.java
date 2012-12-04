@@ -3,6 +3,7 @@ package main;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.awt.Point;
+import main.Day.Course;
 
 public class Campus 
 {
@@ -211,18 +212,22 @@ public class Campus
 		return doors;
 	}
 	
-	public void addSign(Point door, String sign)
+	public void addSign(Point door, Course course)
 	{
 		Tile tile = null;
 		
-		if (sign == "Humanities")
-			tile = new Tile(Tile.Type.SIGN);
-		else if (sign == "Math")
-			tile = new Tile(Tile.Type.SIGN, Tile.Direction.LEFT);
-		else if (sign == "Science")
-			tile = new Tile(Tile.Type.SIGN, Tile.Direction.RIGHT);
-		else
-			tile = new Tile(Tile.Type.ROOF);
+		switch(course)
+		{
+			case HUMANITIES:
+				tile = new Tile(Tile.Type.SIGN);
+				break;
+			case MATH:
+				tile = new Tile(Tile.Type.SIGN, Tile.Direction.LEFT);
+				break;
+			default:
+				tile = new Tile(Tile.Type.SIGN, Tile.Direction.RIGHT);
+				break;
+		}
 		
 		campus[door.x][door.y-1] = tile;
 	}
