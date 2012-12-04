@@ -1,6 +1,7 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.awt.Point;
 
 public class Campus 
@@ -220,7 +221,25 @@ public class Campus
 			tile = new Tile(Tile.Type.SIGN, Tile.Direction.LEFT);
 		else if (sign == "Science")
 			tile = new Tile(Tile.Type.SIGN, Tile.Direction.RIGHT);
+		else
+			tile = new Tile(Tile.Type.ROOF);
 		
 		campus[door.x][door.y-1] = tile;
+	}
+
+	public ArrayList<Point> getAdjacent(Point current) 
+	{
+		ArrayList<Point> adjacent = new ArrayList<Point>();
+		
+		if (isTraversable(current.x-1,current.y))
+			adjacent.add(new Point(current.x-1,current.y));
+		if (isTraversable(current.x+1,current.y))
+			adjacent.add(new Point(current.x+1,current.y));	
+		if (isTraversable(current.x,current.y-1))
+			adjacent.add(new Point(current.x,current.y-1));
+		if (isTraversable(current.x,current.y+1))
+			adjacent.add(new Point(current.x,current.y+1));
+		
+		return adjacent;
 	}
 }

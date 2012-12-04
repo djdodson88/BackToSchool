@@ -8,27 +8,27 @@ import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.EventListener;
+import java.util.Random;
 
 
 public class CampusPanel extends JPanel 
 {
 	private int playerX, playerY, screenX, screenY;
 	private static int PWIDTH=800, PHEIGHT=600, TILE=50, TILESX=16, TILESY=12, PADX=4, PADY=3;
-	private boolean animating;
 	private enum Direction{LEFT, UP, RIGHT, DOWN};
-	private Image player;
 	private Image[][] tiles;
-	private Thread animate;
+	private Timer moveTimer, animate;
+	
+	// BackToSchool classes
+	private BackToSchool frame;
 	private Campus campus;
 	private Tiles tileFactory;
-	private Player student;
-	private Point destination;
-	private CardLayout cardLayout;
-	private JPanel cardPanel;
-	private BackToSchool frame;
 	private Day day;
-	
-	private Image playerUp, playerDown, playerLeft, playerRight;
+	private Player student;
+	private Pedestrian pedestrian;
+	private Point destination;
+	private Image player, playerUp, playerDown, playerLeft, playerRight;
 	
 	public CampusPanel()
 	{
@@ -49,7 +49,6 @@ public class CampusPanel extends JPanel
 		student = new Player();
 		player = playerDown;
 		day = new Day(1);
-		continueClasses();
 		
 		addKeyListener(new CampusListener());
 		addMouseListener(new CampusMouseListener());
@@ -58,8 +57,7 @@ public class CampusPanel extends JPanel
 		setFocusable(true);
 		requestFocus();
 		
-		//animating = true;
-		//AnimateThread animate = new AnimateThread();
+		//animate = new Timer(100, new ActionListener() {);
 		//animate.start();
 	}
 	
@@ -70,21 +68,28 @@ public class CampusPanel extends JPanel
 	
 	public void continueClasses() 
 	{
+		ArrayList<Point> doors;
+		
 		if (day.getNextClass() == 1)
 		{
 			playerX = playerY = 5;
 			screenX = screenY = 0;
 			destination = null;
 			
+			doors = campus.getDoors(true);
+			
 			for (int i=0; i<TILESX; i++)
-				for (int j=0; j<TILESY; j++)
+			{	for (int j=0; j<TILESY; j++)
 				{	Tile tile = campus.getTile(screenX+i, screenY+j);
 					if (tile != null)
 						tiles[i][j] = tileFactory.get(tile);
 				}
+			}
 		}
+		else
+			doors = campus.getDoors(false);
 		
-		ArrayList<Point> doors = campus.getDoors(true);
+		//ArrayList<Point> doors = campus.getDoors(true);
 		if (destination != null)
 			doors.remove(destination);	// remove last used door (no two classes in same place in a row)
 		
@@ -96,24 +101,20 @@ public class CampusPanel extends JPanel
 		for (Point p : doors)
 			if (window.contains(p)) 
 				tiles[p.x-screenX][p.y-1-screenY] = tileFactory.get(campus.getTile(p.x, p.y-1));
-				
-	}
-	
-	private class AnimateThread extends Thread
-	{	
-		public void run()
+		
+		/* PEDESTRIAN TEST
+		Point point = new Point(-1,-1);
+		while (!campus.isTraversable(point.x,point.y))
 		{
-			while (animating)
-			{
-				try 
-				{	sleep(500);
-					repaint();
-				} 
-				catch (InterruptedException e) 
-				{	e.printStackTrace();
-				}
-			}
+			int x = (int)(Math.random()*TILESX);
+			int y = (int)(Math.random()*TILESY);
+			point.setLocation(x,y);
 		}
+		Point dest = new Point(destination.x, destination.y+1);
+		pedestrian = new Pedestrian(point, dest, campus);
+		moveTimer = new Timer(1000, new PedestrianListener());
+		moveTimer.start();
+		//*/
 	}
 	
 	private void updateTiles(Direction dir)
@@ -192,6 +193,7 @@ public class CampusPanel extends JPanel
 	
 	public void paintComponent(Graphics g)
 	{
+		// render campus
 		g.setColor(Color.LIGHT_GRAY);
 		for (int i=0; i<TILESX; i++)
 			for (int j=0; j<TILESY; j++)
@@ -200,15 +202,22 @@ public class CampusPanel extends JPanel
 				else
 					g.fillRect(i*TILE, j*TILE, TILE, TILE);
 			}
-				
+			
+		// render player
 		g.drawImage(player, playerX*TILE, playerY*TILE, TILE, TILE, this); //player.paintIcon(this, g, playerX, playerY);
 		
+		/* render pedestrian (currently even if off screen)
+		int pedX = pedestrian.getLocation().x-screenX;
+		int pedY = pedestrian.getLocation().y-screenY;
+		g.drawImage(pedestrian.getImage(), pedX*TILE, pedY*TILE, TILE, TILE, this);
+		//*/
+		
+		// render interface 
+		//TODO: draw arrow to class
 		g.setColor(Color.RED);
 		g.drawString("Day: "+day.getDay(), 50, 15);
 		g.drawString("Class: "+day.getNextClassName(), 100, 15);
-		g.drawString("Destination: "+destination.x+","+destination.y, 14*50, 15);
-		
-		//TODO: draw arrow to class
+		g.drawString("Destination: "+destination.x+","+destination.y, 14*50, 15);		
 	}
 	
 	public void printStudentStats()
@@ -218,7 +227,18 @@ public class CampusPanel extends JPanel
 		System.out.println("Science: " + student.getSciRigor());
 		System.out.println("Creativity: " + student.getCreativity());
 	}
-	public class CampusListener extends KeyAdapter
+	
+	private class PedestrianListener implements EventListener
+	{		
+		public void actionPerformed(ActionEvent e) 
+		{
+			if (pedestrian.hasMove())
+				pedestrian.move();
+			repaint();
+		}	
+	}
+	
+	private class CampusListener extends KeyAdapter
 	{	
 		public void keyPressed(KeyEvent e)
 		{	
@@ -236,7 +256,7 @@ public class CampusPanel extends JPanel
 					}
 					else
 					{	System.out.println("CLASS");
-						MiniSplashPane miniSplash = new MiniSplashPane(frame, student, day);
+						MiniSplashPane miniSplash = new MiniSplashPane(student, day);
 						
 						frame.addPanel(miniSplash, BackToSchool.Screen.MINISPLASH);
 						frame.switchPanel(BackToSchool.Screen.MINISPLASH);
@@ -327,7 +347,7 @@ public class CampusPanel extends JPanel
 			int yIndex = click.y/TILE;
 			
 			Tile clicked = campus.getTile(xIndex, yIndex);
-			System.out.println("Clicked: " + xIndex + "," + yIndex);
+			//System.out.println("Clicked: " + xIndex + "," + yIndex);
 		}
 	}
 
