@@ -22,12 +22,10 @@ import minigames.tiles.PuzzlePanel;
 import minigames.warehouse.WareHouseKeeper;
 
 
-public class ClassroomPanel extends JPanel{
-
-
+public class ClassroomPanel extends JLayeredPane
+{
 	private BufferedImage backgroundImg;
 	private static boolean done;
-	private BackToSchool frame;
 	private int game;
 	private int dayCnt;
 	
@@ -43,9 +41,7 @@ public class ClassroomPanel extends JPanel{
 	
 	public ClassroomPanel(Player player, int game, Day day, BackToSchool frame)
 	{
-
 		System.out.println("new classroom");
-		this.frame = frame;
 		student = player;
 		dayCnt = day.getDay();
 		
@@ -98,17 +94,15 @@ public class ClassroomPanel extends JPanel{
 		
 		minigame.setBounds(26, 32, 550, 450);
 		
-		this.add(minigame);
+		add(minigame);
+		moveToFront(minigame);
 		minigame.requestFocusInWindow();
-	
 	}
-
-
+	
 	public void paintComponent(Graphics g)
 	{
 		super.paintComponent(g);
 		g.drawImage(backgroundImg, 0, 0, null);
-
 	}
 
 	private void setup()

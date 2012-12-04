@@ -46,9 +46,11 @@ public class BackToSchool extends JFrame
 				break;
 			case CLASS:
 				classroom = (ClassroomPanel) panel;
+				//classroom.sendFrame(this);
 				break;
 			case MINISPLASH:
 				miniSplash = (MiniSplashPane)panel;
+				miniSplash.sendFrame(this);
 				break;
 			case BATTLE:
 				battle = (Battle)panel;
