@@ -2,6 +2,7 @@ package main;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -17,6 +18,9 @@ public class Library extends JPanel {
 	JButton humanitiesButton;
 	JButton scienceButton;
 	JButton mathButton;
+	JButton exitButton;
+	BackToSchool frame;
+
 	boolean optionSelected;
 	boolean humanitiesSelected;
 	boolean scienceSelected;
@@ -38,7 +42,6 @@ public class Library extends JPanel {
 		txt = new JLabel("Please select a skill level to increase");
 		txt.setBounds(350,100,300,30);
 
-
 		humanitiesButton=new JButton("Humanities");
 		humanitiesButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event)
@@ -46,8 +49,9 @@ public class Library extends JPanel {
 				if(!optionSelected){
 					optionSelected=true;
 					humanitiesSelected=true;
-					student.increaseCreativit(0.01);
+					student.increaseCreativit(0.5);
 					System.out.println("Pressed Humanities");
+					repaint();
 				}
 			}
 		});
@@ -57,9 +61,10 @@ public class Library extends JPanel {
 			{
 				if(!optionSelected){
 					optionSelected=true;
-					student.increaseSciRigor(0.01); 
+					student.increaseSciRigor(0.5); 
 					System.out.println("Pressed Science");
 					scienceSelected = true;
+					repaint();
 				}
 			}
 		});
@@ -69,25 +74,68 @@ public class Library extends JPanel {
 			{
 				if(!optionSelected){
 					optionSelected=true;
-					student.increaseQuantReasoning(0.01);
+					student.increaseQuantReasoning(0.5);
 					System.out.println("Pressed Math");
 					mathSelected=true;
+					repaint();
 				}
 			}			
 		});
+		
+		exitButton=new JButton("Exit");
+		exitButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent event)
+			{
+				frame.switchPanel(BackToSchool.Screen.CAMPUS);
+			}			
+		});
+		exitButton.setVisible(false);
 
 		humanitiesButton.setBounds(388,200,100,30); 
 		scienceButton.setBounds(388,300,100,30); 
 		mathButton.setBounds(388,400,100,30); 
+		exitButton.setBounds(388,350,100,30);
 
 		this.add(txt);
 		this.add(humanitiesButton);
 		this.add(scienceButton);
 		this.add(mathButton);
+		this.add(exitButton);
 	}
 	
 	public Player getBackPlayer(){
 		return student;
+	}
+	
+	public void getFrame(BackToSchool frame)
+	{
+		this.frame = frame;
+		
+	}
+	public void paintComponent(Graphics g)
+	{
+		super.paintComponent(g);
+		
+		if(optionSelected)
+		{
+			txt.setBounds(350,300,300,30);
+			if(humanitiesSelected){
+				txt.setText("Hurray  +0.5 exp on Creativity");
+			}
+			else if(mathSelected)
+			{
+				txt.setText("Hurray  +0.5 exp on Quantitive Reasoning");
+			}
+			else if(scienceSelected){
+				txt.setText("Hurray  +0.5 exp on Scientific Rigor");
+			}
+			
+			scienceButton.setVisible(false);
+			mathButton.setVisible(false);
+			humanitiesButton.setVisible(false);
+			exitButton.setVisible(true);
+		}
+		
 	}
 
 	public static void main(String[] args) {
