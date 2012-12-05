@@ -296,7 +296,7 @@ public class WareHouseKeeper extends JPanel
 	
 	public void increaseStats()
 	{
-		switch(day.getNextCourse())
+		switch(day.getCourse())
 		{
 		case SCIENCE:
 			student.increaseSciRigor(earnedPercentage);

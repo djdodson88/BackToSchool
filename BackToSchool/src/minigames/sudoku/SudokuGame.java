@@ -226,7 +226,7 @@ public class SudokuGame extends JPanel implements ActionListener{
 		 */
 		
 		// nextDay - 1 to get current day
-		switch(day.getNextCourse())
+		switch(day.getCourse())
 		{
 		case SCIENCE: //day 3 resets to nextDay to 1, so 1-1 = 0
 			student.increaseSciRigor(stats);

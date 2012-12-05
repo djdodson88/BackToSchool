@@ -101,7 +101,7 @@ public class PuzzlePanel extends JPanel
 	
 	public void increaseStats()
 	{	
-		switch (day.getNextCourse())
+		switch (day.getCourse())
 		{
 			case HUMANITIES:
 				player.increaseCreativit(0);

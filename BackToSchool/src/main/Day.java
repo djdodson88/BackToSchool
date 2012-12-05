@@ -7,7 +7,7 @@ public class Day {
 	private double midtermScore;
 	private boolean humMidterm, mathMidterm, sciMidterm, finalBattle;
 	private boolean humAttend, mathAttend, sciAttend;
-	private Course nextCourse;
+	private Course nextCourse, current;
 	
 	public Day(int d)
 	{
@@ -18,7 +18,6 @@ public class Day {
 	private void nextDay()
 	{
 		//TODO: store data from completed day if wanted
-		
 		day++;
 		
 		humMidterm = (day==4)? true : false;
@@ -34,6 +33,12 @@ public class Day {
 	public int getDay()
 	{
 		return day;	
+	}
+	
+	//for minigames
+	public Course getCourse()
+	{
+		return current;
 	}
 	
 	public Course getNextCourse()
@@ -61,13 +66,16 @@ public class Day {
 			case HUMANITIES:
 				humAttend = true;
 				nextCourse = Course.MATH;
+				current = Course.HUMANITIES;
 				break;
 			case MATH:
 				mathAttend = true;
 				nextCourse = Course.SCIENCE;
+				current = Course.MATH;
 				break;
 			case SCIENCE:
 				sciAttend = true;
+				current = Course.SCIENCE;
 				nextDay();
 				break;
 		}

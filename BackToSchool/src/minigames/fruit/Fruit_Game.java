@@ -246,7 +246,7 @@ public class Fruit_Game extends JPanel implements Runnable{
 		
 	public void increaseStats()
 	{
-		switch(day.getNextCourse())
+		switch(day.getCourse())
 		{
 		case SCIENCE:
 			student.increaseSciRigor(earnedPercentage);
