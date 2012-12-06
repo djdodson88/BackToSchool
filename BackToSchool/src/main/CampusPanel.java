@@ -5,10 +5,13 @@ import javax.swing.*;
 
 import main.Day.Course;
 
+import java.applet.Applet;
+import java.applet.AudioClip;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.Random;
@@ -31,6 +34,7 @@ public class CampusPanel extends JPanel
 	private Pedestrian pedestrian;
 	private Point destination;
 	private Image player, playerUp, playerDown, playerLeft, playerRight;
+	private Sound testsong;
 	
 	public CampusPanel()
 	{
@@ -52,6 +56,9 @@ public class CampusPanel extends JPanel
 		player = playerDown;
 		day = new Day(1);
 		
+		testsong = new Sound("sounds/dw1world.mid");
+		
+		
 		addKeyListener(new CampusListener());
 		addMouseListener(new CampusMouseListener());
 		setPreferredSize(new Dimension(PWIDTH,PHEIGHT));
@@ -70,6 +77,7 @@ public class CampusPanel extends JPanel
 	
 	public void continueClasses() 
 	{
+		testsong.playSound();
 		ArrayList<Point> doors;
 		
 		if (day.getNextCourse().ordinal() == 0) // first class (could hardcode as HUMANITIES)
@@ -250,7 +258,7 @@ public class CampusPanel extends JPanel
 				if ((screenX+playerX==destination.x) && (screenY+playerY-1==destination.y))
 				{	// destination door reached
 					System.out.println("FOUND CLASS");
-					
+					testsong.stopSound();
 					if (day.isMidtermNext())
 					{	System.out.println("MIDTERM");
 						frame.addPanel(new Battle(student, day.getNextCourseName()), BackToSchool.Screen.BATTLE);
@@ -351,6 +359,35 @@ public class CampusPanel extends JPanel
 			Tile clicked = campus.getTile(xIndex, yIndex);
 			//System.out.println("Clicked: " + xIndex + "," + yIndex);
 		}
+	}
+	
+	public class Sound // Holds one audio file
+	{
+	  private AudioClip song; // Sound player
+	  private URL songPath; // Sound path
+
+	  Sound(String filename){
+	     try
+	     {
+	    	// System.out.println("file:" + System.getProperty("user.dir") + "\\" + filename);
+	    	 songPath = new URL ("file:" + System.getProperty("user.dir") + "\\" + filename);
+	    	 song = Applet.newAudioClip(songPath);
+	    	// playSound();
+	     }catch(Exception e){
+	         e.printStackTrace();
+	         //e.getMessage();
+	     } // Satisfy the catch
+	  }
+
+	  public void playSound(){
+	     song.loop(); // Play 
+	  }
+	  public void stopSound(){
+	     song.stop(); // Stop
+	  }
+	  public void playSoundOnce(){
+	     song.play(); // Play only once
+	  }
 	}
 
 }
