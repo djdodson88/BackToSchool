@@ -45,6 +45,10 @@ public class Battle extends JPanel {
 	JLabel scientRigorLabel;
 	Timer timer;
 	Player player;
+	boolean drawConfused1;
+	boolean drawConfused2;
+	ImageIcon confusedStudent1;
+	ImageIcon confusedStudent2;
 	boolean setDown;
 
 	// Attack Menu variables
@@ -83,6 +87,7 @@ public class Battle extends JPanel {
 	//JLabel bossStory;
 	boolean bossTurn;
 	Graphics graphics;
+	double earnedPercentage;
 
 	public Battle(Player player, String classSubject){
 		this.setPreferredSize(new Dimension(800, 600));// setting the size
@@ -147,6 +152,11 @@ public class Battle extends JPanel {
 		backpack = new ImageIcon("art/battle/backpack.png");
 		pencil1 = new ImageIcon("art/battle/pencil.png");
 		pencil2 = new ImageIcon("art/battle/pencil.png");
+		confusedStudent1 = new ImageIcon("art/characters/confused_student.png");
+		confusedStudent2 = new ImageIcon("art/characters/confused_student2.png");
+		
+		drawConfused1=false;
+		drawConfused2=false;
 		studentX=600;// x coordinate for student
 		studentY=200;// y coordinate for student
 		backpackX=600;
@@ -260,15 +270,26 @@ public class Battle extends JPanel {
 			// -------------------Science boss atack-----------------------//
 			if(bossSubject.equals("Science"))
 			{
-				attackX+=12;
+				attackX+=8;
 
 				if(attackX>700)
 				{
+					drawConfused1=false;
+					drawConfused2=false;
 					playerHealth-=(21-(player.getSciRigor()-r.nextInt(5)));
 
 					playerHealthLabel.setText(playerHealth+"%");// inflict damage on players health
 					bossTimer.stop();
 					bossTurn=false;
+				}
+				else if(attackX>460 && attackX<480){
+					drawConfused1=true;
+					drawConfused2=false;
+				}
+				else if(attackX>=600)
+				{
+					drawConfused1=false;
+					drawConfused2=true;
 				}
 			}
 			else if(bossSubject.equals("Math"))
@@ -277,6 +298,8 @@ public class Battle extends JPanel {
 				// if student touches the boss , tell him to go the other direction
 				if (bossX > 350) 
 				{
+					drawConfused1=true;
+					drawConfused2=false;
 					playerHealth-=(21-(player.getQuantReasoning()-r.nextInt(5)));
 					playerHealthLabel.setText(playerHealth+"%");
 					xSpeed = -xSpeed;
@@ -284,10 +307,17 @@ public class Battle extends JPanel {
 				// if the student reaches to the origin, make him stop
 				else if(bossX < 4)
 				{
+					drawConfused1=false;
+					drawConfused2=false;
 					bossTimer.stop();
 					bossX=0;
 					xSpeed=5;
 					bossTurn=false;
+				}
+				else if(bossX>330 && bossX<350)
+				{
+					drawConfused1=false;
+					drawConfused2=true;
 				}
 			}
 			else if(bossSubject.equals("Humanities"))
@@ -296,12 +326,18 @@ public class Battle extends JPanel {
 
 				if(attackY>50)
 				{
+					drawConfused1=false;
+					drawConfused2=false;
 					playerHealth-=(21-(player.getCreativity()-r.nextInt(5)));
 					//playerHealth-=100;
 					playerHealthLabel.setText(playerHealth+"%");
 					bossTimer.stop();
 					xSpeed=5;
 					bossTurn=false;
+				}
+				else if(attackY>10){
+					drawConfused2=true;
+					drawConfused1=false;
 				}
 			}
 
@@ -311,10 +347,6 @@ public class Battle extends JPanel {
 				playerHealthLabel.setText("0%");
 				//System.out.println("You were vanquished by the "+ this.bossSubject + " midterm...");
 				repaint();
-				//cardLayout.show(cardPanel, "CAMPUS");
-				
-				
-				//frame.switchPanel(BackToSchool.Screen.CAMPUS);
 			}
 
 
@@ -399,7 +431,19 @@ public class Battle extends JPanel {
 		super.paintComponent(g);
 		graphics=g;
 		background.paintIcon(this,g,0,0);
-		student.paintIcon(this, g, studentX, studentY);
+		
+		if(drawConfused1)
+		{
+			confusedStudent1.paintIcon(this, g, studentX, studentY);
+		}
+		else if(drawConfused2)
+		{
+			confusedStudent2.paintIcon(this, g, studentX, studentY);
+		}
+		else{
+			student.paintIcon(this, g, studentX, studentY);
+		}
+		
 		boss.paintIcon(this, g, bossX, bossY);
 		
 		if(attackPressed){
@@ -444,6 +488,7 @@ public class Battle extends JPanel {
 		
 		if(playerHealth<=0){
 			lostScreen.paintIcon(this, g, 0, 0);
+			earnedPercentage=.25;
 			exit.setVisible(true);
 			optionAButton.setVisible(false);
 			optionBButton.setVisible(false);
@@ -464,6 +509,7 @@ public class Battle extends JPanel {
 		else if(bossHealth<=0)
 		{
 			winScreen.paintIcon(this, g, 0, 0);
+			earnedPercentage=0.5;
 			optionAButton.setVisible(false);
 			optionBButton.setVisible(false);
 			bossHealthLabel.setVisible(false);
@@ -535,17 +581,27 @@ public class Battle extends JPanel {
 		}
 	}
 	
+	public void increaseStats(){
+		if(bossSubject.equals("Science"))
+			player.increaseSciRigor(earnedPercentage);
+		else if(bossSubject.equals("Humanities"))
+			player.increaseCreativit(earnedPercentage);
+		else if(bossSubject.equals("Math"))
+			player.increaseQuantReasoning(earnedPercentage);
+	}
+	
 	// action listener for the exit Button
 		private class exitButtonListener implements ActionListener
 		{
 			public void actionPerformed(ActionEvent event)
 			{
+				increaseStats();
 				frame.switchPanel(BackToSchool.Screen.CAMPUS);
 			}
 		}
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("Back To School: Battle Mode");
-		Battle battle = new Battle(new Player(),"Math");
+		Battle battle = new Battle(new Player(),"Humanities");
 		frame.setSize(800,600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// frame.add(battle);
