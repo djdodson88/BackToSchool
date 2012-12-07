@@ -174,7 +174,7 @@ public class Battle extends JPanel {
 		playerHealthLabel.setBounds(670,340,100,100);
 		playerHealthLabel.setFont(new Font("Serif", Font.PLAIN, 20));
 		creativityLabel.setBounds(620,380,160,100);
-		quantReasoningLabel.setBounds(620,420,160,100);
+		quantReasoningLabel.setBounds(620,420,200,100);
 		scientRigorLabel.setBounds(620,460,160,100);
 		//---------------------End of Player Variables---------------------------//
 
@@ -229,7 +229,7 @@ public class Battle extends JPanel {
 		bossHealthLabel.setBounds(140,340,100,100);
 		bossName.setBounds(90,410,200,30);
 		bossType.setBounds(90,440,100,30);
-		bossSpecialAttackLabel.setBounds(90,470,200,30);
+		bossSpecialAttackLabel.setBounds(90,470,250,30);
 		bossSpecialDefenseLabel.setBounds(90,500,250,30);
 		//bossStory.setBounds(100,500,100,10);
 
