@@ -8,9 +8,9 @@ public class Player {
 	
 	// player starts with 1.0 GPA statistics (debatable)
 	public Player(){
-		sciRigor=1.0;
-		creativity=1.0;
-		quantReasoning=1.0;
+		sciRigor=4.0;
+		creativity=4.0;
+		quantReasoning=4.0;
 	}
 	
 	// increase the statistic
