@@ -34,9 +34,9 @@ public class Battle extends JPanel {
 	private Sound playerDefSound;
 	private Sound playerSpeSound;
 	private Sound playerFreeSound;
-	private Sound humSound;
-	private Sound sciSound;
-	private Sound mathSound;
+	private Sound sciBossSound;
+	private Sound bossSound;
+	boolean soundIsPlaying;
 
 	// global variables
 	JButton button1;
@@ -124,6 +124,8 @@ public class Battle extends JPanel {
 		this.setPreferredSize(new Dimension(800, 600));// setting the size
 		this.setBackground(Color.white);// color of background
 
+		soundIsPlaying=false;
+		
 		setLayout(null);
 		defaultFont = new Font("Courier", Font.PLAIN, 14);
 
@@ -170,7 +172,7 @@ public class Battle extends JPanel {
 
 		//attacking menu
 		defaultAttackLabel = new JLabel("Default Attack");
-		defaultAttackLabel.setFont(defaultFont);
+		defaultAttackLabel.setFont(new Font("Courier", Font.PLAIN, 12));
 		defaultAttackLabel.setBounds(450,425, 100, 30);
 
 
@@ -187,7 +189,7 @@ public class Battle extends JPanel {
 			optionBButton.setOpaque(false);
 			optionBButton.setBorder(null);
 			specializedAttackLabel = new JLabel("Special Attack");
-			specializedAttackLabel.setFont(defaultFont);
+			specializedAttackLabel.setFont(new Font("Courier", Font.PLAIN, 12));
 			specializedAttackLabel.setBounds(450,455,160,30);
 
 			optionAButton.setBounds(388,398,50,40); 
@@ -236,13 +238,11 @@ public class Battle extends JPanel {
 		// initializing variables
 		playerHealthLabel = new JLabel(playerHealth+"%");
 		creativityLabel = new JLabel("Creativity: "+player.getCreativity());
-		quantReasoningLabel = new JLabel("Quantative Reasoning: "+player.getQuantReasoning());
+		quantReasoningLabel = new JLabel("Quantative Reas.: "+player.getQuantReasoning());
 		scientRigorLabel = new JLabel("Scientific Rigor: "+player.getSciRigor());
-
-		playerHealthLabel.setFont(defaultFont);
-		creativityLabel.setFont(defaultFont);
-		quantReasoningLabel.setFont(defaultFont);
-		scientRigorLabel.setFont(defaultFont);
+		creativityLabel.setFont(new Font("Courier", Font.PLAIN, 12));
+		quantReasoningLabel.setFont(new Font("Courier", Font.PLAIN, 12));
+		scientRigorLabel.setFont(new Font("Courier", Font.PLAIN, 12));
 
 
 		//setting location of statistics
@@ -323,9 +323,9 @@ public class Battle extends JPanel {
 
 		//setting location of statistics
 		bossHealthLabel.setBounds(140,340,100,100);
-		bossName.setBounds(90,410,200,30);
-		bossType.setBounds(90,440,100,30);
-		bossSpecialAttackLabel.setBounds(90,470,250,30);
+		bossName.setBounds(55,420,200,30);
+		bossType.setBounds(55,450,200,30);
+		bossSpecialAttackLabel.setBounds(55,480,400,30);
 		//bossSpecialDefenseLabel.setBounds(90,500,250,30);
 		//bossStory.setBounds(100,500,100,10);
 
@@ -336,23 +336,24 @@ public class Battle extends JPanel {
 		// adding components to the jpanel
 		
 		// Variables for Sounds
-		if(classSubject.equals("Math"))
+		if(classSubject.equals("Math")){
 			backgroundSong=new Sound("sounds/Battle/mathBoss.mid");
-		else if(classSubject.equals("Science"))
+			bossSound=new Sound("sounds/Battle/mathBossSound.wav");
+		}
+		else if(classSubject.equals("Science")){
 			backgroundSong=new Sound("sounds/Battle/sciBoss.mid");
-		else if(classSubject.equals("Humanities"))
+			sciBossSound=new Sound("sounds/Battle/frog_sounds.wav");
+			sciBossSound.playSound();
+			bossSound=new Sound("sounds/Battle/sciBossSound.wav");
+		}
+		else if(classSubject.equals("Humanities")){
 			backgroundSong=new Sound("sounds/Battle/humBoss.mid");
+			bossSound=new Sound("sounds/Battle/humBossSound.wav");
+		}
 		
 		backgroundSong.playSound();
-
-
-		//				private Sound playerDefSound;
-		//				private Sound playerSpeSound;
-		//				private Sound playerFreeSound;
-		//				private Sound humSound;
-		//				private Sound sciSound;
-		//				private Sound mathSound;
-		//
+		playerDefSound=new Sound("sounds/Battle/pencil_sound.wav");
+		
 		this.add(bossName);
 		this.add(bossType);
 		this.add(miss);
@@ -442,11 +443,16 @@ public class Battle extends JPanel {
 			if(bossSubject.equals("Science"))
 			{
 				attackX+=8;
-
+				if(!soundIsPlaying)
+				{
+					bossSound.playSoundOnce();
+					soundIsPlaying=true;
+				}
 				if(attackX>700)
 				{
 					drawConfused1=false;
 					drawConfused2=false;
+					soundIsPlaying=false;
 					bossTimer.stop();
 					decreasePlayerHealth();
 					playerHealthLabel.setText(playerHealth+"%");// inflict damage on players health
@@ -477,6 +483,11 @@ public class Battle extends JPanel {
 				// if student touches the boss , tell him to go the other direction
 				if (bossX > 350) 
 				{
+					if(!soundIsPlaying)
+					{
+						bossSound.playSoundOnce();
+						soundIsPlaying=true;
+					}
 					setHitOrMiss();
 
 					if(isHit){
@@ -490,6 +501,7 @@ public class Battle extends JPanel {
 				{
 					drawConfused1=false;
 					drawConfused2=false;
+					soundIsPlaying=false;
 					decreasePlayerHealth();
 					playerHealthLabel.setText(playerHealth+"%");
 					bossTimer.stop();
@@ -511,11 +523,16 @@ public class Battle extends JPanel {
 			else if(bossSubject.equals("Humanities"))
 			{
 				attackY += 1;
-
+				if(!soundIsPlaying)
+				{
+					bossSound.playSoundOnce();
+					soundIsPlaying=true;
+				}
 				if(attackY>50)
 				{
 					drawConfused1=false;
 					drawConfused2=false;
+					soundIsPlaying=false;
 					bossTimer.stop();
 					decreasePlayerHealth();
 					playerHealthLabel.setText(playerHealth+"%");
@@ -607,7 +624,7 @@ public class Battle extends JPanel {
 			}
 
 			if(bossHealth>0){
-				bossTimer = new Timer(15, updateTask);
+				bossTimer = new Timer(10, updateTask);
 				bossTimer.start();
 			}
 			else
@@ -649,8 +666,10 @@ public class Battle extends JPanel {
 			if(!specialAttack){
 				backpack.paintIcon(this, g, backpackX,backpackY);
 				//System.out.println(backpackX);
-				if(backpackX<230)
+				if(backpackX<230){
+					playerDefSound.playSoundOnce();
 					explosion.paintIcon(this,g,180,100);
+				}
 			}
 			else
 			{
@@ -659,6 +678,8 @@ public class Battle extends JPanel {
 
 				if(backpackX<210)
 				{
+					playerDefSound.playSoundOnce();
+					playerDefSound.playSoundOnce();
 					explosion2.paintIcon(this,g,150,180);
 					explosion.paintIcon(this,g,170,230);
 				}
@@ -695,6 +716,10 @@ public class Battle extends JPanel {
 		if(playerHealth<=0){
 			lostScreen.paintIcon(this, g, 0, 0);
 			backgroundSong.stopSound();
+			
+			if(bossSubject.equals("Science"))
+				sciBossSound.stopSound();
+			
 			earnedPercentage=.25;
 			exit.setVisible(true);
 			optionAButton.setVisible(false);
@@ -720,6 +745,10 @@ public class Battle extends JPanel {
 		else if(bossHealth<=0)
 		{
 			winScreen.paintIcon(this, g, 0, 0);
+			
+			if(bossSubject.equals("Science"))
+				sciBossSound.stopSound();
+			
 			backgroundSong.stopSound();
 			earnedPercentage=0.5;
 			optionAButton.setVisible(false);
@@ -887,7 +916,7 @@ public class Battle extends JPanel {
 
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("Back To School: Battle Mode");
-		Battle battle = new Battle(new Player(),"Math");
+		Battle battle = new Battle(new Player(),"Humanities");
 		frame.setSize(800,600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// frame.add(battle);

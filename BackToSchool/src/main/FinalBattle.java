@@ -37,6 +37,7 @@ public class FinalBattle extends JPanel {
 	private Sound humSound;
 	private Sound sciSound;
 	private Sound mathSound;
+	boolean isBossSoundPlaying;
 	
 	// global variables
 	JButton button1;
@@ -142,10 +143,12 @@ public class FinalBattle extends JPanel {
 
 	public FinalBattle(Player player)
 	{
+		Font defaultFont = new Font("Courier", Font.PLAIN, 14);
 		this.player = player;
 		this.setPreferredSize(new Dimension(800, 600));// setting the size
 		this.setBackground(Color.white);// color of background
 		background = new ImageIcon("art/battle/battle.jpg");
+		isBossSoundPlaying=false;
 		playerHealth=100;
 		mathBossHealth=100;
 		sciBossHealth=100;
@@ -180,6 +183,7 @@ public class FinalBattle extends JPanel {
 		optionAButton.setOpaque(false);
 		optionAButton.setBorder(null);
 		defaultAttackLabel = new JLabel("Default Attack");
+		defaultAttackLabel.setFont(new Font("Courier", Font.PLAIN, 12));
 		defaultAttackLabel.setBounds(450,385,100,30);
 
 		// adding option B button
@@ -192,6 +196,7 @@ public class FinalBattle extends JPanel {
 		optionBButton.setBorder(null);
 		optionBButton.setVisible(false);
 		specializedAttackLabel = new JLabel("Special Attack");
+		specializedAttackLabel.setFont(new Font("Courier", Font.PLAIN, 12));
 		specializedAttackLabel.setBounds(450,430,160,30);
 		specializedAttackLabel.setVisible(false);
 
@@ -205,6 +210,7 @@ public class FinalBattle extends JPanel {
 		optionCButton.setBorder(null);
 		optionCButton.setVisible(false);
 		freezeAttackLabel = new JLabel("Freeze Attack");
+		freezeAttackLabel.setFont(new Font("Courier", Font.PLAIN, 12));
 		freezeAttackLabel.setBounds(452,475,160,30);
 		freezeAttackLabel.setVisible(false);
 		freezeAttack=false;
@@ -240,7 +246,7 @@ public class FinalBattle extends JPanel {
 		playerHealthLabel = new JLabel(playerHealth+"%");
 		playerHealthLabel.setFont(new Font("Serif", Font.PLAIN, 20));
 		creativityLabel = new JLabel("Creativity: "+player.getCreativity());
-		quantReasoningLabel = new JLabel("Quantative Reasoning: "+player.getQuantReasoning());
+		quantReasoningLabel = new JLabel("Quantative Reas.: "+player.getQuantReasoning());
 		scientRigorLabel = new JLabel("Scientific Rigor: "+player.getSciRigor());
 		backpack = new ImageIcon("art/battle/backpack.png");
 
@@ -252,6 +258,11 @@ public class FinalBattle extends JPanel {
 
 		drawConfused1=false;
 		drawConfused2=false;
+		
+		playerHealthLabel.setFont(new Font("Courier", Font.PLAIN, 20));
+		creativityLabel.setFont(new Font("Courier", Font.PLAIN, 12));
+		quantReasoningLabel.setFont(new Font("Courier", Font.PLAIN, 12));
+		scientRigorLabel.setFont(new Font("Courier", Font.PLAIN, 12));
 
 		//setting location of statistics
 		playerHealthLabel.setBounds(670,340,100,100);
@@ -301,13 +312,15 @@ public class FinalBattle extends JPanel {
 		bossSpecialAttackLabel = new JLabel();
 		//bossSpecialDefenseLabel = new JLabel();
 
-		bossHealthLabel.setFont(new Font("Serif", Font.PLAIN, 20));
+		bossNameLabel.setFont(defaultFont);
+		bossTypeLabel.setFont(defaultFont);
+		bossSpecialAttackLabel.setFont(defaultFont);
+		bossHealthLabel.setFont(new Font("Courier", Font.PLAIN, 20));
 
 		bossHealthLabel.setBounds(140,340,100,100);
-		bossNameLabel.setBounds(90,410,200,30);
-		bossTypeLabel.setBounds(90,440,100,30);
-		bossSpecialAttackLabel.setBounds(90,470,200,30);
-		//bossSpecialDefenseLabel.setBounds(90,500,250,30);
+		bossNameLabel.setBounds(55,420,200,30);
+		bossTypeLabel.setBounds(55,450,200,30);
+		bossSpecialAttackLabel.setBounds(55,480,400,30);
 
 		explosion = new ImageIcon("art/battle/explosion.png");
 		explosion2 = new ImageIcon("art/battle/explosion.png");
@@ -358,14 +371,11 @@ public class FinalBattle extends JPanel {
 		// Variables for Sounds
 		backgroundSong=new Sound("sounds/Battle/battle_background_song.mid");
 		backgroundSong.playSound();
-		
-	
-//		private Sound playerDefSound;
-//		private Sound playerSpeSound;
-//		private Sound playerFreeSound;
-//		private Sound humSound;
-//		private Sound sciSound;
-//		private Sound mathSound;
+		playerDefSound=new Sound("sounds/Battle/pencil_sound.wav");
+		playerFreeSound=new Sound("sounds/Battle/iceSound.wav");
+		humSound=new Sound("sounds/Battle/humBossSound.wav");
+		sciSound=new Sound("sounds/Battle/sciBossSound.wav");
+		mathSound=new Sound("sounds/Battle/mathBossSound.wav");
 
 		// adding components to the jpanel
 		this.add(instr1);
@@ -428,6 +438,8 @@ public class FinalBattle extends JPanel {
 				pencil2.paintIcon(this,g,backpackX+5,backpackY+40);
 
 				if(backpackX<230){
+					playerDefSound.playSoundOnce();
+					playerDefSound.playSoundOnce();
 					if(bossChosen.equals("Science")){
 						explosion.paintIcon(this, g, 180, 100);
 						explosion2.paintIcon(this, g, 180, 140);
@@ -444,6 +456,11 @@ public class FinalBattle extends JPanel {
 			}
 			else if(freezeAttack)
 			{
+				if(!isBossSoundPlaying){
+					playerFreeSound.playSoundOnce();
+					isBossSoundPlaying=true;
+				}
+				
 				if(bossChosen.equals("Science"))
 					sciBossButton.setIcon(new ImageIcon("art/battle/Finalscience_boss_freeze.png"));
 				else if(bossChosen.equals("Math"))
@@ -456,6 +473,7 @@ public class FinalBattle extends JPanel {
 				backpack.paintIcon(this, g, backpackX,backpackY);
 
 				if(backpackX<230){
+					playerDefSound.playSoundOnce();
 					if(bossChosen.equals("Science"))
 						explosion.paintIcon(this, g, 180, 100);
 					else if(bossChosen.equals("Math"))
@@ -756,7 +774,8 @@ public class FinalBattle extends JPanel {
 
 	public void moveBoss(){
 		redrawAttackMenu();
-		if(mathBossTurn&&!mathBossFreeze){
+		
+		if(mathBossTurn&&!mathBossFreeze){			
 			mathBossX += xSpeed;
 
 			mathBossY -= ySpeed;
@@ -765,6 +784,11 @@ public class FinalBattle extends JPanel {
 			if (mathBossX > 500) 
 			{
 				setHitOrMiss();
+				if(!isBossSoundPlaying)
+				{
+					mathSound.playSoundOnce();
+					isBossSoundPlaying=true;
+				}
 				
 				if(isHit){
 					drawConfused1=true;
@@ -780,7 +804,7 @@ public class FinalBattle extends JPanel {
 				drawConfused2=false;
 				bossTimer.stop();
 				decreasePlayerHealth();
-
+				isBossSoundPlaying=false;
 				if(playerHealth<0)
 					playerHealthLabel.setText("0%");
 				else
@@ -819,6 +843,11 @@ public class FinalBattle extends JPanel {
 			}
 		}
 		else if(humBossTurn&&!humBossFreeze){
+			if(!isBossSoundPlaying)
+			{
+				humSound.playSoundOnce();
+				isBossSoundPlaying=true;
+			}
 			attackY += 1;
 			if(attackY>50)
 			{
@@ -851,6 +880,8 @@ public class FinalBattle extends JPanel {
 						playerHealthLabel.setText("0%");
 					else
 						playerHealthLabel.setText(playerHealth+"%");
+					
+					isBossSoundPlaying=false;
 					moveBoss();
 				}
 				else if(mathBossHealth>0&&!mathBossFreeze)
@@ -870,6 +901,7 @@ public class FinalBattle extends JPanel {
 					else
 						playerHealthLabel.setText(playerHealth+"%");
 					
+					isBossSoundPlaying=false;
 					moveBoss();
 				}
 				else{
@@ -891,6 +923,7 @@ public class FinalBattle extends JPanel {
 					bossTypeLabel.setText("");
 					bossNameLabel.setText("");
 					redrawAttackMenu();	
+					isBossSoundPlaying=false;
 				}
 			}
 			else if(attackY>10){
@@ -907,6 +940,11 @@ public class FinalBattle extends JPanel {
 		else if(sciBossTurn&&!sciBossFreeze)
 		{
 			attackX+=12;
+			if(!isBossSoundPlaying)
+			{
+				sciSound.playSoundOnce();
+				isBossSoundPlaying=true;
+			}
 
 			if(attackX>800)
 			{
@@ -941,6 +979,7 @@ public class FinalBattle extends JPanel {
 					else
 						playerHealthLabel.setText(playerHealth+"%");
 					
+					isBossSoundPlaying=false;
 					moveBoss();
 				}
 				else{
@@ -963,6 +1002,7 @@ public class FinalBattle extends JPanel {
 					
 					bossTimer.stop();
 					redrawAttackMenu();
+					isBossSoundPlaying=false;
 				}
 			}
 			else if(attackX>550 && attackX<580){
@@ -1103,6 +1143,7 @@ public class FinalBattle extends JPanel {
 					repaint();  // Refresh the JFrame, callback paintComponent()
 				}
 			};
+			isBossSoundPlaying=false;
 			whosTurn();
 			if(sciBossHealth>0||mathBossHealth>0||humBossHealth>0){
 				if(mathBossTurn){
