@@ -893,7 +893,7 @@ public class Battle extends JPanel {
 	  Sound(String filename){
 	     try
 	     {
-	    	// System.out.println("file:" + System.getProperty("user.dir") + "\\" + filename);
+	    	 System.out.println("file:" + System.getProperty("user.dir") + "\\" + filename);
 	    	 songPath = new URL ("file:" + System.getProperty("user.dir") + "\\" + filename);
 	    	 song = Applet.newAudioClip(songPath);
 	    	// playSound();
@@ -916,7 +916,7 @@ public class Battle extends JPanel {
 
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("Back To School: Battle Mode");
-		Battle battle = new Battle(new Player(),"Humanities");
+		Battle battle = new Battle(new Player(),"Science");
 		frame.setSize(800,600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// frame.add(battle);
