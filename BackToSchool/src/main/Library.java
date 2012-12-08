@@ -2,10 +2,16 @@ package main;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -15,6 +21,7 @@ import javax.swing.SwingUtilities;
 
 public class Library extends JPanel {
 	JLabel txt;
+
 	JButton humanitiesButton;
 	JButton scienceButton;
 	JButton mathButton;
@@ -26,11 +33,14 @@ public class Library extends JPanel {
 	boolean scienceSelected;
 	boolean mathSelected;
 	
+	BufferedImage background;
 	Player student; 
 
 	public Library(Player player){
 		this.setPreferredSize(new Dimension(800, 600));// setting the size
-		this.setBackground(Color.white);// color of background
+		setup();
+		
+		
 		setLayout(null);
 		optionSelected=false;
 		humanitiesSelected=false;
@@ -38,11 +48,14 @@ public class Library extends JPanel {
 		mathSelected=false;
 
 		student = player;
+	
+		txt = new JLabel("Please choose a subject to checkout");
 		
-		txt = new JLabel("Please select a skill level to increase");
-		txt.setBounds(350,100,300,30);
+		txt.setFont(new Font("Courier", Font.PLAIN, 14));
+		txt.setBounds(200,180,500,30);
 
-		humanitiesButton=new JButton("Humanities");
+		humanitiesButton=new JButton(new ImageIcon("art/library/library_hum.jpg"));
+	
 		humanitiesButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event)
 			{
@@ -50,51 +63,49 @@ public class Library extends JPanel {
 					optionSelected=true;
 					humanitiesSelected=true;
 					student.increaseCreativit(0.5);
-					System.out.println("Pressed Humanities");
 					repaint();
 				}
 			}
 		});
-		scienceButton=new JButton("Science");
+		scienceButton=new JButton(new ImageIcon("art/library/science_lib.jpg"));
 		scienceButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event)
 			{
 				if(!optionSelected){
 					optionSelected=true;
 					student.increaseSciRigor(0.5); 
-					System.out.println("Pressed Science");
 					scienceSelected = true;
 					repaint();
 				}
 			}
 		});
-		mathButton=new JButton("Math");
+		mathButton=new JButton(new ImageIcon("art/library/math_lib.png"));
 		mathButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event)
 			{
 				if(!optionSelected){
 					optionSelected=true;
 					student.increaseQuantReasoning(0.5);
-					System.out.println("Pressed Math");
 					mathSelected=true;
 					repaint();
 				}
 			}			
 		});
 		
-		exitButton=new JButton("Exit");
+		exitButton=new JButton(new ImageIcon("art/buttons/exit_btn.jpg"));
 		exitButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event)
 			{
 				frame.switchPanel(BackToSchool.Screen.CAMPUS);
 			}			
 		});
+		
 		exitButton.setVisible(false);
 
-		humanitiesButton.setBounds(388,200,100,30); 
-		scienceButton.setBounds(388,300,100,30); 
-		mathButton.setBounds(388,400,100,30); 
-		exitButton.setBounds(388,350,100,30);
+		humanitiesButton.setBounds(200,225, 200,67); 
+		scienceButton.setBounds(200,300,200,67); 
+		mathButton.setBounds(200,375,200,67); 
+		exitButton.setBounds(600,450,100,30);
 
 		this.add(txt);
 		this.add(humanitiesButton);
@@ -103,6 +114,15 @@ public class Library extends JPanel {
 		this.add(exitButton);
 	}
 	
+	private void setup()
+	{
+		try {
+			background = ImageIO.read(new File("art/library/library_view.jpg"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	public Player getBackPlayer(){
 		return student;
 	}
@@ -115,24 +135,22 @@ public class Library extends JPanel {
 	public void paintComponent(Graphics g)
 	{
 		super.paintComponent(g);
+		g.drawImage(background, 0, 0, null);
 		
 		if(optionSelected)
 		{
-			txt.setBounds(350,300,300,30);
+			txt.setBounds(450,300,300,30);
 			if(humanitiesSelected){
-				txt.setText("Hurray  +0.5 exp on Creativity");
+				txt.setText("+0.5 exp on Creativity");
 			}
 			else if(mathSelected)
 			{
-				txt.setText("Hurray  +0.5 exp on Quantitive Reasoning");
+				txt.setText("+0.5 exp on Quantitive Reasoning");
 			}
 			else if(scienceSelected){
-				txt.setText("Hurray  +0.5 exp on Scientific Rigor");
+				txt.setText("+0.5 exp on Scientific Rigor");
 			}
-			
-			scienceButton.setVisible(false);
-			mathButton.setVisible(false);
-			humanitiesButton.setVisible(false);
+		
 			exitButton.setVisible(true);
 		}
 		
