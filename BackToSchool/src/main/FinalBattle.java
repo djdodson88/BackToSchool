@@ -140,6 +140,9 @@ public class FinalBattle extends JPanel {
 	boolean humBossFreeze;
 	boolean mathBossFreeze;
 	boolean sciBossFreeze;
+	ImageIcon humTombstone;
+	ImageIcon sciTombstone;
+	ImageIcon mathTombstone;
 
 	public FinalBattle(Player player)
 	{
@@ -302,7 +305,7 @@ public class FinalBattle extends JPanel {
 		mathBossButton.setBackground(null);
 		mathBossButton.setOpaque(false);
 		mathBossButton.setBorder(null);
-
+		
 		mathBossX=0;
 		mathBossY=250;
 
@@ -332,6 +335,10 @@ public class FinalBattle extends JPanel {
 		humBossFreeze=false;
 		mathBossFreeze=false;
 		sciBossFreeze=false;
+		
+		humTombstone = new ImageIcon("art/battle/tombstone.png");
+		sciTombstone= new ImageIcon("art/battle/tombstone.png");
+		mathTombstone= new ImageIcon("art/battle/tombstone.png");
 
 		//--------------------End of Bosses Variables
 
@@ -418,6 +425,19 @@ public class FinalBattle extends JPanel {
 		
 		graphics=g;
 		background.paintIcon(this,g,0,0);
+	
+		if(sciBossHealth<=0)
+		{
+			sciTombstone.paintIcon(this, g, 0, 110);
+		}
+		if(mathBossHealth<=0)
+		{
+			mathTombstone.paintIcon(this, g, 0, 250);
+		}
+		if(humBossHealth<=0)
+		{
+			humTombstone.paintIcon(this, g, 0, 0);
+		}
 
 		if(drawConfused1)
 		{
@@ -603,12 +623,12 @@ public class FinalBattle extends JPanel {
 			}
 		}
 
-		if(humBossHealth<0)
-			humBossButton.setIcon(new ImageIcon("art/battle/Finalhumboss.png"));
-		if(mathBossHealth<0)
-			mathBossButton.setIcon(new ImageIcon("art/battle/Finalmath_boss.png"));
-		if(sciBossHealth<0)
-			sciBossButton.setIcon(new ImageIcon("art/battle/Finalscience_boss.png"));
+//		if(humBossHealth<0)
+//			humBossButton.setIcon(new ImageIcon("art/battle/Finalhumboss.png"));
+//		if(mathBossHealth<0)
+//			mathBossButton.setIcon(new ImageIcon("art/battle/Finalmath_boss.png"));
+//		if(sciBossHealth<0)
+//			sciBossButton.setIcon(new ImageIcon("art/battle/Finalscience_boss.png"));
 
 		if(humBossHealth>0&&!humBossFreeze)
 			humBossTurn=true;
@@ -1120,12 +1140,18 @@ public class FinalBattle extends JPanel {
 			}
 
 			//repaint();
-			if(sciBossHealth<0)
+			if(sciBossHealth<=0){
 				sciBossButton.setVisible(false);
-			if(mathBossHealth<0)
+				//sciBossButton.setIcon(new ImageIcon("art/battle/tombstone.png"));
+			}
+			if(mathBossHealth<=0){
 				mathBossButton.setVisible(false);
-			if(humBossHealth<0)
+				//mathBossButton.setIcon(new ImageIcon("art/battle/tombstone.png"));
+			}
+			if(humBossHealth<=0){
 				humBossButton.setVisible(false);
+				//humBossButton.setIcon(new ImageIcon("art/battle/tombstone.png"));
+			}
 			
 			timer.stop();
 			backpackX=600;
@@ -1197,6 +1223,7 @@ public class FinalBattle extends JPanel {
 	{
 		public void actionPerformed(ActionEvent event)
 		{
+			redrawAttackMenu();
 			if(!attackPressed && humBossHealth>0){
 				instr1.setVisible(false);
 				instr2.setVisible(false);
@@ -1241,6 +1268,7 @@ public class FinalBattle extends JPanel {
 	{
 		public void actionPerformed(ActionEvent event)
 		{
+			redrawAttackMenu();
 			if(!attackPressed  && sciBossHealth>0){
 				instr1.setVisible(false);
 				instr2.setVisible(false);
@@ -1285,6 +1313,7 @@ public class FinalBattle extends JPanel {
 	{
 		public void actionPerformed(ActionEvent event)
 		{
+			redrawAttackMenu();
 			if(!attackPressed  && mathBossHealth>0){
 				instr1.setVisible(false);
 				instr2.setVisible(false);
