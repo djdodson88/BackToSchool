@@ -22,6 +22,8 @@ public class Player {
 		// if GPA was added and it is more than 4.0. Set the GPA to 4.0
 		if(sciRigor>4.0)
 			sciRigor=4.0;
+		
+		sciRigor = truncStat(sciRigor);
 	}
 	
 	// increase the statistic
@@ -31,6 +33,8 @@ public class Player {
 		
 		if(creativity>4.0)
 			creativity=4.0;
+		
+		creativity = truncStat(creativity);
 	}
 	
 	// increase the statistic
@@ -40,6 +44,8 @@ public class Player {
 		
 		if(quantReasoning>4.0)
 			quantReasoning=4.0;
+		
+		quantReasoning = truncStat(quantReasoning);
 	}
 	
 	//return the statistic
@@ -57,5 +63,9 @@ public class Player {
 		return quantReasoning;
 	}
 	
+	private double truncStat(double stat)
+	{
+		return Math.ceil(stat * 100)/100;
+	}
 
 }

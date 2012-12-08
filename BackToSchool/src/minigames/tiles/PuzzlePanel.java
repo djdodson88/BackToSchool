@@ -149,18 +149,22 @@ public class PuzzlePanel extends JPanel implements ActionListener
 		double percentage = 0;
 		if(endTime >= startTime * .75)
 		{
+			// 100-75
 			percentage = 0.5;
 		}
 		else if(endTime >= startTime * .50)
 		{
+			// 75-50
 			percentage = 0.4;
 		}
-		else if(endTime >= startTime * .30)
+		else if(endTime <= startTime * .30)
 		{
+			// 50-30
 			percentage = 0.3;
 		}
-		else if(endTime >= startTime * .10)
+		else
 		{
+			// 30-0
 			percentage = 0.1;
 		}
 		

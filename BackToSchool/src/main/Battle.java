@@ -35,6 +35,9 @@ public class Battle extends JPanel {
 	boolean gameOver=false;
 	Random r;
 
+	//Debug
+	private JButton exitDebug;
+	
 	// Student variables
 	ImageIcon student;
 	ImageIcon backpack;
@@ -98,7 +101,8 @@ public class Battle extends JPanel {
 	Graphics graphics;
 	double earnedPercentage;
 	boolean drawSpecialAttackButton;
-
+	
+	private Font defaultFont;
 	JButton miss;
 	JButton hit;
 
@@ -106,6 +110,16 @@ public class Battle extends JPanel {
 		this.setPreferredSize(new Dimension(800, 600));// setting the size
 		this.setBackground(Color.white);// color of background
 
+		setLayout(null);
+		defaultFont = new Font("Courier", Font.PLAIN, 14);
+		
+		//exit Button for debugging person
+		exitDebug = new JButton(new ImageIcon("art/buttons/exit_btn.jpg"));
+		exitDebug.setBounds(650, 10, 100, 30);
+		exitDebug.setVisible(true);
+		this.add(exitDebug);
+		exitDebug.addActionListener(new exitDebugButtonListener());
+		
 		drawSpecialAttackButton=false;
 		r = new Random();
 		bossSubject=classSubject;
@@ -142,7 +156,8 @@ public class Battle extends JPanel {
 
 		//attacking menu
 		defaultAttackLabel = new JLabel("Default Attack");
-		defaultAttackLabel.setBounds(450,425,100,30);
+		defaultAttackLabel.setFont(defaultFont);
+		defaultAttackLabel.setBounds(450,425, 100, 30);
 
 
 		if((bossSubject.equals("Math")&&player.getQuantReasoning()>2.4) ||
@@ -158,6 +173,7 @@ public class Battle extends JPanel {
 			optionBButton.setOpaque(false);
 			optionBButton.setBorder(null);
 			specializedAttackLabel = new JLabel("Special Attack");
+			specializedAttackLabel.setFont(defaultFont);
 			specializedAttackLabel.setBounds(450,455,160,30);
 
 			optionAButton.setBounds(388,398,50,40); 
@@ -208,11 +224,16 @@ public class Battle extends JPanel {
 		creativityLabel = new JLabel("Creativity: "+player.getCreativity());
 		quantReasoningLabel = new JLabel("Quantative Reasoning: "+player.getQuantReasoning());
 		scientRigorLabel = new JLabel("Scientific Rigor: "+player.getSciRigor());
-
+		
+		playerHealthLabel.setFont(defaultFont);
+		creativityLabel.setFont(defaultFont);
+		quantReasoningLabel.setFont(defaultFont);
+		scientRigorLabel.setFont(defaultFont);
+		
 
 		//setting location of statistics
 		playerHealthLabel.setBounds(670,340,100,100);
-		playerHealthLabel.setFont(new Font("Serif", Font.PLAIN, 20));
+		playerHealthLabel.setFont(new Font("Courier", Font.PLAIN, 20));
 		creativityLabel.setBounds(620,380,160,100);
 		quantReasoningLabel.setBounds(620,420,200,100);
 		scientRigorLabel.setBounds(620,460,160,100);
@@ -241,7 +262,7 @@ public class Battle extends JPanel {
 		bossY=0;// y coordinate for boss
 
 		bossHealthLabel = new JLabel(bossHealth+"%");
-		bossHealthLabel.setFont(new Font("Serif", Font.PLAIN, 20));
+		bossHealthLabel.setFont(new Font("Courier", Font.PLAIN, 20));
 
 		if(bossSubject.equals("Humanities")){
 			attackY=0;
@@ -256,6 +277,7 @@ public class Battle extends JPanel {
 			humAttack3=new ImageIcon("art/battle/hum_attack3.png");
 			attackY=0;
 			attackX=600;
+			
 			//bossStory = new JLabel("Hello");
 		}
 		else if(bossSubject.equals("Science"))
@@ -281,6 +303,10 @@ public class Battle extends JPanel {
 		explosion = new ImageIcon("art/battle/explosion.png");
 		explosion2 = new ImageIcon("art/battle/explosion.png");
 
+		bossName.setFont(defaultFont);
+		bossType.setFont(defaultFont);
+		bossSpecialAttackLabel.setFont(defaultFont);
+		
 		//setting location of statistics
 		bossHealthLabel.setBounds(140,340,100,100);
 		bossName.setBounds(90,410,200,30);
@@ -339,7 +365,7 @@ public class Battle extends JPanel {
 
 				hit.setVisible(true);
 				isHit=true;
-				System.out.println("High Hit");
+				//System.out.println("High Hit");
 			}
 			// Low Hit
 			else if(num>5 && num<=8)
@@ -354,14 +380,14 @@ public class Battle extends JPanel {
 				isHit=true;
 				// Set low hit image to visible(true)
 				hit.setVisible(true);
-				System.out.println("Low Hit");
+				//System.out.println("Low Hit");
 			}
 			// Miss
 			else if(num>8){
 				// Set miss image to visible(true)
 				isMiss=true;
 				miss.setVisible(true);
-				System.out.println("Miss");
+				//System.out.println("Miss");
 			}
 		}
 	}
@@ -759,6 +785,32 @@ public class Battle extends JPanel {
 			frame.switchPanel(BackToSchool.Screen.CAMPUS);
 		}
 	}
+	
+	private class exitDebugButtonListener implements ActionListener
+	{
+		public void actionPerformed(ActionEvent event)
+		{
+			Random random = new Random();
+			int debug = random.nextInt(2);
+			
+			switch(debug)
+			{
+			case 0:
+				earnedPercentage = 0.5;
+				System.out.println("Win");
+				break;
+			case 1:
+				earnedPercentage = 0.25;
+				System.out.println("Lose");
+				break;
+			}
+			
+			increaseStats();
+			
+			frame.switchPanel(BackToSchool.Screen.CAMPUS);
+		}
+	}
+	
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("Back To School: Battle Mode");
 		Battle battle = new Battle(new Player(),"Humanities");

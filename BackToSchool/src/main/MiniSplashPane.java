@@ -33,21 +33,21 @@ public class MiniSplashPane extends JLayeredPane
 	private JButton default_exit; //for testing day structure, etc
 	private Day day;
 	private Player student;
-	
+
 	public MiniSplashPane(Player player, Day current)
 	{
 		day = current;
 		student = player;
-		
+
 		try {
 			backgroundImg = ImageIO.read(new File("art/classroom/classroom.jpg"));
 		} catch (IOException e) {	
 			e.printStackTrace();
 		}
-		
+
 		// STRICTLY FOR TESTING, WILL BE REMOVED 
 		//Button used for now to get through day-> weeks
-		
+
 		default_exit = new JButton(new ImageIcon("art/buttons/exit_btn.jpg"));
 		this.add(default_exit);
 		default_exit.setBounds(700,0, 100, 30);
@@ -55,18 +55,53 @@ public class MiniSplashPane extends JLayeredPane
 		default_exit.addActionListener(
 				new ActionListener() {
 					public void actionPerformed(ActionEvent e)
-					{	frame.switchPanel(BackToSchool.Screen.CAMPUS);
+					{	
+						// DEBUG PURPOSES
+						Random random = new Random();
+						int winStat = random.nextInt(4);
+						double percentage = 0;
+						
+						switch(winStat)
+						{
+						case 0:
+							percentage = 0.5;
+							break;
+						case 1:
+							percentage = 0.4;
+							break;
+						case 2:
+							percentage = 0.3;
+							break;
+						case 3:
+							percentage = 0.1;
+							break;
+						}
+						
+						switch(day.getCourse())
+						{
+						case SCIENCE:
+							student.increaseSciRigor(percentage);
+							break;
+						case HUMANITIES:
+							student.increaseCreativit(percentage);
+							break;
+						case MATH:
+							student.increaseQuantReasoning(percentage);
+							break;
+						}
+						//--- END ----
+						frame.switchPanel(BackToSchool.Screen.CAMPUS);
 					}
 				});
-		
+
 		subPanel = new MiniSplash();
 		subPanel.setBounds(50,60,500,300);
 		add(subPanel);
 		moveToFront(subPanel);
-		
+
 		setVisible(true);	
 	}
-	
+
 	protected void switchPanels(JPanel panel)
 	{
 		remove(subPanel);
@@ -75,7 +110,7 @@ public class MiniSplashPane extends JLayeredPane
 		moveToFront(subPanel);
 		repaint();
 	}
-	
+
 	public void sendFrame(BackToSchool frame)
 	{
 		this.frame = frame;
@@ -86,7 +121,7 @@ public class MiniSplashPane extends JLayeredPane
 		super.paintComponent(g);
 		g.drawImage(backgroundImg, 0, 0, null);
 	}
-	
+
 	private class MiniSplash extends JPanel
 	{
 		private boolean nxtScreen, finished;
@@ -95,7 +130,7 @@ public class MiniSplashPane extends JLayeredPane
 		private JButton button, previous, skipButton;
 		private JPanel minigame;
 		private ImageIcon start, skip, exit, next;
-		
+
 		public MiniSplash()
 		{			
 			start = new ImageIcon("art/buttons/start_btn.jpg");
@@ -103,14 +138,14 @@ public class MiniSplashPane extends JLayeredPane
 			exit = new ImageIcon("art/buttons/exit_btn.jpg"); //eventually will be removed
 			next = new ImageIcon("art/buttons/next_btn.jpg");
 			skipButton = new JButton(skip);
-			
+
 			try {
 				binderBg = ImageIO.read(new File("art/classroom/splash.jpg"));
 				bulletpoint = ImageIO.read(new File("art/classroom/bulletpoint.png"));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
+
 			/* Game Key
 			 * 1 = Fruit
 			 * 2 = Warehouse
@@ -159,33 +194,33 @@ public class MiniSplashPane extends JLayeredPane
 				button.setBounds(150, 250, 100, 30);
 				skipButton.setBounds(250, 250, 100, 30);
 				skipButton.addActionListener(new ActionListener(){ 
-							public void actionPerformed(ActionEvent e) 
-							{	switchPanels();
-							}
-						});				
+					public void actionPerformed(ActionEvent e) 
+					{	switchPanels();
+					}
+				});				
 			}
 			else
 			{
 				button.setBounds(200, 250, 100, 30);
 			}
 			button.addActionListener( new ActionListener() {
-						public void actionPerformed(ActionEvent e)
-						{	if(game == 3 && !finished)
-							{	
-								numScreen++;
-								finished = true;
-								button.setIcon(start);
-								repaint();
-							}
-							else
-								switchPanels();
-						}
-					});
+				public void actionPerformed(ActionEvent e)
+				{	if(game == 3 && !finished)
+				{	
+					numScreen++;
+					finished = true;
+					button.setIcon(start);
+					repaint();
+				}
+				else
+					switchPanels();
+				}
+			});
 
 			setBounds(26, 32, 550, 450);
 			setVisible(true);
 		}
-		
+
 		public void paintComponent(Graphics g)
 		{
 			super.paintComponent(g);
@@ -193,12 +228,12 @@ public class MiniSplashPane extends JLayeredPane
 			Font font = new Font("Arial", Font.PLAIN, 12);
 			drawString(g, setInstructions(), 60, 42);
 		}
-		
+
 		private String setInstructions()
 		{
 			String instructions = "";
 			String gameTitle = "";
-	
+
 			if(game == 1)
 			{
 				gameTitle = "Fruit Game";
@@ -222,7 +257,7 @@ public class MiniSplashPane extends JLayeredPane
 			{
 				gameTitle = "Sudoku";
 				instructions += gameTitle + "\n";
-	
+
 				if(numScreen == 1)
 				{
 					instructions += ";li Sudoku is a puzzle-game, which involves \nfilling in the grid with the correct number sequence ";
@@ -246,28 +281,28 @@ public class MiniSplashPane extends JLayeredPane
 				instructions += "Instructions: \n";
 				instructions += ";li Click the mouse to move the tile over\n";
 				instructions += ";li Arrange the puzzle into the correct order.";
-	
+
 			}
 			else if (game == 5)
 			{
 				gameTitle = "Beer Pong";
 				instructions += gameTitle + "\n";
 				instructions += "Instructions: \n";
-				
+
 			}
 			return instructions;
 		}	
-		
+
 		private void drawString(Graphics g, String text, int x, int y)
 		{
 			for(String line: text.split("\n"))
 			{
 				int bulletPos = y + g.getFontMetrics().getHeight();
-	
+
 				if(line.contains(";li"))
 				{
 					line = line.replace(";li","");
-	
+
 					if(line.contains(";indent"))
 					{
 						line = line.replace(";indent", "");
@@ -296,7 +331,7 @@ public class MiniSplashPane extends JLayeredPane
 				g.drawString(line, x, y+=g.getFontMetrics().getHeight());
 			}
 		}
-		
+
 		private void switchPanels()
 		{		
 			frame.addPanel(new ClassroomPanel(student, game, day, frame), BackToSchool.Screen.CLASS);
