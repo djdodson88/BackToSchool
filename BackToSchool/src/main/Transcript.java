@@ -326,7 +326,7 @@ public class Transcript extends JPanel{
 			{
 				comment = "Great! Keep it up!";
 			}
-			else if(skills[i] <= 4.0)
+			else if(skills[i] == 4.0)
 			{
 				comment = "EXCELLENT! Ace those finals!";
 			}
