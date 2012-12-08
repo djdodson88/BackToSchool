@@ -8,9 +8,12 @@ public class Day {
 	private boolean humMidterm, mathMidterm, sciMidterm, finalBattle;
 	private boolean humAttend, mathAttend, sciAttend;
 	private Course nextCourse, current;
+	private boolean isShown;
 	
 	public Day(int d)
 	{
+		isShown = false;
+		
 		day=d-1;
 		nextDay();		
 	}
@@ -129,4 +132,19 @@ public class Day {
 	{
 		return finalBattle;
 	}
+	
+	
+	
+	public void setTranscriptState(boolean state)
+	{
+		// such that transcript shown once
+		isShown = state;
+	}
+	
+	public boolean isTranscriptShow()
+	{
+		return isShown;
+	}
+
+	
 }

@@ -224,11 +224,13 @@ public class CampusPanel extends JPanel
 		
 		// render interface 
 		//TODO: draw arrow to class
+		
 		g.setColor(Color.RED);
 		g.drawString("Day: "+day.getDay(), 50, 15);
 		g.drawString("Class: "+day.getNextCourseName(), 100, 15);
 		g.drawString("Destination: "+destination.x+","+destination.y, 14*50, 15);		
 	}
+	
 	
 	public void printStudentStats()
 	{
@@ -271,10 +273,23 @@ public class CampusPanel extends JPanel
 						frame.addPanel(miniSplash, BackToSchool.Screen.MINISPLASH);
 						frame.switchPanel(BackToSchool.Screen.MINISPLASH);
 						
-						//frame.addPanel(new Battle(student, day.getNextClassName()), BackToSchool.Screen.BATTLE);
-						//frame.switchPanel(BackToSchool.Screen.BATTLE);
 					}
 					day.attendClass();
+					
+					// Transcript will only show at end of week 1 and 2
+					if((day.getDay() == 4 || day.getDay() == 6) && !day.isTranscriptShow())
+					{
+						System.out.println("Transcript made");
+						Transcript transcript = new Transcript(student, day);
+						frame.addPanel(transcript, BackToSchool.Screen.TRANSCRIPT);	
+					}
+					
+					if(day.getDay() == 5)
+					{
+						day.setTranscriptState(false);
+					}
+					
+					
 					printStudentStats();
 					
 				}

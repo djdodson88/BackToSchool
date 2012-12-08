@@ -782,7 +782,14 @@ public class Battle extends JPanel {
 		public void actionPerformed(ActionEvent event)
 		{
 			increaseStats();
-			frame.switchPanel(BackToSchool.Screen.CAMPUS);
+			if(bossSubject.equals("Science")) //science boss is the end of 2nd week
+			{
+				frame.switchPanel(BackToSchool.Screen.TRANSCRIPT);
+			}
+			else
+			{
+				frame.switchPanel(BackToSchool.Screen.CAMPUS);
+			}
 		}
 	}
 	
@@ -807,7 +814,14 @@ public class Battle extends JPanel {
 			
 			increaseStats();
 			
-			frame.switchPanel(BackToSchool.Screen.CAMPUS);
+			if(bossSubject.equals("Science"))
+			{
+				frame.switchPanel(BackToSchool.Screen.TRANSCRIPT);
+			}
+			else
+			{
+				frame.switchPanel(BackToSchool.Screen.CAMPUS);
+			}
 		}
 	}
 	

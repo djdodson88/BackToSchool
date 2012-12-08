@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 
 public class BackToSchool extends JFrame
 {
-	public enum Screen{CAMPUS, BATTLE, FINALBATTLE, CLASS, MINISPLASH, WELCOME};
+	public enum Screen{CAMPUS, BATTLE, FINALBATTLE, CLASS, MINISPLASH, WELCOME, LIBRARY, TRANSCRIPT};
 	private CardLayout cardLayout;
 	private JPanel cardPanel;
 	private CampusPanel campus;
@@ -18,6 +18,8 @@ public class BackToSchool extends JFrame
 	private ClassroomPanel classroom;
 	private MiniSplashPane miniSplash;
 	private Welcome welcome;
+	private Transcript transcript;
+	private Library library;
 	
 	public BackToSchool(CardLayout layout, JPanel panel)
 	{
@@ -63,6 +65,14 @@ public class BackToSchool extends JFrame
 			case WELCOME:
 				welcome  = (Welcome)panel;
 				welcome.sendFrame(this);
+				break;
+			case LIBRARY:
+				library = (Library)panel;
+				library.sendFrame(this);
+				break;
+			case TRANSCRIPT:
+				transcript = (Transcript)panel;
+				transcript.sendFrame(this);
 				break;
 				
 		}	

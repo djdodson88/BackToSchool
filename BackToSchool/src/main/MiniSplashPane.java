@@ -90,7 +90,16 @@ public class MiniSplashPane extends JLayeredPane
 							break;
 						}
 						//--- END ----
-						frame.switchPanel(BackToSchool.Screen.CAMPUS);
+						
+
+						if((day.getDay() == 4 || day.getDay() == 7) && !day.isTranscriptShow())
+						{
+							frame.switchPanel(BackToSchool.Screen.TRANSCRIPT);
+						}
+						else
+						{
+							frame.switchPanel(BackToSchool.Screen.CAMPUS);
+						}
 					}
 				});
 

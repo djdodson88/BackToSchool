@@ -221,8 +221,15 @@ public class PuzzlePanel extends JPanel implements ActionListener
 
 		if(src == exit)
 		{
-			frame.switchPanel(BackToSchool.Screen.CAMPUS);
 			
+			if((day.getDay() == 4 || day.getDay() == 7) && !day.isTranscriptShow())
+			{
+				frame.switchPanel(BackToSchool.Screen.TRANSCRIPT);
+			}
+			else
+			{
+				frame.switchPanel(BackToSchool.Screen.CAMPUS);
+			}
 		}
 
 	}

@@ -114,6 +114,12 @@ public class Library extends JPanel {
 		this.add(exitButton);
 	}
 	
+	protected void sendFrame(BackToSchool frame) 
+	{
+		this.frame = frame;
+	}
+	
+	
 	private void setup()
 	{
 		try {
