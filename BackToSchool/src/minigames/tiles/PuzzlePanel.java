@@ -1,13 +1,14 @@
 package minigames.tiles;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Timer;
 import java.util.concurrent.LinkedBlockingQueue;
 import javax.swing.*;
 import main.BackToSchool;
 import main.Player;
 import main.Day;
 
-public class PuzzlePanel extends JPanel
+public class PuzzlePanel extends JPanel implements ActionListener
 {
 	private ImageIcon[][] puzzle;
 	private ImageIcon one, two, three, four, five, six, seven, eight, nine, ten, 
@@ -21,11 +22,20 @@ public class PuzzlePanel extends JPanel
 	private Day day;
 	private BackToSchool frame;
 	
+	private Clock gameTimer;
+	private Timer timer;
+	
+	private int startTime;
+	private boolean gameOver;
+	
+	private JButton exit;
+	
 	public PuzzlePanel(Player student, Day current, BackToSchool frame)
 	{
 		player = student;
 		day = current;
 		this.frame = frame;
+		startTime = 0;
 		
 		// LOAD IN ALL IMAGES
 		one = new ImageIcon("art/tilePuzzle/1.png");
@@ -50,19 +60,26 @@ public class PuzzlePanel extends JPanel
 		int dayNum = day.getDay();
 		if (dayNum <= 3)
 		{
+			startTime = 60;
 			indexI = indexJ = 3;
 			eleven = blank;
 		}
 		else if (dayNum > 3 && dayNum <=6)
-		{	indexI = 4;
+		{	
+			startTime = 75;
+			indexI = 4;
 			indexJ = 3;
 			twelve = blank;
 		}
 		else
 		{
+			startTime = 90;
 			indexI=indexJ = 4;
 			sixteen = blank;
 		}
+		
+		startTime = 5; //debug
+		gameTimer = new Clock(startTime);
 		
 		puzzle = new ImageIcon[indexI][indexJ];
 		xPad = (PWIDTH-(TILE*indexI))/2;
@@ -92,27 +109,62 @@ public class PuzzlePanel extends JPanel
 
 		newPuzzle();
 		finished = false;
+		gameTimer.start();
+		
+		// set up exit button
+		setLayout(null);
+		exit = new JButton(new ImageIcon("art/buttons/exit_btn.jpg"));
+		exit.setBounds(PWIDTH-120, PHEIGHT-40, 100,30);
+		this.add(exit);
+		exit.addActionListener(this);
+		exit.setVisible(false);
 		
 		addMouseListener(new PuzzleListener());
 		setPreferredSize(new Dimension(PWIDTH,PHEIGHT));
 		setBackground(Color.gray);
 		requestFocus();
+		
+		gameLoop();
 	}
 	
-	public void increaseStats()
+	private void increaseStats(double score)
 	{	
 		switch (day.getCourse())
 		{
 			case HUMANITIES:
-				player.increaseCreativit(0);
+				player.increaseCreativit(score);
 				break;
 			case MATH:
-				player.increaseQuantReasoning(0);
+				player.increaseQuantReasoning(score);
 				break;
 			default:
-				player.increaseSciRigor(0);
+				player.increaseSciRigor(score);
 				break;
 		}	
+	}
+	
+	private double scorePerformance()
+	{
+		int endTime = gameTimer.timeRemaining();
+		double percentage = 0;
+		if(endTime >= startTime * .75)
+		{
+			percentage = 0.5;
+		}
+		else if(endTime >= startTime * .50)
+		{
+			percentage = 0.4;
+		}
+		else if(endTime >= startTime * .30)
+		{
+			percentage = 0.3;
+		}
+		else if(endTime >= startTime * .10)
+		{
+			percentage = 0.1;
+		}
+		
+		return percentage;
 	}
 	
 	private void newPuzzle()
@@ -159,20 +211,53 @@ public class PuzzlePanel extends JPanel
 		repaint();
 	}
 	
+	public void actionPerformed(ActionEvent e) {
+
+		Object src = e.getSource();
+
+		if(src == exit)
+		{
+			frame.switchPanel(BackToSchool.Screen.CAMPUS);
+			
+		}
+
+	}
+	
 	public void paintComponent(Graphics g)
 	{
 		g.setColor(Color.LIGHT_GRAY);
 		g.fillRect(0, 0, PWIDTH, PHEIGHT);
 		
 		for (int i=0; i<=indexI; i++)
+		{
 			for (int j=0; j<=indexJ; j++)
+			{
 				puzzle[i][j].paintIcon(this, g, (i*TILE)+xPad, (j*TILE)+yPad);
+			}
+		}
+		
+		g.setColor(Color.RED);
+		Font timeStyle = new Font("Arial", Font.BOLD, 30);
+		Font gameMessage = new Font("Arial", Font.BOLD, 16);
+		
+		g.setFont(timeStyle);
+		String time = String.valueOf(gameTimer.timeRemaining());
+		g.drawString(time, 20, 30);
+		
+		g.setFont(gameMessage);
 		
 		if (finished)
 		{
-			g.setColor(Color.RED);
-			g.drawString("CONGRATULATIONS", 40, PHEIGHT-25);
-			g.drawString("Click anywhere to play again", 25, PHEIGHT-10);
+			gameTimer.timeStop();
+			g.drawString("CONGRATULATIONS", PWIDTH/2 - 80, 20);
+			exit.setVisible(true);
+
+		}
+		else if (gameTimer.timeRemaining() == 0 && !finished)
+		{
+			gameTimer.timeStop();
+			g.drawString("GAME OVER", PWIDTH/2 - 50, 20);
+			exit.setVisible(true);
 		}
 	}
 	
@@ -295,14 +380,45 @@ public class PuzzlePanel extends JPanel
 					}
 					
 					if (isSolved())
+					{
 						finished = true;
+						gameTimer.timeStop();
+						gameOver = true;
+					}
 					repaint();
 				}	
 			}
 			else // isFinished
 			{
-				newPuzzle();
-				finished = false;
+				
+				//newPuzzle();
+				gameOver = true;
+				gameTimer.timeStop();
+				increaseStats(scorePerformance());
+				
+			
+				
+			}
+		}
+	}
+	
+	public void gameLoop()
+	{
+		timer = new Timer();
+		int fps = 80;
+		timer.schedule(new Loop(), 0, 1000/fps);
+
+	}
+
+	public class Loop extends java.util.TimerTask
+	{
+		public void run()
+		{
+			repaint(); // render
+
+			if(gameOver)
+			{
+				timer.cancel();
 			}
 		}
 	}
