@@ -1,5 +1,7 @@
 package main;
 
+import java.applet.Applet;
+import java.applet.AudioClip;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -8,6 +10,7 @@ import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.net.URL;
 import java.util.Random;
 
 import javax.swing.AbstractAction;
@@ -22,8 +25,19 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
+import main.FinalBattle.Sound;
+
 
 public class Battle extends JPanel {
+	// Variables for sounds
+	private Sound backgroundSong;
+	private Sound playerDefSound;
+	private Sound playerSpeSound;
+	private Sound playerFreeSound;
+	private Sound humSound;
+	private Sound sciSound;
+	private Sound mathSound;
+
 	// global variables
 	JButton button1;
 	boolean attackPressed;
@@ -37,7 +51,7 @@ public class Battle extends JPanel {
 
 	//Debug
 	private JButton exitDebug;
-	
+
 	// Student variables
 	ImageIcon student;
 	ImageIcon backpack;
@@ -101,7 +115,7 @@ public class Battle extends JPanel {
 	Graphics graphics;
 	double earnedPercentage;
 	boolean drawSpecialAttackButton;
-	
+
 	private Font defaultFont;
 	JButton miss;
 	JButton hit;
@@ -112,14 +126,14 @@ public class Battle extends JPanel {
 
 		setLayout(null);
 		defaultFont = new Font("Courier", Font.PLAIN, 14);
-		
+
 		//exit Button for debugging person
 		exitDebug = new JButton(new ImageIcon("art/buttons/exit_btn.jpg"));
 		exitDebug.setBounds(650, 10, 100, 30);
 		exitDebug.setVisible(true);
 		this.add(exitDebug);
 		exitDebug.addActionListener(new exitDebugButtonListener());
-		
+
 		drawSpecialAttackButton=false;
 		r = new Random();
 		bossSubject=classSubject;
@@ -224,12 +238,12 @@ public class Battle extends JPanel {
 		creativityLabel = new JLabel("Creativity: "+player.getCreativity());
 		quantReasoningLabel = new JLabel("Quantative Reasoning: "+player.getQuantReasoning());
 		scientRigorLabel = new JLabel("Scientific Rigor: "+player.getSciRigor());
-		
+
 		playerHealthLabel.setFont(defaultFont);
 		creativityLabel.setFont(defaultFont);
 		quantReasoningLabel.setFont(defaultFont);
 		scientRigorLabel.setFont(defaultFont);
-		
+
 
 		//setting location of statistics
 		playerHealthLabel.setBounds(670,340,100,100);
@@ -277,7 +291,7 @@ public class Battle extends JPanel {
 			humAttack3=new ImageIcon("art/battle/hum_attack3.png");
 			attackY=0;
 			attackX=600;
-			
+
 			//bossStory = new JLabel("Hello");
 		}
 		else if(bossSubject.equals("Science"))
@@ -306,7 +320,7 @@ public class Battle extends JPanel {
 		bossName.setFont(defaultFont);
 		bossType.setFont(defaultFont);
 		bossSpecialAttackLabel.setFont(defaultFont);
-		
+
 		//setting location of statistics
 		bossHealthLabel.setBounds(140,340,100,100);
 		bossName.setBounds(90,410,200,30);
@@ -320,17 +334,32 @@ public class Battle extends JPanel {
 		lostScreen = new ImageIcon("art/battle/Lost.jpg");
 		winScreen = new ImageIcon("art/battle/Win.jpg");
 		// adding components to the jpanel
+		
+		// Variables for Sounds
+		if(classSubject.equals("Math"))
+			backgroundSong=new Sound("sounds/Battle/mathBoss.mid");
+		else if(classSubject.equals("Science"))
+			backgroundSong=new Sound("sounds/Battle/sciBoss.mid");
+		else if(classSubject.equals("Humanities"))
+			backgroundSong=new Sound("sounds/Battle/humBoss.mid");
+		
+		backgroundSong.playSound();
+
+
+		//				private Sound playerDefSound;
+		//				private Sound playerSpeSound;
+		//				private Sound playerFreeSound;
+		//				private Sound humSound;
+		//				private Sound sciSound;
+		//				private Sound mathSound;
 		//
 		this.add(bossName);
 		this.add(bossType);
 		this.add(miss);
 		this.add(hit);
 		this.add(bossSpecialAttackLabel);
-		//this.add(bossSpecialDefenseLabel);
-		//this.add(bossStory);
 		this.add(button1);
 		this.add(optionAButton);
-
 		this.add(bossHealthLabel);
 		this.add(playerHealthLabel);
 		this.add(creativityLabel);
@@ -391,7 +420,7 @@ public class Battle extends JPanel {
 			}
 		}
 	}
-	
+
 
 	public void decreasePlayerHealth(){
 		if(isHit){
@@ -425,7 +454,7 @@ public class Battle extends JPanel {
 				}
 				else if(attackX>460 && attackX<480){
 					setHitOrMiss();
-					
+
 					if(isHit){
 						drawConfused1=true;
 						drawConfused2=false;
@@ -449,14 +478,14 @@ public class Battle extends JPanel {
 				if (bossX > 350) 
 				{
 					setHitOrMiss();
-					
+
 					if(isHit){
 						drawConfused1=true;
 						drawConfused2=false;
 					}
 					xSpeed = -xSpeed;
 				}
-				
+
 				else if(bossX < 4)
 				{
 					drawConfused1=false;
@@ -474,8 +503,8 @@ public class Battle extends JPanel {
 				else if(bossX>330 && bossX<350)
 				{
 					if(isHit){
-					drawConfused1=false;
-					drawConfused2=true;
+						drawConfused1=false;
+						drawConfused2=true;
 					}
 				}
 			}
@@ -495,7 +524,7 @@ public class Battle extends JPanel {
 				}
 				else if(attackY>10){
 					setHitOrMiss();
-					
+
 					if(isHit){
 						drawConfused2=true;
 						drawConfused1=false;
@@ -665,6 +694,7 @@ public class Battle extends JPanel {
 
 		if(playerHealth<=0){
 			lostScreen.paintIcon(this, g, 0, 0);
+			backgroundSong.stopSound();
 			earnedPercentage=.25;
 			exit.setVisible(true);
 			optionAButton.setVisible(false);
@@ -690,6 +720,7 @@ public class Battle extends JPanel {
 		else if(bossHealth<=0)
 		{
 			winScreen.paintIcon(this, g, 0, 0);
+			backgroundSong.stopSound();
 			earnedPercentage=0.5;
 			optionAButton.setVisible(false);
 
@@ -792,14 +823,14 @@ public class Battle extends JPanel {
 			}
 		}
 	}
-	
+
 	private class exitDebugButtonListener implements ActionListener
 	{
 		public void actionPerformed(ActionEvent event)
 		{
 			Random random = new Random();
 			int debug = random.nextInt(2);
-			
+
 			switch(debug)
 			{
 			case 0:
@@ -811,9 +842,9 @@ public class Battle extends JPanel {
 				System.out.println("Lose");
 				break;
 			}
-			
+
 			increaseStats();
-			
+
 			if(bossSubject.equals("Science"))
 			{
 				frame.switchPanel(BackToSchool.Screen.TRANSCRIPT);
@@ -825,9 +856,38 @@ public class Battle extends JPanel {
 		}
 	}
 	
+	public class Sound // Holds one audio file
+	{
+	  private AudioClip song; // Sound player
+	  private URL songPath; // Sound path
+
+	  Sound(String filename){
+	     try
+	     {
+	    	// System.out.println("file:" + System.getProperty("user.dir") + "\\" + filename);
+	    	 songPath = new URL ("file:" + System.getProperty("user.dir") + "\\" + filename);
+	    	 song = Applet.newAudioClip(songPath);
+	    	// playSound();
+	     }catch(Exception e){
+	         e.printStackTrace();
+	         //e.getMessage();
+	     } // Satisfy the catch
+	  }
+	  
+	  public void playSound(){
+	     song.loop(); // Play 
+	  }
+	  public void stopSound(){
+	     song.stop(); // Stop
+	  }
+	  public void playSoundOnce(){
+	     song.play(); // Play only once
+	  }
+	}
+
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("Back To School: Battle Mode");
-		Battle battle = new Battle(new Player(),"Humanities");
+		Battle battle = new Battle(new Player(),"Math");
 		frame.setSize(800,600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// frame.add(battle);

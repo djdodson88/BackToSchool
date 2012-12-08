@@ -1,5 +1,7 @@
 package main;
 
+import java.applet.Applet;
+import java.applet.AudioClip;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -7,6 +9,7 @@ import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.net.URL;
 import java.util.Random;
 
 import javax.swing.AbstractAction;
@@ -23,8 +26,18 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 import main.Battle.W;
+import main.CampusPanel.Sound;
 
 public class FinalBattle extends JPanel {	
+	// Variables for sounds
+	private Sound backgroundSong;
+	private Sound playerDefSound;
+	private Sound playerSpeSound;
+	private Sound playerFreeSound;
+	private Sound humSound;
+	private Sound sciSound;
+	private Sound mathSound;
+	
 	// global variables
 	JButton button1;
 	boolean attackPressed;
@@ -341,6 +354,18 @@ public class FinalBattle extends JPanel {
 		hit.setBorder(null);
 		hit.setBounds(700,200,100,100);
 		hit.setVisible(false);
+		
+		// Variables for Sounds
+		backgroundSong=new Sound("sounds/Battle/battle_background_song.mid");
+		backgroundSong.playSound();
+		
+	
+//		private Sound playerDefSound;
+//		private Sound playerSpeSound;
+//		private Sound playerFreeSound;
+//		private Sound humSound;
+//		private Sound sciSound;
+//		private Sound mathSound;
 
 		// adding components to the jpanel
 		this.add(instr1);
@@ -369,10 +394,9 @@ public class FinalBattle extends JPanel {
 		this.add(freezeAttackLabel);
 		this.add(exit);
 		this.add(defaultAttackLabel);
-
 		setVisible(true);
 	}
-
+	
 	protected void sendFrame(BackToSchool frame) 
 	{
 		this.frame = frame;
@@ -381,6 +405,7 @@ public class FinalBattle extends JPanel {
 	// paint the images and graphics
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		
 		graphics=g;
 		background.paintIcon(this,g,0,0);
 
@@ -490,6 +515,7 @@ public class FinalBattle extends JPanel {
 			defaultAttackLabel.setVisible(false);
 			optionAButton.setVisible(false);
 			playerHealthLabel.setVisible(false);
+			backgroundSong.stopSound();
 		}
 		else if(playerHealth<=0){
 			splashLost.paintIcon(this,g,0,0);
@@ -518,7 +544,7 @@ public class FinalBattle extends JPanel {
 			scientRigorLabel.setVisible(false);
 			specializedAttackLabel.setVisible(false);
 			defaultAttackLabel.setVisible(false);
-
+			backgroundSong.stopSound();
 			exit.setVisible(true);
 		}
 	}
@@ -600,7 +626,7 @@ public class FinalBattle extends JPanel {
 
 				hit.setVisible(true);
 				isHit=true;
-				System.out.println("High Hit");
+				//System.out.println("High Hit");
 			}
 			// Low Hit
 			else if(num>5 && num<=8)
@@ -615,14 +641,14 @@ public class FinalBattle extends JPanel {
 				isHit=true;
 				// Set low hit image to visible(true)
 				hit.setVisible(true);
-				System.out.println("Low Hit");
+				//System.out.println("Low Hit");
 			}
 			// Miss
 			else if(num>8){
 				// Set miss image to visible(true)
 				isMiss=true;
 				miss.setVisible(true);
-				System.out.println("Miss");
+			//	System.out.println("Miss");
 			}
 		}
 	}
@@ -1337,6 +1363,35 @@ public class FinalBattle extends JPanel {
 			}
 		}
 	}
+	
+	public class Sound // Holds one audio file
+	{
+	  private AudioClip song; // Sound player
+	  private URL songPath; // Sound path
+
+	  Sound(String filename){
+	     try
+	     {
+	    	// System.out.println("file:" + System.getProperty("user.dir") + "\\" + filename);
+	    	 songPath = new URL ("file:" + System.getProperty("user.dir") + "\\" + filename);
+	    	 song = Applet.newAudioClip(songPath);
+	    	// playSound();
+	     }catch(Exception e){
+	         e.printStackTrace();
+	         //e.getMessage();
+	     } // Satisfy the catch
+	  }
+	  
+	  public void playSound(){
+	     song.loop(); // Play 
+	  }
+	  public void stopSound(){
+	     song.stop(); // Stop
+	  }
+	  public void playSoundOnce(){
+	     song.play(); // Play only once
+	  }
+	}
 
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("Back To School: Battle Mode");
@@ -1347,13 +1402,11 @@ public class FinalBattle extends JPanel {
 		frame.setContentPane(fBattle);
 		frame.pack();
 
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				new FinalBattle(new Player()); // Let the constructor do the job
-			}
-		});
+//		SwingUtilities.invokeLater(new Runnable() {
+//			public void run() {
+//				new FinalBattle(new Player()); // Let the constructor do the job
+//			}
+//		});
 		frame.setVisible(true);
 	}
-
-
 }
