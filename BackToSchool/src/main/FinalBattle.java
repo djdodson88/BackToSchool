@@ -374,7 +374,12 @@ public class FinalBattle extends JPanel {
 			}
 			else if(freezeAttack)
 			{
-				
+				if(bossChosen.equals("Science"))
+					sciBossButton.setIcon(new ImageIcon("art/battle/Finalscience_boss_freeze.png"));
+				else if(bossChosen.equals("Math"))
+					mathBossButton.setIcon(new ImageIcon("art/battle/Finalmath_boss_freeze.png"));
+				else if(bossChosen.equals("Humanities"))
+					humBossButton.setIcon(new ImageIcon("art/battle/Finalhumboss_freeze.png"));
 			}
 			else
 			{
@@ -477,23 +482,36 @@ public class FinalBattle extends JPanel {
 		{
 			if(humFreezeRounds>0)
 				humFreezeRounds--;
-			else if(humFreezeRounds==0)
+			else if(humFreezeRounds==0){
 				humBossFreeze=false;
+				humBossButton.setIcon(new ImageIcon("art/battle/Finalhumboss.png"));
+			}
 		}
 		if(mathBossFreeze)
 		{
 			if(mathFreezeRounds>0)
 				mathFreezeRounds--;
-			else if(mathFreezeRounds==0)
+			else if(mathFreezeRounds==0){
 				mathBossFreeze=false;	
+				mathBossButton.setIcon(new ImageIcon("art/battle/Finalmath_boss.png"));
+			}
 		}
 		if(sciBossFreeze)
 		{
 			if(sciFreezeRounds>0)
 				sciFreezeRounds--;
-			else if(sciFreezeRounds==0)
+			else if(sciFreezeRounds==0){
 				sciBossFreeze=false;
+				sciBossButton.setIcon(new ImageIcon("art/battle/Finalscience_boss.png"));
+			}
 		}
+		
+		if(humBossHealth<0)
+			humBossButton.setIcon(new ImageIcon("art/battle/Finalhumboss.png"));
+		else if(mathBossHealth<0)
+			mathBossButton.setIcon(new ImageIcon("art/battle/Finalmath_boss.png"));
+		else if(sciBossHealth<0)
+			sciBossButton.setIcon(new ImageIcon("art/battle/Finalscience_boss.png"));
 		
 		if(humBossHealth>0&&!humBossFreeze)
 			humBossTurn=true;
@@ -527,7 +545,7 @@ public class FinalBattle extends JPanel {
 			else if(humBossTurn)
 				playerHealth-=(15-(player.getCreativity()));
 			// Set high hit image to visible(true)
-
+			System.out.println("High Hit");
 		}
 		// Low Hit
 		else if(num>5 && num<=8)
@@ -540,10 +558,12 @@ public class FinalBattle extends JPanel {
 				playerHealth-=(10-(player.getCreativity()));
 
 			// Set low hit image to visible(true)
+			System.out.println("Low Hit");
 		}
 		// Miss
 		else if(num>8){
 			// Set miss image to visible(true)
+			System.out.println("Miss");
 		}
 	}
 
