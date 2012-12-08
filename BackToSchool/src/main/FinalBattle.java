@@ -481,6 +481,8 @@ public class FinalBattle extends JPanel {
 			humBossButton.setVisible(false);
 			sciBossButton.setVisible(false);
 			mathBossButton.setVisible(false);
+			miss.setVisible(false);
+			hit.setVisible(false);
 			creativityLabel.setVisible(false);
 			quantReasoningLabel.setVisible(false);
 			scientRigorLabel.setVisible(false);
@@ -488,8 +490,6 @@ public class FinalBattle extends JPanel {
 			defaultAttackLabel.setVisible(false);
 			optionAButton.setVisible(false);
 			playerHealthLabel.setVisible(false);
-
-
 		}
 		else if(playerHealth<=0){
 			splashLost.paintIcon(this,g,0,0);
@@ -503,6 +503,8 @@ public class FinalBattle extends JPanel {
 			instr1.setVisible(false);
 			instr2.setVisible(false);
 			instr3.setVisible(false);
+			miss.setVisible(false);
+			hit.setVisible(false);
 			optionBButton.setVisible(false);
 			playerHealthLabel.setVisible(false);
 			optionCButton.setVisible(false);
@@ -743,11 +745,6 @@ public class FinalBattle extends JPanel {
 					drawConfused2=false;
 				}
 				
-
-				if(playerHealth<0)
-					playerHealthLabel.setText("0%");
-				else
-					playerHealthLabel.setText(playerHealth+"%");
 				xSpeed = -xSpeed;
 				ySpeed = -ySpeed;
 			}
@@ -757,6 +754,12 @@ public class FinalBattle extends JPanel {
 				drawConfused2=false;
 				bossTimer.stop();
 				decreasePlayerHealth();
+
+				if(playerHealth<0)
+					playerHealthLabel.setText("0%");
+				else
+					playerHealthLabel.setText(playerHealth+"%");
+				
 				bossHealthLabel.setText("");
 				bossTypeLabel.setText("");
 				bossNameLabel.setText("");
@@ -795,10 +798,6 @@ public class FinalBattle extends JPanel {
 			{
 				drawConfused1=false;
 				drawConfused2=false;
-				if(playerHealth<0)
-					playerHealthLabel.setText("0%");
-				else
-					playerHealthLabel.setText(playerHealth+"%");
 
 				xSpeed=5;
 				anyBossTurn=true;
@@ -822,6 +821,10 @@ public class FinalBattle extends JPanel {
 					attackX=60;
 					attackY=240;
 					decreasePlayerHealth();
+					if(playerHealth<0)
+						playerHealthLabel.setText("0%");
+					else
+						playerHealthLabel.setText(playerHealth+"%");
 					moveBoss();
 				}
 				else if(mathBossHealth>0&&!mathBossFreeze)
@@ -835,11 +838,21 @@ public class FinalBattle extends JPanel {
 					bossNameLabel.setText("Name: Number of Doom");
 					bossSpecialAttackLabel.setText("Special Attack: Number Cruncher");
 					decreasePlayerHealth();
+					
+					if(playerHealth<0)
+						playerHealthLabel.setText("0%");
+					else
+						playerHealthLabel.setText(playerHealth+"%");
+					
 					moveBoss();
 				}
 				else{
 					anyBossTurn=false;
 					decreasePlayerHealth();
+					if(playerHealth<0)
+						playerHealthLabel.setText("0%");
+					else
+						playerHealthLabel.setText(playerHealth+"%");
 					bossTimer.stop();
 					bossHealthLabel.setText("");
 					bossTypeLabel.setText("");
@@ -874,11 +887,6 @@ public class FinalBattle extends JPanel {
 				drawConfused1=false;
 				drawConfused2=false;
 
-				if(playerHealth<0)
-					playerHealthLabel.setText("0%");
-				else
-					playerHealthLabel.setText(playerHealth+"%");
-
 				sciBossTurn=false;
 				anyBossTurn=true;
 				
@@ -901,6 +909,12 @@ public class FinalBattle extends JPanel {
 					bossNameLabel.setText("Name: Number of Doom");
 					bossSpecialAttackLabel.setText("Special Attack: Number Cruncher");
 					decreasePlayerHealth();
+
+					if(playerHealth<0)
+						playerHealthLabel.setText("0%");
+					else
+						playerHealthLabel.setText(playerHealth+"%");
+					
 					moveBoss();
 				}
 				else{
@@ -915,6 +929,12 @@ public class FinalBattle extends JPanel {
 					miss.setVisible(false);
 					hit.setVisible(false);
 					decreasePlayerHealth();
+
+					if(playerHealth<0)
+						playerHealthLabel.setText("0%");
+					else
+						playerHealthLabel.setText(playerHealth+"%");
+					
 					bossTimer.stop();
 					redrawAttackMenu();
 				}
