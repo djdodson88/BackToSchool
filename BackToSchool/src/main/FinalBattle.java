@@ -36,6 +36,9 @@ public class FinalBattle extends JPanel {
 	JButton exit;
 	Random r;
 
+	JButton miss;
+	JButton hit;
+
 	// Student variable
 	ImageIcon student;
 	ImageIcon backpack;
@@ -69,9 +72,16 @@ public class FinalBattle extends JPanel {
 	boolean optionA;
 	boolean optionB;
 	boolean optionC;
+	boolean isHit;
+	boolean isMiss;
 	boolean specialAttack;
 	boolean freezeAttack;
+	double percentDamage;
 	String bossChosen;
+
+	JLabel instr1;
+	JLabel instr2;
+	JLabel instr3;
 
 	// Boss variables
 	ImageIcon humBoss;
@@ -171,11 +181,11 @@ public class FinalBattle extends JPanel {
 		specializedAttackLabel = new JLabel("Special Attack");
 		specializedAttackLabel.setBounds(450,430,160,30);
 		specializedAttackLabel.setVisible(false);
-		
+
 		// adding option B button
 		optionCButton = new JButton();
 		optionCButton.addActionListener(new CButtonListener());
-		optionCButton.setIcon(new ImageIcon("art/battle/B_sprite.png"));
+		optionCButton.setIcon(new ImageIcon("art/battle/C_sprite.png"));
 		optionCButton.setBounds(388,470,50,40);
 		optionCButton.setBackground(null);
 		optionCButton.setOpaque(false);
@@ -292,7 +302,7 @@ public class FinalBattle extends JPanel {
 		mathFreezeRounds=0;
 		humFreezeRounds=0;
 		sciFreezeRounds=0;
-		
+
 		humBossFreeze=false;
 		mathBossFreeze=false;
 		sciBossFreeze=false;
@@ -302,7 +312,42 @@ public class FinalBattle extends JPanel {
 		splashLost = new ImageIcon("art/battle/Lost.jpg");
 		splashWin = new ImageIcon("art/battle/Win.jpg");
 
+		instr1 = new JLabel("Choose a");
+		instr2 = new JLabel("Boss");
+		instr3 = new JLabel("to attack");
+
+		instr1.setFont(new Font("Serif", Font.PLAIN, 30));
+		instr2.setFont(new Font("Serif", Font.PLAIN, 30));
+		instr3.setFont(new Font("Serif", Font.PLAIN, 30));
+
+		instr1.setBounds(120,350,200,100);
+		instr2.setBounds(145,400,200,100);
+		instr3.setBounds(125,450,200,100);
+
+		//playerDamage.setBounds(700,200,50,50);
+
+		miss = new JButton();
+		miss.setIcon(new ImageIcon("art/battle/miss.png"));
+		miss.setBackground(null);
+		miss.setOpaque(false);
+		miss.setBorder(null);
+		miss.setBounds(700,200,100,100);
+		miss.setVisible(false);
+
+		hit = new JButton();
+		hit.setIcon(new ImageIcon("art/battle/hit.png"));
+		hit.setBackground(null);
+		hit.setOpaque(false);
+		hit.setBorder(null);
+		hit.setBounds(700,200,100,100);
+		hit.setVisible(false);
+
 		// adding components to the jpanel
+		this.add(instr1);
+		this.add(instr2);
+		this.add(instr3);
+		this.add(miss);
+		this.add(hit);
 		this.add(bossSpecialAttackLabel);
 		//this.add(bossSpecialDefenseLabel);
 		this.add(bossNameLabel);
@@ -395,7 +440,7 @@ public class FinalBattle extends JPanel {
 				}
 			}
 		}
-		
+
 		if(optionA)
 			scribble.paintIcon(this, g, 395, 382);
 		else if(optionB)
@@ -429,6 +474,9 @@ public class FinalBattle extends JPanel {
 			optionAButton.setVisible(false);
 			optionBButton.setVisible(false);
 			optionCButton.setVisible(false);
+			instr1.setVisible(false);
+			instr2.setVisible(false);
+			instr3.setVisible(false);
 			freezeAttackLabel.setVisible(false);
 			humBossButton.setVisible(false);
 			sciBossButton.setVisible(false);
@@ -452,6 +500,9 @@ public class FinalBattle extends JPanel {
 			bossHealthLabel.setVisible(false);
 			button1.setVisible(false);
 			optionAButton.setVisible(false);
+			instr1.setVisible(false);
+			instr2.setVisible(false);
+			instr3.setVisible(false);
 			optionBButton.setVisible(false);
 			playerHealthLabel.setVisible(false);
 			optionCButton.setVisible(false);
@@ -477,7 +528,7 @@ public class FinalBattle extends JPanel {
 			movePlayer();
 	}
 
-	public void whosTurn(){
+	public void whosTurn(){		
 		if(humBossFreeze)
 		{
 			if(humFreezeRounds>0)
@@ -505,14 +556,14 @@ public class FinalBattle extends JPanel {
 				sciBossButton.setIcon(new ImageIcon("art/battle/Finalscience_boss.png"));
 			}
 		}
-		
+
 		if(humBossHealth<0)
 			humBossButton.setIcon(new ImageIcon("art/battle/Finalhumboss.png"));
-		else if(mathBossHealth<0)
+		if(mathBossHealth<0)
 			mathBossButton.setIcon(new ImageIcon("art/battle/Finalmath_boss.png"));
-		else if(sciBossHealth<0)
+		if(sciBossHealth<0)
 			sciBossButton.setIcon(new ImageIcon("art/battle/Finalscience_boss.png"));
-		
+
 		if(humBossHealth>0&&!humBossFreeze)
 			humBossTurn=true;
 		else if(sciBossHealth>0&&!sciBossFreeze)
@@ -533,38 +584,59 @@ public class FinalBattle extends JPanel {
 
 	public void setHitOrMiss()
 	{
-		int num = r.nextInt(11);
+		if(!isHit&&!isMiss ){
+			int num = r.nextInt(11);
+			// High Hit
+			if(num<=5)
+			{
+				if(sciBossTurn)
+					percentDamage=(15-(player.getSciRigor()));
+				else if(mathBossTurn)
+					percentDamage=(15-(player.getQuantReasoning()));
+				else if(humBossTurn)
+					percentDamage=(15-(player.getCreativity()));
 
-		// High Hit
-		if(num<=5)
-		{
-			if(sciBossTurn)
-				playerHealth-=(15-(player.getSciRigor()));
-			else if(mathBossTurn)
-				playerHealth-=(15-(player.getQuantReasoning()));
-			else if(humBossTurn)
-				playerHealth-=(15-(player.getCreativity()));
-			// Set high hit image to visible(true)
-			System.out.println("High Hit");
-		}
-		// Low Hit
-		else if(num>5 && num<=8)
-		{
-			if(sciBossTurn)
-				playerHealth-=(10-(player.getSciRigor()));
-			else if(mathBossTurn)
-				playerHealth-=(10-(player.getQuantReasoning()));
-			else if(humBossTurn)
-				playerHealth-=(10-(player.getCreativity()));
+				hit.setVisible(true);
+				isHit=true;
+				System.out.println("High Hit");
+			}
+			// Low Hit
+			else if(num>5 && num<=8)
+			{
+				if(sciBossTurn)
+					percentDamage=(10-(player.getSciRigor()));
+				else if(mathBossTurn)
+					percentDamage=(10-(player.getQuantReasoning()));
+				else if(humBossTurn)
+					percentDamage=(10-(player.getCreativity()));
 
-			// Set low hit image to visible(true)
-			System.out.println("Low Hit");
+				isHit=true;
+				// Set low hit image to visible(true)
+				hit.setVisible(true);
+				System.out.println("Low Hit");
+			}
+			// Miss
+			else if(num>8){
+				// Set miss image to visible(true)
+				isMiss=true;
+				miss.setVisible(true);
+				System.out.println("Miss");
+			}
 		}
-		// Miss
-		else if(num>8){
-			// Set miss image to visible(true)
-			System.out.println("Miss");
+	}
+
+	public void decreasePlayerHealth(){
+		if(isHit){
+			playerHealth-=percentDamage;
+			hit.setVisible(false);
+			isHit=false;
 		}
+		else if(isMiss)
+		{
+			miss.setVisible(false);
+			isMiss=false;
+		}
+
 	}
 
 	public void redrawAttackMenu(){
@@ -573,12 +645,13 @@ public class FinalBattle extends JPanel {
 		optionC=false;
 		specialAttack=false;
 		freezeAttack=false;
+
 		if(anyBossTurn){
 			if(humBossTurn){
 				if(player.getCreativity()>2.4){
 					optionBButton.setVisible(true);
 					specializedAttackLabel.setVisible(true);
-					
+
 					if(player.getCreativity()>3.9){
 						optionCButton.setVisible(true);
 						freezeAttackLabel.setVisible(true);
@@ -601,7 +674,7 @@ public class FinalBattle extends JPanel {
 				if(player.getQuantReasoning()>2.4){
 					optionBButton.setVisible(true);
 					specializedAttackLabel.setVisible(true);
-					
+
 					if(player.getQuantReasoning()>3.9){
 						optionCButton.setVisible(true);
 						freezeAttackLabel.setVisible(true);
@@ -624,7 +697,7 @@ public class FinalBattle extends JPanel {
 				if(player.getSciRigor()>2.4){
 					optionBButton.setVisible(true);
 					specializedAttackLabel.setVisible(true);
-					
+
 					if(player.getSciRigor()>3.9){
 						optionCButton.setVisible(true);
 						freezeAttackLabel.setVisible(true);
@@ -663,9 +736,13 @@ public class FinalBattle extends JPanel {
 			// if student touches the boss , tell him to go the other direction
 			if (mathBossX > 500) 
 			{
-				drawConfused1=true;
-				drawConfused2=false;
 				setHitOrMiss();
+				
+				if(isHit){
+					drawConfused1=true;
+					drawConfused2=false;
+				}
+				
 
 				if(playerHealth<0)
 					playerHealthLabel.setText("0%");
@@ -674,21 +751,28 @@ public class FinalBattle extends JPanel {
 				xSpeed = -xSpeed;
 				ySpeed = -ySpeed;
 			}
-			// if the student reaches to the origin, make him stop
 			else if(mathBossX < 4)
 			{
 				drawConfused1=false;
 				drawConfused2=false;
 				bossTimer.stop();
+				decreasePlayerHealth();
+				bossHealthLabel.setText("");
+				bossTypeLabel.setText("");
+				bossNameLabel.setText("");
+				bossSpecialAttackLabel.setText("");
+				instr1.setVisible(true);
+				instr2.setVisible(true);
+				instr3.setVisible(true);
 				anyBossTurn=false;
 				redrawAttackMenu();
 				xSpeed=5;
 				ySpeed=1;
 				mathBossTurn=false;
 				bossChosen="Humanities";
-				bossHealthLabel.setText("Choose");
-				bossTypeLabel.setText("a boss");
-				bossNameLabel.setText("to attack");
+				bossHealthLabel.setText("");
+				bossTypeLabel.setText("");
+				bossNameLabel.setText("");
 				bossSpecialAttackLabel.setText("");
 				//bossSpecialDefenseLabel.setText("");
 				humBossButton.setBounds(0,0,140,140); 
@@ -699,19 +783,18 @@ public class FinalBattle extends JPanel {
 			}
 			else if(mathBossX>450 && mathBossX<480)
 			{
-				drawConfused1=false;
-				drawConfused2=true;
+				if(isHit){
+					drawConfused1=false;
+					drawConfused2=true;
+				}
 			}
 		}
 		else if(humBossTurn&&!humBossFreeze){
 			attackY += 1;
 			if(attackY>50)
 			{
-
 				drawConfused1=false;
 				drawConfused2=false;
-				setHitOrMiss();
-
 				if(playerHealth<0)
 					playerHealthLabel.setText("0%");
 				else
@@ -724,9 +807,6 @@ public class FinalBattle extends JPanel {
 				sciBossButton.setBounds(0,110,130,140); 
 				mathBossButton.setBounds(0,250,130,140); 
 
-				bossHealthLabel.setText("Choose");
-				bossTypeLabel.setText("a boss");
-				bossNameLabel.setText("to attack");
 				bossSpecialAttackLabel.setText("");
 
 				if(sciBossHealth>0&&!sciBossFreeze)
@@ -739,10 +819,9 @@ public class FinalBattle extends JPanel {
 					bossTypeLabel.setText("Type: Science");
 					bossNameLabel.setText("Name: Froggerhut");
 					bossSpecialAttackLabel.setText("Special Attack: Shooting Scalpels");
-					//bossSpecialDefenseLabel.setText("Special Defense: Preservation");
-
 					attackX=60;
 					attackY=240;
+					decreasePlayerHealth();
 					moveBoss();
 				}
 				else if(mathBossHealth>0&&!mathBossFreeze)
@@ -755,17 +834,33 @@ public class FinalBattle extends JPanel {
 					bossTypeLabel.setText("Type: Math");
 					bossNameLabel.setText("Name: Number of Doom");
 					bossSpecialAttackLabel.setText("Special Attack: Number Cruncher");
+					decreasePlayerHealth();
 					moveBoss();
 				}
 				else{
 					anyBossTurn=false;
+					decreasePlayerHealth();
 					bossTimer.stop();
+					bossHealthLabel.setText("");
+					bossTypeLabel.setText("");
+					bossNameLabel.setText("");
+					bossSpecialAttackLabel.setText("");
+					instr1.setVisible(true);
+					instr2.setVisible(true);
+					instr3.setVisible(true);
+					bossHealthLabel.setText("");
+					bossTypeLabel.setText("");
+					bossNameLabel.setText("");
 					redrawAttackMenu();	
 				}
 			}
 			else if(attackY>10){
-				drawConfused2=true;
-				drawConfused1=false;
+				setHitOrMiss();
+				
+				if(isHit){
+					drawConfused2=true;
+					drawConfused1=false;
+				}
 			}
 
 			// Set hit and miss images to visible(false)
@@ -778,7 +873,7 @@ public class FinalBattle extends JPanel {
 			{
 				drawConfused1=false;
 				drawConfused2=false;
-				setHitOrMiss();
+
 				if(playerHealth<0)
 					playerHealthLabel.setText("0%");
 				else
@@ -786,10 +881,11 @@ public class FinalBattle extends JPanel {
 
 				sciBossTurn=false;
 				anyBossTurn=true;
+				
 				bossChosen="Humanities";
-				bossHealthLabel.setText("Choose");
-				bossTypeLabel.setText("a boss");
-				bossNameLabel.setText("to attack");
+				//				bossHealthLabel.setText("Choose");
+				//				bossTypeLabel.setText("a boss");
+				//				bossNameLabel.setText("to attack");
 				bossSpecialAttackLabel.setText("");
 				humBossButton.setBounds(0,0,140,140); 
 				sciBossButton.setBounds(0,110,130,140); 
@@ -804,22 +900,39 @@ public class FinalBattle extends JPanel {
 					bossTypeLabel.setText("Type: Math");
 					bossNameLabel.setText("Name: Number of Doom");
 					bossSpecialAttackLabel.setText("Special Attack: Number Cruncher");
+					decreasePlayerHealth();
 					moveBoss();
 				}
 				else{
 					anyBossTurn=false;
+					bossHealthLabel.setText("");
+					bossTypeLabel.setText("");
+					bossNameLabel.setText("");
+					bossSpecialAttackLabel.setText("");
+					instr1.setVisible(true);
+					instr2.setVisible(true);
+					instr3.setVisible(true);
+					miss.setVisible(false);
+					hit.setVisible(false);
+					decreasePlayerHealth();
 					bossTimer.stop();
 					redrawAttackMenu();
 				}
 			}
 			else if(attackX>550 && attackX<580){
-				drawConfused1=true;
-				drawConfused2=false;
+				if(isHit){
+					drawConfused1=true;
+					drawConfused2=false;
+				}
 			}
 			else if(attackX>=600)
 			{
-				drawConfused1=false;
-				drawConfused2=true;
+				setHitOrMiss();
+				
+				if(isHit){
+					drawConfused1=false;
+					drawConfused2=true;
+				}
 			}
 
 			// Set hit and miss images to visible(false)
@@ -828,8 +941,21 @@ public class FinalBattle extends JPanel {
 		{
 			anyBossTurn=false;
 			bossTimer.stop();
+			miss.setVisible(false);
+			hit.setVisible(false);
+			bossHealthLabel.setText("");
+			bossTypeLabel.setText("");
+			bossNameLabel.setText("");
+			bossSpecialAttackLabel.setText("");
+			instr1.setVisible(true);
+			instr2.setVisible(true);
+			instr3.setVisible(true);
+			humBossButton.setBounds(0,0,140,140); 
+			sciBossButton.setBounds(0,110,130,140); 
+			mathBossButton.setBounds(0,250,130,140); 
 			redrawAttackMenu();
 		}
+
 
 		repaint();
 	}
@@ -908,6 +1034,13 @@ public class FinalBattle extends JPanel {
 			}
 
 			//repaint();
+			if(sciBossHealth<0)
+				sciBossButton.setVisible(false);
+			if(mathBossHealth<0)
+				mathBossButton.setVisible(false);
+			if(humBossHealth<0)
+				humBossButton.setVisible(false);
+			
 			timer.stop();
 			backpackX=600;
 			backpackY=200;
@@ -978,6 +1111,9 @@ public class FinalBattle extends JPanel {
 		public void actionPerformed(ActionEvent event)
 		{
 			if(!attackPressed && humBossHealth>0){
+				instr1.setVisible(false);
+				instr2.setVisible(false);
+				instr3.setVisible(false);
 				humBossButton.setBounds(100,0,140,140); 
 				sciBossButton.setBounds(0,110,130,140); 
 				mathBossButton.setBounds(0,250,130,140);  
@@ -990,7 +1126,7 @@ public class FinalBattle extends JPanel {
 				if(player.getCreativity()>2.4){
 					optionBButton.setVisible(true);
 					specializedAttackLabel.setVisible(true);
-					
+
 					if(player.getCreativity()>3.9){
 						optionCButton.setVisible(true);
 						freezeAttackLabel.setVisible(true);
@@ -1019,6 +1155,9 @@ public class FinalBattle extends JPanel {
 		public void actionPerformed(ActionEvent event)
 		{
 			if(!attackPressed  && sciBossHealth>0){
+				instr1.setVisible(false);
+				instr2.setVisible(false);
+				instr3.setVisible(false);
 				humBossButton.setBounds(0,0,140,140); 
 				sciBossButton.setBounds(100,110,130,140); 
 				mathBossButton.setBounds(0,250,130,140);  
@@ -1031,7 +1170,7 @@ public class FinalBattle extends JPanel {
 				if(player.getSciRigor()>2.4){
 					optionBButton.setVisible(true);
 					specializedAttackLabel.setVisible(true);
-					
+
 					if(player.getSciRigor()>3.9){
 						optionCButton.setVisible(true);
 						freezeAttackLabel.setVisible(true);
@@ -1060,6 +1199,9 @@ public class FinalBattle extends JPanel {
 		public void actionPerformed(ActionEvent event)
 		{
 			if(!attackPressed  && mathBossHealth>0){
+				instr1.setVisible(false);
+				instr2.setVisible(false);
+				instr3.setVisible(false);
 				humBossButton.setBounds(0,0,140,140); 
 				sciBossButton.setBounds(0,110,130,140); 
 				mathBossButton.setBounds(100,250,130,140); 
@@ -1072,7 +1214,7 @@ public class FinalBattle extends JPanel {
 				if(player.getQuantReasoning()>2.4){
 					optionBButton.setVisible(true);
 					specializedAttackLabel.setVisible(true);
-					
+
 					if(player.getQuantReasoning()>3.9){
 						optionCButton.setVisible(true);
 						freezeAttackLabel.setVisible(true);
@@ -1127,22 +1269,22 @@ public class FinalBattle extends JPanel {
 			}
 		}
 	}
-	
+
 	// action listener for the Option B Button
-		private class CButtonListener implements ActionListener
+	private class CButtonListener implements ActionListener
+	{
+		public void actionPerformed(ActionEvent event)
 		{
-			public void actionPerformed(ActionEvent event)
-			{
-				if(!attackPressed){
-					optionA=false;
-					optionB=false;
-					freezeAttack=true;
-					optionC=true;
-					specialAttack=false;
-					repaint();
-				}
+			if(!attackPressed){
+				optionA=false;
+				optionB=false;
+				freezeAttack=true;
+				optionC=true;
+				specialAttack=false;
+				repaint();
 			}
 		}
+	}
 
 	// action listener for the exit Button
 	private class exitButtonListener implements ActionListener
