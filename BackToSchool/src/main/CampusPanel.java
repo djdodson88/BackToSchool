@@ -21,7 +21,7 @@ import java.util.Random;
 public class CampusPanel extends JPanel 
 {
 	private int playerX, playerY, screenX, screenY;
-	private static int PWIDTH=800, PHEIGHT=600, TILE=50, TILESX=16, TILESY=12, PADX=4, PADY=3;
+	private final static int PWIDTH=800, PHEIGHT=600, TILE=50, TILESX=16, TILESY=12, PADX=4, PADY=3, MOVERATE=750;
 	private enum Direction{LEFT, UP, RIGHT, DOWN};
 	private Image[][] tiles;
 	private Timer moveTimer, animate;
@@ -59,7 +59,7 @@ public class CampusPanel extends JPanel
 		
 		testsong = new Sound("sounds/dw1world.mid");
 		
-		
+		moveTimer = new Timer(MOVERATE, new PedestrianListener());
 		addKeyListener(new CampusListener());
 		addMouseListener(new CampusMouseListener());
 		setPreferredSize(new Dimension(PWIDTH,PHEIGHT));
@@ -119,7 +119,7 @@ public class CampusPanel extends JPanel
 			if (window.contains(p)) 
 				tiles[p.x-screenX][p.y-1-screenY] = tileFactory.get(campus.getTile(p.x, p.y-1));
 		
-		/* PEDESTRIAN TEST
+		//* PEDESTRIAN TEST
 		Point point = new Point(-1,-1);
 		while (!campus.isTraversable(point.x,point.y))
 		{
@@ -129,7 +129,6 @@ public class CampusPanel extends JPanel
 		}
 		Point dest = new Point(destination.x, destination.y+1);
 		pedestrian = new Pedestrian(point, dest, campus);
-		moveTimer = new Timer(1000, new PedestrianListener());
 		moveTimer.start();
 		//*/
 	}
@@ -223,10 +222,12 @@ public class CampusPanel extends JPanel
 		// render player
 		g.drawImage(player, playerX*TILE, playerY*TILE, TILE, TILE, this); //player.paintIcon(this, g, playerX, playerY);
 		
-		/* render pedestrian (currently even if off screen)
-		int pedX = pedestrian.getLocation().x-screenX;
-		int pedY = pedestrian.getLocation().y-screenY;
-		g.drawImage(pedestrian.getImage(), pedX*TILE, pedY*TILE, TILE, TILE, this);
+		//* render pedestrian (currently even if off screen)
+		if (pedestrian.hasMove())
+		{	int pedX = pedestrian.getLocation().x-screenX;
+			int pedY = pedestrian.getLocation().y-screenY;
+			g.drawImage(pedestrian.getImage(), pedX*TILE, pedY*TILE, TILE, TILE, this);
+		}
 		//*/
 		
 		// render interface 
@@ -247,7 +248,7 @@ public class CampusPanel extends JPanel
 		System.out.println("Creativity: " + student.getCreativity());
 	}
 	
-	private class PedestrianListener implements EventListener
+	private class PedestrianListener implements ActionListener
 	{		
 		public void actionPerformed(ActionEvent e) 
 		{

@@ -36,11 +36,19 @@ public class Pedestrian
 		path = aStarSearch(start, destination, campus);	
 	}
 	
+	public boolean hasMove() 
+	{
+		if(pathIndex <= path.size()-1)
+			return true;
+		else
+			return false;
+	}
+	
 	public void move()
 	{	
 		if (pathIndex <= path.size()-1)
 		{
-			Point next = path.get(pathIndex);
+			Point next = path.get(pathIndex++);
 			
 			if (next.x < location.x)
 				image = left;
@@ -48,7 +56,7 @@ public class Pedestrian
 				image = right;
 			else if (next.y < location.y)
 				image = up;
-			else if (next.y < location.y)
+			else if (next.y > location.y)
 				image = down;
 			
 			location = next;
@@ -102,7 +110,7 @@ public class Pedestrian
     					
     					if (p.equals(end))
     					{	solution.add(p);
-    						return solution;
+    						return cleanSolution(solution, campus, true);
     					}
     				}	
     			}
@@ -120,8 +128,31 @@ public class Pedestrian
     		}
     	}
 		
-    	return solution;
+		return cleanSolution(solution, campus, true);
     }
+	
+	private ArrayList<Point> cleanSolution(ArrayList<Point> solution, Campus campus, boolean backward)
+	{	
+		Point current, other;
+		int index = solution.size()-1;
+    	while (index > 1)
+    	{	current = solution.get(index);
+    		other = solution.get(index-1);
+    		while (!(campus.getAdjacent(current).contains(other)))	// weed out invalid moves
+    		{	
+    			// the move before this one had to exist in the search path at some point, backtrack until found
+    			solution.remove(index-1);
+    			index--; // current's index is one less due to the removal
+    			other = solution.get(index-1);	// only other need be updated for next iteration
+    		}
+    		index--;
+    	}
+    	
+    	//if (!campus.getAdjacent(solution.get(0)).contains(solution.get(1)))
+    		//System.out.println("Invalid solution");
+    	
+    	return solution;
+	}
 
 	/* CPoint
 	 * made from points in Campus for use with A* Search
@@ -173,12 +204,29 @@ public class Pedestrian
 	            return 0; 
 	    }
 	}
-
-	public boolean hasMove() 
+	
+	public static void main(String[] args)
 	{
-		if(pathIndex <= path.size()-1)
-			return true;
-		else
-			return false;
+		Campus campus = new Campus();
+		ArrayList<Point> doors = campus.getDoors(true);
+		int pick = (int)(Math.random()*doors.size());
+		Point destination = doors.get(pick);
+		
+		Point point = new Point(-1,-1);
+		while (!campus.isTraversable(point.x,point.y))
+		{
+			int x = (int)(Math.random()*30);
+			int y = (int)(Math.random()*20);
+			point.setLocation(x,y);
+		}
+		Point dest = new Point(destination.x, destination.y+1);
+		Pedestrian pedestrian = new Pedestrian(point, dest, campus);
+		
+		ArrayList<Point> path = pedestrian.path;
+		
+		System.out.println("Start:" + point.toString());
+		System.out.println("Destination:" + destination.toString());
+		for (Point p : path)
+			System.out.println(p.toString());
 	}
 }
