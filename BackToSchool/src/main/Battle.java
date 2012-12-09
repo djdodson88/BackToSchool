@@ -35,6 +35,8 @@ public class Battle extends JPanel {
 	private Sound playerSpeSound;
 	private Sound playerFreeSound;
 	private Sound sciBossSound;
+	private Sound winSong;
+	private Sound lostSong;
 	private Sound bossSound;
 	boolean soundIsPlaying;
 
@@ -212,11 +214,13 @@ public class Battle extends JPanel {
 		InputMap myInputMap = new InputMap();
 		ActionMap myActionMap = new ActionMap();
 		W w = new W();
-
+		L l = new L();
 		myInputMap = this.getInputMap(WHEN_IN_FOCUSED_WINDOW);
 		myInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0, false), "w");
+		myInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_L, 0, false), "l");
 		myActionMap = this.getActionMap();
 		myActionMap.put("w", w);
+		myActionMap.put("l", l);
 
 
 		//----------------------Player Variables--------------------------------//
@@ -353,6 +357,8 @@ public class Battle extends JPanel {
 		
 		backgroundSong.playSound();
 		playerDefSound=new Sound("sounds/Battle/pencil_sound.wav");
+		lostSong=new Sound("sounds/Battle/lost.mid");
+		winSong=new Sound("sounds/Battle/victory.mid");
 		
 		this.add(bossName);
 		this.add(bossType);
@@ -569,6 +575,14 @@ public class Battle extends JPanel {
 			repaint();
 		}
 	}
+	
+	public class L extends AbstractAction{
+		public void actionPerformed(ActionEvent e)
+		{
+			playerHealth=0;
+			repaint();
+		}
+	}
 
 	private void movePlayer(){
 		backpackX -= xSpeed;
@@ -715,6 +729,7 @@ public class Battle extends JPanel {
 
 		if(playerHealth<=0){
 			lostScreen.paintIcon(this, g, 0, 0);
+			lostSong.playSound();
 			backgroundSong.stopSound();
 			
 			if(bossSubject.equals("Science"))
@@ -745,6 +760,7 @@ public class Battle extends JPanel {
 		else if(bossHealth<=0)
 		{
 			winScreen.paintIcon(this, g, 0, 0);
+			winSong.playSound();
 			
 			if(bossSubject.equals("Science"))
 				sciBossSound.stopSound();
@@ -842,6 +858,8 @@ public class Battle extends JPanel {
 		public void actionPerformed(ActionEvent event)
 		{
 			increaseStats();
+			winSong.stopSound();
+			lostSong.stopSound();
 			if(bossSubject.equals("Science")) //science boss is the end of 2nd week
 			{
 				frame.switchPanel(BackToSchool.Screen.TRANSCRIPT);

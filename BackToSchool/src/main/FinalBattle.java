@@ -31,6 +31,8 @@ import main.CampusPanel.Sound;
 public class FinalBattle extends JPanel {	
 	// Variables for sounds
 	private Sound backgroundSong;
+	private Sound lostSong;
+	private Sound winSong;
 	private Sound playerDefSound;
 	private Sound playerSpeSound;
 	private Sound playerFreeSound;
@@ -229,12 +231,14 @@ public class FinalBattle extends JPanel {
 		InputMap myInputMap = new InputMap();
 		ActionMap myActionMap = new ActionMap();
 		W w = new W();
+		L l = new L();
 
 		myInputMap = this.getInputMap(WHEN_IN_FOCUSED_WINDOW);
 		myInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0, false), "w");
+		myInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_L, 0, false), "l");
 		myActionMap = this.getActionMap();
+		myActionMap.put("l", l);
 		myActionMap.put("w", w);
-
 		setLayout(null);
 
 		//----------------------Player Variables--------------------------------//
@@ -383,6 +387,8 @@ public class FinalBattle extends JPanel {
 		humSound=new Sound("sounds/Battle/humBossSound.wav");
 		sciSound=new Sound("sounds/Battle/sciBossSound.wav");
 		mathSound=new Sound("sounds/Battle/mathBossSound.wav");
+		lostSong=new Sound("sounds/Battle/lost.mid");
+		winSong=new Sound("sounds/Battle/victory.mid");
 
 		// adding components to the jpanel
 		this.add(instr1);
@@ -527,6 +533,7 @@ public class FinalBattle extends JPanel {
 
 		if(mathBossHealth<=0&&humBossHealth<=0&&sciBossHealth<=0){
 			splashWin.paintIcon(this, g, 0, 0);
+			winSong.playSound();
 			exit.setVisible(true);
 			bossSpecialAttackLabel.setVisible(false);
 			//bossSpecialDefenseLabel.setVisible(false);
@@ -557,6 +564,7 @@ public class FinalBattle extends JPanel {
 		}
 		else if(playerHealth<=0){
 			splashLost.paintIcon(this,g,0,0);
+			lostSong.playSound();
 			bossSpecialAttackLabel.setVisible(false);
 			//bossSpecialDefenseLabel.setVisible(false);
 			bossNameLabel.setVisible(false);
@@ -644,6 +652,14 @@ public class FinalBattle extends JPanel {
 			mathBossHealth=0;
 			humBossHealth=0;
 			sciBossHealth=0;
+			repaint();
+		}
+	}
+	
+	public class L extends AbstractAction{
+		public void actionPerformed(ActionEvent e)
+		{
+			playerHealth=0;
 			repaint();
 		}
 	}
@@ -1408,6 +1424,8 @@ public class FinalBattle extends JPanel {
 		public void actionPerformed(ActionEvent event)
 		{
 			frame.switchPanel(BackToSchool.Screen.TRANSCRIPT);
+			winSong.stopSound();
+			lostSong.stopSound();
 		}
 	}
 
