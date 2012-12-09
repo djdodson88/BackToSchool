@@ -10,6 +10,7 @@ import java.applet.Applet;
 import java.applet.AudioClip;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.*;
@@ -18,12 +19,15 @@ import java.util.EventListener;
 import java.util.Random;
 
 
-public class CampusPanel extends JPanel 
+public class CampusPanel extends JPanel
 {
-	private int playerX, playerY, screenX, screenY;
-	private final static int PWIDTH=800, PHEIGHT=600, TILE=50, TILESX=16, TILESY=12, PADX=4, PADY=3, MOVERATE=750;
+	private int playerX, playerY, screenX, screenY, period=6;
+	private final static int PWIDTH=800, PHEIGHT=600, TILE=50, TILESX=16, TILESY=12, PADX=4, PADY=3, 
+				MOVERATE=750, FRAMERATE=50;
 	private enum Direction{LEFT, UP, RIGHT, DOWN};
 	private Image[][] tiles;
+	private Graphics dbg;
+	private Image buffer;
 	private ArrayList<Timer> moveTimers;
 	private Timer animate;
 	
@@ -78,8 +82,7 @@ public class CampusPanel extends JPanel
 		setFocusable(true);
 		requestFocus();
 		
-		//animate = new Timer(100, new ActionListener() {);
-		//animate.start();
+		animate = new Timer(FRAMERATE, new AnimationListener());
 	}
 	
 	protected void sendFrame(BackToSchool frame)
@@ -91,6 +94,7 @@ public class CampusPanel extends JPanel
 	{	
 		handleSpecialEvents();
 		generateClassroom();
+		renderScreen();		// so panel can be drawn immediately
 		
 		//* PEDESTRIAN TEST
 		ArrayList<Point> doors = campus.getDoors(false);
@@ -112,6 +116,7 @@ public class CampusPanel extends JPanel
 		
 		crowd.playSound();
 		bell.playSoundOnce();
+		animate.start();
 	}
 	
 	private void handleSpecialEvents()
@@ -248,27 +253,32 @@ public class CampusPanel extends JPanel
 			tiles[TILESX-1][j] = tileFactory.get(campus.getTile((TILESX-1)+screenX, j+screenY));
 	}
 	
-	public void paintComponent(Graphics g)
+	public void renderScreen()
 	{
+		if (buffer == null)
+		{  // create the buffer
+			buffer = createImage(PWIDTH, PHEIGHT);
+			dbg = buffer.getGraphics();
+		}
 		// render campus
-		g.setColor(Color.LIGHT_GRAY);
+		dbg.setColor(Color.LIGHT_GRAY);
 		for (int i=0; i<TILESX; i++)
 			for (int j=0; j<TILESY; j++)
 			{	if (tiles[i][j]!=null)
-					g.drawImage(tiles[i][j], i*TILE, j*TILE, TILE, TILE, this);//  tiles[i][j].paintIcon(this, g, i*TILE, j*TILE);
+					dbg.drawImage(tiles[i][j], i*TILE, j*TILE, TILE, TILE, this);//  tiles[i][j].paintIcon(this, g, i*TILE, j*TILE);
 				else
-					g.fillRect(i*TILE, j*TILE, TILE, TILE);
+					dbg.fillRect(i*TILE, j*TILE, TILE, TILE);
 			}
 			
 		// render player
-		g.drawImage(player, playerX*TILE, playerY*TILE, TILE, TILE, this); //player.paintIcon(this, g, playerX, playerY);
+		dbg.drawImage(player, playerX*TILE, playerY*TILE, TILE, TILE, this); //player.paintIcon(this, g, playerX, playerY);
 		
 		//* render pedestrians (currently even if off screen)
 		for (Pedestrian p : pedestrians)
 		{	if (p.hasMove())
 			{	int pedX = p.getLocation().x-screenX;
 				int pedY = p.getLocation().y-screenY;
-				g.drawImage(p.getImage(), pedX*TILE, pedY*TILE, TILE, TILE, this);
+				dbg.drawImage(p.getImage(), pedX*TILE, pedY*TILE, TILE, TILE, this);
 			}
 		}
 		//*/
@@ -276,15 +286,50 @@ public class CampusPanel extends JPanel
 		// render interface 
 		//TODO: draw arrow to class
 		
-		g.setColor(Color.RED);
-		g.drawString("Day: "+day.getDay(), 50, 15);
-		g.drawString("Class: "+day.getNextCourseName(), 100, 15);
-		g.drawString("Destination: "+destination.x+","+destination.y, 14*50, 15);		
+		dbg.setColor(Color.RED);
+		dbg.drawString("Day: "+day.getDay(), 50, 15);
+		dbg.drawString("Class: "+day.getNextCourseName(), 100, 15);
+		//dbg.drawString("Destination: "+destination.x+","+destination.y, 14*50, 15);		
+	}
+
+	/*
+	private void paintScreen()
+	{
+		Graphics g;
+		try 
+		{	g = this.getGraphics();  // get the panel's graphic context
+			if ((g != null) && (buffer!= null))
+				g.drawImage(buffer, 0, 0, null);
+			Toolkit.getDefaultToolkit().sync();  // sync the display on some systems
+			g.dispose();
+		}
+		catch (Exception e)
+		{ 	System.out.println("Graphics context error: " + e);  
+		}
+	}*/
+	
+	public void paintComponent(Graphics g)
+	{
+    	super.paintComponent(g);
+    	if (buffer != null)
+    		g.drawImage(buffer, 0, 0, null);
+    	else
+    		System.out.println("no buffer");
 	}
 	
 	/*
 	 * 	SUPPORT CLASSES
 	 */
+	private class AnimationListener implements ActionListener
+	{
+		public void actionPerformed(ActionEvent arg0) 
+		{
+			if (buffer != null)
+				repaint();
+			renderScreen();	
+		}
+	}
+	
 	private class PedestrianListener implements ActionListener
 	{		
 		int pedID;
@@ -441,5 +486,4 @@ public class CampusPanel extends JPanel
 	     song.play(); // Play only once
 	  }
 	}
-
 }
