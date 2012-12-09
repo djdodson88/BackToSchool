@@ -1,15 +1,20 @@
 package minigames.tiles;
+import java.applet.Applet;
+import java.applet.AudioClip;
 import java.awt.*;
 import java.awt.event.*;
+import java.net.URL;
 import java.util.Timer;
 import java.util.concurrent.LinkedBlockingQueue;
 import javax.swing.*;
 import main.BackToSchool;
 import main.Player;
 import main.Day;
+import minigames.fruit.Fruit_Game.Sound;
 
 public class PuzzlePanel extends JPanel implements ActionListener
-{
+{	
+	private Sound backgroundSong;
 	private ImageIcon[][] puzzle;
 	private ImageIcon one, two, three, four, five, six, seven, eight, nine, ten, 
 		eleven, twelve, thirteen, fourteen, fifteen, sixteen, blank;
@@ -36,6 +41,9 @@ public class PuzzlePanel extends JPanel implements ActionListener
 		day = current;
 		this.frame = frame;
 		startTime = 0;
+		
+		backgroundSong = new Sound("sounds/Background/POL-water-world-short.wav");
+		backgroundSong.playSound();
 		
 		// LOAD IN ALL IMAGES
 		one = new ImageIcon("art/tilePuzzle/1.png");
@@ -218,7 +226,7 @@ public class PuzzlePanel extends JPanel implements ActionListener
 	public void actionPerformed(ActionEvent e) {
 
 		Object src = e.getSource();
-
+		backgroundSong.stopSound();
 		if(src == exit)
 		{
 			
@@ -432,5 +440,34 @@ public class PuzzlePanel extends JPanel implements ActionListener
 				timer.cancel();
 			}
 		}
+	}
+	
+	public class Sound // Holds one audio file
+	{
+	  private AudioClip song; // Sound player
+	  private URL songPath; // Sound path
+
+	  Sound(String filename){
+	     try
+	     {
+	    	 System.out.println("file:" + System.getProperty("user.dir") + "\\" + filename);
+	    	 songPath = new URL ("file:" + System.getProperty("user.dir") + "\\" + filename);
+	    	 song = Applet.newAudioClip(songPath);
+	    	// playSound();
+	     }catch(Exception e){
+	         e.printStackTrace();
+	         //e.getMessage();
+	     } // Satisfy the catch
+	  }
+	  
+	  public void playSound(){
+	     song.loop(); // Play 
+	  }
+	  public void stopSound(){
+	     song.stop(); // Stop
+	  }
+	  public void playSoundOnce(){
+	     song.play(); // Play only once
+	  }
 	}
 }

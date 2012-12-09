@@ -6,6 +6,8 @@
 package minigames.warehouse;
  
 
+import java.applet.Applet;
+import java.applet.AudioClip;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -18,6 +20,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.net.URL;
 
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
@@ -36,11 +39,12 @@ import javax.swing.colorchooser.ColorSelectionModel;
 import main.BackToSchool;
 import main.Day;
 import main.Player;
+import minigames.fruit.Fruit_Game.Sound;
 
 
 public class WareHouseKeeper extends JPanel
 {   
-	
+	private Sound backgroundSong;
 	Timer t;
     JPanel p;
     JPanel controlPanel;
@@ -90,7 +94,8 @@ public class WareHouseKeeper extends JPanel
     private BackToSchool frame;
     
     public WareHouseKeeper(Player player, Day current, BackToSchool frame){
-    	
+    	backgroundSong = new Sound("sounds/Background/POL-henchman-short.wav");
+    	backgroundSong.playSound();
     	student = player;
     	day = current;
     	this.frame = frame;
@@ -536,6 +541,7 @@ public class WareHouseKeeper extends JPanel
 		public void actionPerformed(ActionEvent event)
 		{
 			increaseStats();
+			backgroundSong.stopSound();
 			
 			if((day.getDay() == 4 || day.getDay() == 7) && !day.isTranscriptShow())
 			{
@@ -567,6 +573,36 @@ public class WareHouseKeeper extends JPanel
             System.out.println();
         }
     }
+    
+    public class Sound // Holds one audio file
+	{
+	  private AudioClip song; // Sound player
+	  private URL songPath; // Sound path
+
+	  Sound(String filename){
+	     try
+	     {
+	    	 System.out.println("file:" + System.getProperty("user.dir") + "\\" + filename);
+	    	 songPath = new URL ("file:" + System.getProperty("user.dir") + "\\" + filename);
+	    	 song = Applet.newAudioClip(songPath);
+	    	// playSound();
+	     }catch(Exception e){
+	         e.printStackTrace();
+	         //e.getMessage();
+	     } // Satisfy the catch
+	  }
+	  
+	  public void playSound(){
+	     song.loop(); // Play 
+	  }
+	  public void stopSound(){
+	     song.stop(); // Stop
+	  }
+	  public void playSoundOnce(){
+	     song.play(); // Play only once
+	  }
+	}
+
     
     public static void main (String[] args){
         System.out.println("test");   

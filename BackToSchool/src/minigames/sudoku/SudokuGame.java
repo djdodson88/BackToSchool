@@ -4,6 +4,8 @@ package minigames.sudoku;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+import java.applet.Applet;
+import java.applet.AudioClip;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,14 +14,16 @@ import java.awt.event.KeyListener;
 import java.awt.image.*;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Timer;
 
 import main.BackToSchool;
 import main.Day;
 import main.Player;
+import minigames.fruit.Fruit_Game.Sound;
 
 public class SudokuGame extends JPanel implements ActionListener{
-
+	private Sound backgroundSong;
 	private BufferedImage fourByfour_grid;
 	private BufferedImage nineBynine_grid;
 	private BufferedImage colorSq;
@@ -62,6 +66,9 @@ public class SudokuGame extends JPanel implements ActionListener{
 		this.frame = frame;
 		student = player;
 		day = current;
+		
+		backgroundSong = new Sound("sounds/Background/POL-misty-cave-short.wav");
+		backgroundSong.playSound();
 		
 		InputMap myInputMap = new InputMap();
 		ActionMap myActionMap = new ActionMap();
@@ -245,7 +252,7 @@ public class SudokuGame extends JPanel implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 
 		Object src = e.getSource();
-
+		backgroundSong.stopSound();
 		if(src == exit)
 		{
 			if((day.getDay() == 4 || day.getDay() == 7) && !day.isTranscriptShow())
@@ -897,6 +904,34 @@ public class SudokuGame extends JPanel implements ActionListener{
 		}
 	}
 
+	public class Sound // Holds one audio file
+	{
+	  private AudioClip song; // Sound player
+	  private URL songPath; // Sound path
+
+	  Sound(String filename){
+	     try
+	     {
+	    	 System.out.println("file:" + System.getProperty("user.dir") + "\\" + filename);
+	    	 songPath = new URL ("file:" + System.getProperty("user.dir") + "\\" + filename);
+	    	 song = Applet.newAudioClip(songPath);
+	    	// playSound();
+	     }catch(Exception e){
+	         e.printStackTrace();
+	         //e.getMessage();
+	     } // Satisfy the catch
+	  }
+	  
+	  public void playSound(){
+	     song.loop(); // Play 
+	  }
+	  public void stopSound(){
+	     song.stop(); // Stop
+	  }
+	  public void playSoundOnce(){
+	     song.play(); // Play only once
+	  }
+	}
 
 }
 

@@ -1,4 +1,6 @@
 package minigames.fruit;
+import java.applet.Applet;
+import java.applet.AudioClip;
 import java.awt.*;  
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -7,6 +9,7 @@ import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
@@ -15,8 +18,10 @@ import javax.swing.*;
 import main.BackToSchool;
 import main.Day;
 import main.Player;
+import main.Battle.Sound;
 
 public class Fruit_Game extends JPanel implements Runnable{  
+	private Sound backgroundSong;
 	BufferedImage basket;
 	BufferedImage banana;
 	BufferedImage bomb;
@@ -48,7 +53,8 @@ public class Fruit_Game extends JPanel implements Runnable{
 	
 	
 	public Fruit_Game(Player player, Day current, BackToSchool frame) {
-		
+		backgroundSong = new Sound("sounds/Background/POL-across-woodland-short.wav");
+		backgroundSong.playSound();
 		student = player;
 		this.frame = frame;
 		day = current;
@@ -329,6 +335,7 @@ public class Fruit_Game extends JPanel implements Runnable{
 		public void actionPerformed(ActionEvent event)
 		{
 			increaseStats();
+			backgroundSong.stopSound();
 			if((day.getDay() == 4 || day.getDay() == 7) && !day.isTranscriptShow())
 			{
 				frame.switchPanel(BackToSchool.Screen.TRANSCRIPT);
@@ -379,6 +386,35 @@ public class Fruit_Game extends JPanel implements Runnable{
 	{	
 	}
 	
+	public class Sound // Holds one audio file
+	{
+	  private AudioClip song; // Sound player
+	  private URL songPath; // Sound path
+
+	  Sound(String filename){
+	     try
+	     {
+	    	 System.out.println("file:" + System.getProperty("user.dir") + "\\" + filename);
+	    	 songPath = new URL ("file:" + System.getProperty("user.dir") + "\\" + filename);
+	    	 song = Applet.newAudioClip(songPath);
+	    	// playSound();
+	     }catch(Exception e){
+	         e.printStackTrace();
+	         //e.getMessage();
+	     } // Satisfy the catch
+	  }
+	  
+	  public void playSound(){
+	     song.loop(); // Play 
+	  }
+	  public void stopSound(){
+	     song.stop(); // Stop
+	  }
+	  public void playSoundOnce(){
+	     song.play(); // Play only once
+	  }
+	}
+
 	/** main program (entry point) */
 	   public static void main(String[] args) {
 	      // Run GUI in the Event Dispatcher Thread (EDT) instead of main thread.
