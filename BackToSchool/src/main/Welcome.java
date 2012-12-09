@@ -67,5 +67,9 @@ public class Welcome extends JPanel implements ActionListener
 		{
 			frame.switchPanel(BackToSchool.Screen.CAMPUS);
 		}
+		else if(src == about)
+		{
+			frame.switchPanel(BackToSchool.Screen.ABOUT);
+		}
 	}
 }

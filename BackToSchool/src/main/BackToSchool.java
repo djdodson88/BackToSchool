@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 
 public class BackToSchool extends JFrame
 {
-	public enum Screen{CAMPUS, BATTLE, FINALBATTLE, CLASS, MINISPLASH, WELCOME, LIBRARY, TRANSCRIPT};
+	public enum Screen{CAMPUS, BATTLE, FINALBATTLE, CLASS, MINISPLASH, WELCOME, LIBRARY, TRANSCRIPT, ABOUT};
 	private CardLayout cardLayout;
 	private JPanel cardPanel;
 	private CampusPanel campus;
@@ -20,6 +20,7 @@ public class BackToSchool extends JFrame
 	private Welcome welcome;
 	private Transcript transcript;
 	private Library library;
+	private About about;
 	
 	public BackToSchool(CardLayout layout, JPanel panel)
 	{
@@ -31,6 +32,9 @@ public class BackToSchool extends JFrame
 		classroom = null;
 		miniSplash = null;
 		welcome = null;
+		transcript = null;
+		about = null;
+		library = null;
 		
 		cardLayout = layout;
 		cardPanel = panel;
@@ -48,7 +52,6 @@ public class BackToSchool extends JFrame
 				break;
 			case CLASS:
 				classroom = (ClassroomPanel) panel;
-				//classroom.sendFrame(this);
 				break;
 			case MINISPLASH:
 				miniSplash = (MiniSplashPane)panel;
@@ -74,7 +77,10 @@ public class BackToSchool extends JFrame
 				transcript = (Transcript)panel;
 				transcript.sendFrame(this);
 				break;
-				
+			case ABOUT:
+				about = (About)panel;
+				about.sendFrame(this);
+				break;
 		}	
 	}
 	
@@ -102,6 +108,15 @@ public class BackToSchool extends JFrame
 			case WELCOME: 
 				welcome.requestFocus();
 				break;
+			case LIBRARY:
+				library.requestFocus();
+				break;
+			case TRANSCRIPT:
+				transcript.requestFocus();
+				break;
+			case ABOUT:
+				about.requestFocus();
+				break;
 		}
 		
 	}
@@ -113,6 +128,7 @@ public class BackToSchool extends JFrame
 		BackToSchool frame = new BackToSchool(layout, cards);
 		
 		frame.addPanel(new Welcome(), Screen.WELCOME);
+		frame.addPanel(new About(), Screen.ABOUT);
 		frame.addPanel(new CampusPanel(), Screen.CAMPUS);
 		frame.setContentPane(cards);
 		

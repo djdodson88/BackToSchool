@@ -31,12 +31,7 @@ public class Transcript extends JPanel{
 	private BufferedImage sciBoss;
 
 	private BufferedImage tombstone;
-	
-	/*
-	private BufferedImage humBoss_dead;
-	private BufferedImage mathBoss_dead;
-	private BufferedImage sciBoss_dead;
-	*/
+
 	
 	private boolean starCreativ;
 	private boolean starMath;
