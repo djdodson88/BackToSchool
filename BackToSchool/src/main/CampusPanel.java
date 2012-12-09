@@ -24,7 +24,8 @@ public class CampusPanel extends JPanel
 	private final static int PWIDTH=800, PHEIGHT=600, TILE=50, TILESX=16, TILESY=12, PADX=4, PADY=3, MOVERATE=750;
 	private enum Direction{LEFT, UP, RIGHT, DOWN};
 	private Image[][] tiles;
-	private Timer moveTimer, animate;
+	private ArrayList<Timer> moveTimers;
+	private Timer animate;
 	
 	// BackToSchool classes
 	private BackToSchool frame;
@@ -32,7 +33,7 @@ public class CampusPanel extends JPanel
 	private Tiles tileFactory;
 	private Day day;
 	private Player student;
-	private Pedestrian pedestrian;
+	private ArrayList<Pedestrian> pedestrians;
 	private Point destination;
 	private Image player, playerUp, playerDown, playerLeft, playerRight;
 	private Sound crowd;
@@ -61,7 +62,15 @@ public class CampusPanel extends JPanel
 		crowd = new Sound("sounds/crowd.wav");
 		bell = new Sound("sounds/schoolbell.mp3");
 		
-		moveTimer = new Timer(MOVERATE, new PedestrianListener());
+		// for multiple pedestrians
+		pedestrians = new ArrayList<Pedestrian>();
+		moveTimers = new ArrayList<Timer>();
+		moveTimers.add(new Timer (MOVERATE, new PedestrianListener(0)));
+		moveTimers.add(new Timer (MOVERATE, new PedestrianListener(1)));
+		moveTimers.add(new Timer (MOVERATE, new PedestrianListener(2)));
+		moveTimers.add(new Timer (MOVERATE, new PedestrianListener(3)));
+		moveTimers.add(new Timer (MOVERATE, new PedestrianListener(4)));
+		
 		addKeyListener(new CampusListener());
 		addMouseListener(new CampusMouseListener());
 		setPreferredSize(new Dimension(PWIDTH,PHEIGHT));
@@ -84,17 +93,22 @@ public class CampusPanel extends JPanel
 		generateClassroom();
 		
 		//* PEDESTRIAN TEST
-		Point point = new Point(-1,-1);
-		while (!campus.isTraversable(point.x,point.y))
+		ArrayList<Point> doors = campus.getDoors(false);
+		pedestrians.clear();
+		for (int i=0; i<moveTimers.size(); i++)
 		{
-			int x = (int)(Math.random()*TILESX);
-			int y = (int)(Math.random()*TILESY);
-			point.setLocation(x,y);
+			Point point = new Point(-1,-1);
+			while (!campus.isTraversable(point.x,point.y))
+			{
+				int x = (int)(Math.random()*campus.getWidth());
+				int y = (int)(Math.random()*campus.getHeight());
+				point.setLocation(x,y);
+			}
+			Point dest = doors.get((int)(Math.random()*doors.size()));
+			dest = new Point(dest.x, dest.y+1);
+			pedestrians.add(i, new Pedestrian(point, dest, campus));
+			moveTimers.get(i).start();
 		}
-		Point dest = new Point(destination.x, destination.y+1);
-		pedestrian = new Pedestrian(point, dest, campus);
-		moveTimer.start();
-		//*/
 		
 		crowd.playSound();
 		bell.playSoundOnce();
@@ -249,11 +263,13 @@ public class CampusPanel extends JPanel
 		// render player
 		g.drawImage(player, playerX*TILE, playerY*TILE, TILE, TILE, this); //player.paintIcon(this, g, playerX, playerY);
 		
-		//* render pedestrian (currently even if off screen)
-		if (pedestrian.hasMove())
-		{	int pedX = pedestrian.getLocation().x-screenX;
-			int pedY = pedestrian.getLocation().y-screenY;
-			g.drawImage(pedestrian.getImage(), pedX*TILE, pedY*TILE, TILE, TILE, this);
+		//* render pedestrians (currently even if off screen)
+		for (Pedestrian p : pedestrians)
+		{	if (p.hasMove())
+			{	int pedX = p.getLocation().x-screenX;
+				int pedY = p.getLocation().y-screenY;
+				g.drawImage(p.getImage(), pedX*TILE, pedY*TILE, TILE, TILE, this);
+			}
 		}
 		//*/
 		
@@ -271,10 +287,19 @@ public class CampusPanel extends JPanel
 	 */
 	private class PedestrianListener implements ActionListener
 	{		
+		int pedID;
+		
+		public PedestrianListener(int id)
+		{	
+			super();
+			pedID = id;
+		}
+		
 		public void actionPerformed(ActionEvent e) 
 		{
-			if (pedestrian.hasMove())
-				pedestrian.move();
+			Pedestrian current = pedestrians.get(pedID);
+			if (current.hasMove())
+				current.move();
 			repaint();
 		}	
 	}
