@@ -60,7 +60,7 @@ public class BackToSchool extends JFrame
 				break;
 			case FINALBATTLE:
 				finalBattle = (FinalBattle)panel;
-				//finalBattle.sendFrame(this);
+				finalBattle.sendFrame(this);
 				break;
 			case WELCOME:
 				welcome  = (Welcome)panel;
@@ -99,7 +99,7 @@ public class BackToSchool extends JFrame
 			case FINALBATTLE:
 				finalBattle.requestFocus();
 				break;
-			case WELCOME:
+			case WELCOME: 
 				welcome.requestFocus();
 				break;
 		}

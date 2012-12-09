@@ -1407,7 +1407,7 @@ public class FinalBattle extends JPanel {
 	{
 		public void actionPerformed(ActionEvent event)
 		{
-			frame.switchPanel(BackToSchool.Screen.CAMPUS);
+			frame.switchPanel(BackToSchool.Screen.TRANSCRIPT);
 		}
 	}
 

@@ -3,6 +3,7 @@ package main;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+import main.BackToSchool.Screen;
 import main.Day.Course;
 
 import java.applet.Applet;
@@ -54,7 +55,7 @@ public class CampusPanel extends JPanel
 		
 		student = new Player();
 		player = playerDown;
-		day = new Day(1);
+		day = new Day(9);
 		
 		testsong = new Sound("sounds/dw1world.mid");
 		
@@ -77,6 +78,12 @@ public class CampusPanel extends JPanel
 	
 	public void continueClasses() 
 	{
+		if(day.getDay() == 10)
+		{
+			frame.addPanel(new FinalBattle(student), Screen.FINALBATTLE);
+			frame.switchPanel(Screen.FINALBATTLE);
+		}
+		
 		testsong.playSound();
 		ArrayList<Point> doors;
 		
@@ -277,7 +284,7 @@ public class CampusPanel extends JPanel
 					day.attendClass();
 					
 					// Transcript will only show at end of week 1 and 2
-					if((day.getDay() == 4 || day.getDay() == 6) && !day.isTranscriptShow())
+					if((day.getDay() == 4 || day.getDay() == 6 || day.getDay() == 9) && !day.isTranscriptShow())
 					{
 						System.out.println("Transcript made");
 						Transcript transcript = new Transcript(student, day);
