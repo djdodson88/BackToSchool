@@ -35,7 +35,8 @@ public class CampusPanel extends JPanel
 	private Pedestrian pedestrian;
 	private Point destination;
 	private Image player, playerUp, playerDown, playerLeft, playerRight;
-	private Sound testsong;
+	private Sound crowd;
+	private Sound bell;
 	
 	public CampusPanel()
 	{
@@ -57,7 +58,8 @@ public class CampusPanel extends JPanel
 		player = playerDown;
 		day = new Day(1);
 		
-		testsong = new Sound("sounds/dw1world.mid");
+		crowd = new Sound("sounds/crowd.wav");
+		bell = new Sound("sounds/schoolbell.mp3");
 		
 		moveTimer = new Timer(MOVERATE, new PedestrianListener());
 		addKeyListener(new CampusListener());
@@ -84,7 +86,8 @@ public class CampusPanel extends JPanel
 			frame.switchPanel(Screen.FINALBATTLE);
 		}
 		
-		testsong.playSound();
+		crowd.playSound();
+		bell.playSoundOnce();
 		ArrayList<Point> doors;
 		
 		if (day.getNextCourse().ordinal() == 0) // first class (could hardcode as HUMANITIES)
@@ -268,7 +271,7 @@ public class CampusPanel extends JPanel
 				if ((screenX+playerX==destination.x) && (screenY+playerY-1==destination.y))
 				{	// destination door reached
 					System.out.println("FOUND CLASS");
-					testsong.stopSound();
+					crowd.stopSound();
 					if (day.isMidtermNext())
 					{	System.out.println("MIDTERM");
 						frame.addPanel(new Battle(student, day.getNextCourseName()), BackToSchool.Screen.BATTLE);
