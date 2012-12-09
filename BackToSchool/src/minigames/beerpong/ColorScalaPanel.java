@@ -54,7 +54,7 @@ public class ColorScalaPanel extends JPanel{
         
         for(int i = 0; i < labelCount; i++ )
         {
-            System.out.println(hueStep * i);
+            //System.out.println(hueStep * i);
             labelList[i] = new JLabel();
             labelList[i].setOpaque(true);
             labelList[i].setPreferredSize(labelDimension);
@@ -93,7 +93,7 @@ public class ColorScalaPanel extends JPanel{
     public void setVisibleCount(int _visibleCount ){
         if( _visibleCount < 0 || _visibleCount > labelCount )
         {
-            System.err.println("Error: visibleCount is invalid");
+           // System.err.println("Error: visibleCount is invalid");
         }
         else
         {

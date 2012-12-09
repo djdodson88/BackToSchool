@@ -64,7 +64,7 @@ public class Sprite {
         //If the spirit hits an x border (x < 0 )
         if( getCenterX() < 0 || getCenterX() > TablePanel.WIDTH )
         {
-            System.out.println("MISS X");
+            //System.out.println("MISS X");
             out = true;
             //speed_x = speed_x * -1;
         }
@@ -78,7 +78,7 @@ public class Sprite {
         if( getCenterY() < 0 || getCenterY() > TablePanel.HEIGHT )
         {
             out = true;
-            System.out.println("MISS Y");
+            //System.out.println("MISS Y");
             //speed_y = speed_y * -1;
         }
         else

@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.TimerTask;
 import javax.swing.*;
 
+import main.Day;
+import minigames.sudoku.Clock;
+
 /**
  *
  * @author Cagatay Sahin
@@ -28,6 +31,9 @@ public class TablePanel extends JPanel{
     ArrayList<JLabel> labelList;
     final static int WIDTH = 550;
     final static int HEIGHT = 275;
+    Clock gameTimer;
+    int initialTime;
+    int timeLeft;
     
     ArrayList cupList;
     
@@ -36,7 +42,7 @@ public class TablePanel extends JPanel{
     Image img;
     ImageIcon originalBallIcon;
     
-    public TablePanel( ArrayList _cupList, Sprite _ball ){
+    public TablePanel( ArrayList _cupList, Sprite _ball , Day day){
         labelList = new ArrayList<JLabel>();
                 
         originalBallIcon = new ImageIcon("art/beerpong/ball.png"); 
@@ -67,8 +73,29 @@ public class TablePanel extends JPanel{
         cupList = _cupList;
         ball = _ball;
         
+        if(day.getDay() <= 6)
+		{
+			if(day.getDay() >=3)
+			{
+				initialTime = 20;
+				gameTimer = new Clock(initialTime);
+			}
+			else
+			{
+				initialTime = 40;
+				gameTimer = new Clock(initialTime);
+			}
+		}
+		else
+		{
+			initialTime = 3;
+			gameTimer = new Clock(initialTime); //testing
+		}
+		gameTimer.start();
+        
         img = new ImageIcon("art/beerpong/table.png").getImage();
         setLayout(null);
+      
         this.setBackground(Color.RED);
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
     }
@@ -82,9 +109,37 @@ public class TablePanel extends JPanel{
     
     @Override
     public void paintComponent(Graphics g) {
-        
+    	//super.paintComponent(g);
+    	timeLeft = gameTimer.timeRemaining();
+		Font font = new Font("Arial", Font.BOLD, 50);
+		Font markup = new Font("Arial", Font.PLAIN, 50);
+		Font gameTxt = new Font("Arial", Font.PLAIN, 18);
+
+		//System.out.println(timeLeft);
+		
+		g.setColor(new Color(255,254,215));
+		g.fillRect(415, 60, 120, 300);
+
+
+		g.setFont(gameTxt);
+		g.setColor(Color.BLACK);
+		g.drawString("Timer", 420, 80);
+
+		if(timeLeft == 0)
+		{
+//			isRunning = false;
+//			gameStatus = "Game Over";
+			
+//			if(!statsUpdated)
+//			{
+//				increaseStats(0); // Lose
+//			}
+//			exit.setVisible(true);
+
+		}
+		g.drawString(String.valueOf(timeLeft), 420, 0);
+    	
         g.setColor(Color.BLACK);
-        
         
         g.clearRect(0, 0, WIDTH, HEIGHT);
   

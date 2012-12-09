@@ -76,7 +76,7 @@ public class ClassroomPanel extends JLayeredPane
 		case 5:
 			//Beer Pong
 			// TO DO: Day parameter to control difficulty
-			beer = new BeerPong();
+			beer = new BeerPong(player, day, frame);
 			minigame = beer;
 			break;
 		}

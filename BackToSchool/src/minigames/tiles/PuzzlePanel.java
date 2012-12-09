@@ -86,7 +86,7 @@ public class PuzzlePanel extends JPanel implements ActionListener
 			sixteen = blank;
 		}
 		
-		startTime = 5; //debug
+		//startTime = 5; //debug
 		gameTimer = new Clock(startTime);
 		
 		puzzle = new ImageIcon[indexI][indexJ];
