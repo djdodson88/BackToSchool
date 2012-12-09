@@ -68,4 +68,12 @@ public class Player {
 		return Math.ceil(stat * 100)/100;
 	}
 
+	public String toString()
+	{
+		String output = "Stats:\n";
+		output += "Math: " + quantReasoning + "\n";
+		output += "Science: " + sciRigor + "\n";
+		output += "Creativity: " + creativity + "\n";
+		return output;
+	}
 }

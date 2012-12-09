@@ -79,17 +79,54 @@ public class CampusPanel extends JPanel
 	}
 	
 	public void continueClasses() 
+	{	
+		handleSpecialEvents();
+		generateClassroom();
+		
+		//* PEDESTRIAN TEST
+		Point point = new Point(-1,-1);
+		while (!campus.isTraversable(point.x,point.y))
+		{
+			int x = (int)(Math.random()*TILESX);
+			int y = (int)(Math.random()*TILESY);
+			point.setLocation(x,y);
+		}
+		Point dest = new Point(destination.x, destination.y+1);
+		pedestrian = new Pedestrian(point, dest, campus);
+		moveTimer.start();
+		//*/
+		
+		crowd.playSound();
+		bell.playSoundOnce();
+	}
+	
+	private void handleSpecialEvents()
 	{
+		// TRANSCRIPT HANDLING
+		// Transcript will only show at end of week 1 and 2
+		if((day.getDay() == 4 || day.getDay() == 6 || day.getDay() == 9) && !day.isTranscriptShow())
+		{
+			System.out.println("Transcript made");
+			Transcript transcript = new Transcript(student, day);
+			frame.addPanel(transcript, BackToSchool.Screen.TRANSCRIPT);	
+		}
+		if(day.getDay() == 5)
+		{
+			day.setTranscriptState(false);
+		}
+		System.out.println(student.toString());
+	
+		//FINAL BATTLE
 		if(day.getDay() == 10)
 		{
 			frame.addPanel(new FinalBattle(student), Screen.FINALBATTLE);
 			frame.switchPanel(Screen.FINALBATTLE);
 		}
-		
-		crowd.playSound();
-		bell.playSoundOnce();
+	}
+	
+	private void generateClassroom()
+	{
 		ArrayList<Point> doors;
-		
 		if (day.getNextCourse().ordinal() == 0) // first class (could hardcode as HUMANITIES)
 		{
 			playerX = playerY = 5;
@@ -120,20 +157,7 @@ public class CampusPanel extends JPanel
 		Rectangle window = new Rectangle(screenX, screenY+1, TILESX, TILESY);
 		for (Point p : doors)
 			if (window.contains(p)) 
-				tiles[p.x-screenX][p.y-1-screenY] = tileFactory.get(campus.getTile(p.x, p.y-1));
-		
-		//* PEDESTRIAN TEST
-		Point point = new Point(-1,-1);
-		while (!campus.isTraversable(point.x,point.y))
-		{
-			int x = (int)(Math.random()*TILESX);
-			int y = (int)(Math.random()*TILESY);
-			point.setLocation(x,y);
-		}
-		Point dest = new Point(destination.x, destination.y+1);
-		pedestrian = new Pedestrian(point, dest, campus);
-		moveTimer.start();
-		//*/
+				tiles[p.x-screenX][p.y-1-screenY] = tileFactory.get(campus.getTile(p.x, p.y-1));	
 	}
 	
 	private void updateTiles(Direction dir)
@@ -242,15 +266,9 @@ public class CampusPanel extends JPanel
 		g.drawString("Destination: "+destination.x+","+destination.y, 14*50, 15);		
 	}
 	
-	
-	public void printStudentStats()
-	{
-		System.out.println("Stats:");
-		System.out.println("Math: " + student.getQuantReasoning());
-		System.out.println("Science: " + student.getSciRigor());
-		System.out.println("Creativity: " + student.getCreativity());
-	}
-	
+	/*
+	 * 	SUPPORT CLASSES
+	 */
 	private class PedestrianListener implements ActionListener
 	{		
 		public void actionPerformed(ActionEvent e) 
@@ -285,24 +303,7 @@ public class CampusPanel extends JPanel
 						frame.switchPanel(BackToSchool.Screen.MINISPLASH);
 						
 					}
-					day.attendClass();
-					
-					// Transcript will only show at end of week 1 and 2
-					if((day.getDay() == 4 || day.getDay() == 6 || day.getDay() == 9) && !day.isTranscriptShow())
-					{
-						System.out.println("Transcript made");
-						Transcript transcript = new Transcript(student, day);
-						frame.addPanel(transcript, BackToSchool.Screen.TRANSCRIPT);	
-					}
-					
-					if(day.getDay() == 5)
-					{
-						day.setTranscriptState(false);
-					}
-					
-					
-					printStudentStats();
-					
+					day.attendClass();			
 				}
 				
 				if (campus.isTraversable(screenX+playerX, screenY+playerY-1))
