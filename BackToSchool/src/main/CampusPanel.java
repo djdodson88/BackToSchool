@@ -30,7 +30,7 @@ public class CampusPanel extends JPanel
 	private Image buffer;
 	private ArrayList<Timer> moveTimers;
 	private Timer animate;
-	private boolean isLibrary;
+	private boolean isLibrary, isTranscript;
 	
 	// BackToSchool classes
 	private BackToSchool frame;
@@ -62,7 +62,7 @@ public class CampusPanel extends JPanel
 		
 		student = new Player();
 		player = playerDown;
-		day = new Day(1);
+		day = new Day(3);
 		
 		crowd = new Sound("sounds/crowd.wav");
 		bell = new Sound("sounds/schoolbell.mp3");
@@ -93,19 +93,22 @@ public class CampusPanel extends JPanel
 	
 	public void continueClasses() 
 	{	
+		if (day.isDayEnd())
+			day.nextDay();
+		
 		if(day.getDay() == 10)
 		{
-				frame.addPanel(new FinalBattle(student), Screen.FINALBATTLE);
-				frame.switchPanel(Screen.FINALBATTLE);
+			frame.addPanel(new FinalBattle(student), Screen.FINALBATTLE);
+			frame.switchPanel(Screen.FINALBATTLE);
+			return;
 		}
+		
 		else if (isLibrary)
 		{	
 			isLibrary = false;
 		}
 		else
 		{
-			if (day.getNextCourse().ordinal() == 0)	// only on first class of day 
-				handleSpecialEvents();
 			generateClassroom();
 			renderScreen();		// so panel can be drawn immediately
 			
@@ -134,13 +137,6 @@ public class CampusPanel extends JPanel
 		animate.start();
 		for (Timer t : moveTimers)
 			t.start();
-	}
-	
-	private void handleSpecialEvents()
-	{
-		// TRANSCRIPT HANDLING
-
-		System.out.println(student.toString());	// for debug
 	}
 	
 	private void generateClassroom()
@@ -195,13 +191,8 @@ public class CampusPanel extends JPanel
 		
 		// Handle panel switch
 		if (classroom)
-		{
-			if(day.isTranscript())	// load transcripts for return from class
-			{
-				System.out.println("Transcript made");
-				Transcript transcript = new Transcript(student, day);
-				frame.addPanel(transcript, BackToSchool.Screen.TRANSCRIPT);	
-			}
+		{					
+			day.attendClass();
 			
 			if (day.isMidtermNext())
 			{	//System.out.println("MIDTERM");
@@ -213,7 +204,13 @@ public class CampusPanel extends JPanel
 				frame.addPanel(new MiniSplashPane(student, day), BackToSchool.Screen.MINISPLASH);
 				frame.switchPanel(BackToSchool.Screen.MINISPLASH);
 			}
-			day.attendClass();
+			
+			if(day.isTranscript())	// load transcripts for return from class
+			{
+				System.out.println("Transcript made");
+				Transcript transcript = new Transcript(student, day);
+				frame.addPanel(transcript, BackToSchool.Screen.TRANSCRIPT);	
+			}
 		}
 		else
 		{

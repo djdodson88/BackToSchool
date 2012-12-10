@@ -6,7 +6,7 @@ public class Day {
 	private int day, library;
 	private double midtermScore;
 	private boolean humMidterm, mathMidterm, sciMidterm, finalBattle;
-	private boolean humAttend, mathAttend, sciAttend, libVisit;
+	private boolean humAttend, mathAttend, sciAttend, libVisit, dayEnd;
 	private Course nextCourse, current;
 	
 	public Day(int d)
@@ -15,7 +15,7 @@ public class Day {
 		nextDay();		
 	}
 	
-	private void nextDay()
+	public void nextDay()
 	{
 		//TODO: store data from completed day if wanted
 		day++;
@@ -29,6 +29,7 @@ public class Day {
 		nextCourse = Course.HUMANITIES;
 		library = (int)(Math.random()*3);
 		libVisit = false;
+		dayEnd = false;
 	}
 	
 	public int getDay()
@@ -77,7 +78,7 @@ public class Day {
 			case SCIENCE:
 				sciAttend = true;
 				current = Course.SCIENCE;
-				nextDay();
+				dayEnd = true;
 				break;
 		}
 	}
@@ -153,7 +154,12 @@ public class Day {
 	
 	public boolean isTranscript()
 	{
-		return (day == 4 && nextCourse == Course.HUMANITIES) ||
-				(day == 7 && nextCourse == Course.HUMANITIES);
+		return (day == 3 && current == Course.SCIENCE) ||
+				(day == 6 && current == Course.SCIENCE);
+	}
+	
+	public boolean isDayEnd()
+	{
+		return dayEnd;
 	}
 }
