@@ -37,6 +37,8 @@ public class BeerPong extends JPanel{
     final static int INIT_BALL_CY = TablePanel.HEIGHT / 2;
     final static int INIT_BALL_CZ = 0;
     
+    boolean directionSet;
+    
     static int gameState;
     static int missCount;
     static int hitCount;
@@ -64,6 +66,7 @@ public class BeerPong extends JPanel{
 		day = current;
         ball = new Sprite();
         
+        directionSet=false;
         cupList = new ArrayList<Sprite>();
         cupList.add( new Sprite() );
         cupList.add( new Sprite() );
@@ -360,11 +363,12 @@ public class BeerPong extends JPanel{
     private class up extends AbstractAction{
 		public void actionPerformed(ActionEvent e)
 		{
+			directionSet=true;
 			if(gameState == GS_LOST || gameState == GS_WON )
-				 resetGame();
-		if(gameState == GS_INIT){
+				resetGame();
+			if(gameState == GS_INIT){
 				ball.setSpeedY( ball.getSpeedY() - 2000 );
-           //   System.out.println( "Ball_y: " + ball.getSpeedY() );
+				//   System.out.println( "Ball_y: " + ball.getSpeedY() );
 			}
 			
 			//System.out.println(gameState);
@@ -375,6 +379,7 @@ public class BeerPong extends JPanel{
     private class down extends AbstractAction{
 		public void actionPerformed(ActionEvent e)
 		{
+			directionSet=true;
 			if(gameState == GS_LOST || gameState == GS_WON )
 				 resetGame();
 			 if(gameState == GS_INIT){
@@ -389,6 +394,7 @@ public class BeerPong extends JPanel{
     private class right extends AbstractAction{
 		public void actionPerformed(ActionEvent e)
 		{
+			directionSet=true;
 			if(gameState == GS_LOST || gameState == GS_WON )
 				 resetGame();
 			if(gameState == GS_INIT){
@@ -404,6 +410,7 @@ public class BeerPong extends JPanel{
     private class left extends AbstractAction{
 		public void actionPerformed(ActionEvent e)
 		{
+			directionSet=true;
 			if(gameState == GS_LOST || gameState == GS_WON )
 				 resetGame();
 			if(gameState == GS_INIT){
@@ -462,8 +469,9 @@ public class BeerPong extends JPanel{
 		{
 			if(gameState == GS_LOST || gameState == GS_WON )
 				 resetGame();
-			if(gameState == GS_INIT){
+			if(gameState == GS_INIT && directionSet){
 				 gameState = GS_MOTION;
+				 directionSet=false;
 			}	
 			else if( gameState == GS_HIT )
 			{
