@@ -6,7 +6,7 @@ public class Day {
 	private int day, library;
 	private double midtermScore;
 	private boolean humMidterm, mathMidterm, sciMidterm, finalBattle;
-	private boolean humAttend, mathAttend, sciAttend;
+	private boolean humAttend, mathAttend, sciAttend, libVisit;
 	private Course nextCourse, current;
 	
 	public Day(int d)
@@ -28,6 +28,7 @@ public class Day {
 		
 		nextCourse = Course.HUMANITIES;
 		library = (int)(Math.random()*3);
+		libVisit = false;
 	}
 	
 	public int getDay()
@@ -97,6 +98,11 @@ public class Day {
 		}
 	}
 	
+	public void visitLibrary()
+	{
+		libVisit = true;
+	}
+	
 	public boolean isMidtermNext()
 	{
 		switch (nextCourse)
@@ -131,7 +137,10 @@ public class Day {
 	}
 	
 	public boolean isLibrary()
-	{
+	{		
+		if (libVisit)
+			return false; 
+		
 		if (library == 0 && nextCourse == Course.HUMANITIES)
 			return true;
 		else if (library == 1 && nextCourse == Course.MATH)

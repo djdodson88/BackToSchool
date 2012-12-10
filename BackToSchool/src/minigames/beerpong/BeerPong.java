@@ -332,7 +332,7 @@ public class BeerPong extends JPanel{
 		}
     	backgroundSong.stopSound();
     	
-    	if((day.getDay() == 4 || day.getDay() == 7) && !day.isTranscriptShow())
+    	if(day.isTranscript())
 		{
 			frame.switchPanel(BackToSchool.Screen.TRANSCRIPT);
 		}

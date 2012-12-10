@@ -30,6 +30,7 @@ public class CampusPanel extends JPanel
 	private Image buffer;
 	private ArrayList<Timer> moveTimers;
 	private Timer animate;
+	private boolean isLibrary;
 	
 	// BackToSchool classes
 	private BackToSchool frame;
@@ -38,7 +39,7 @@ public class CampusPanel extends JPanel
 	private Day day;
 	private Player student;
 	private ArrayList<Pedestrian> pedestrians;
-	private Point destination;
+	private Point destination, library;
 	private Image player, playerUp, playerDown, playerLeft, playerRight;
 	private Sound crowd;
 	private Sound bell;
@@ -92,55 +93,54 @@ public class CampusPanel extends JPanel
 	
 	public void continueClasses() 
 	{	
-		handleSpecialEvents();
-		generateClassroom();
-		renderScreen();		// so panel can be drawn immediately
-		
-		//* PEDESTRIAN TEST
-		ArrayList<Point> doors = campus.getDoors(false);
-		pedestrians.clear();
-		for (int i=0; i<moveTimers.size(); i++)
+		if(day.getDay() == 10)
 		{
-			Point point = new Point(-1,-1);
-			while (!campus.isTraversable(point.x,point.y))
+				frame.addPanel(new FinalBattle(student), Screen.FINALBATTLE);
+				frame.switchPanel(Screen.FINALBATTLE);
+		}
+		else if (isLibrary)
+		{	
+			isLibrary = false;
+		}
+		else
+		{
+			if (day.getNextCourse().ordinal() == 0)	// only on first class of day 
+				handleSpecialEvents();
+			generateClassroom();
+			renderScreen();		// so panel can be drawn immediately
+			
+			//* PEDESTRIAN TEST
+			ArrayList<Point> doors = campus.getDoors(false);
+			pedestrians.clear();
+			for (int i=0; i<moveTimers.size(); i++)
 			{
-				int x = (int)(Math.random()*campus.getWidth());
-				int y = (int)(Math.random()*campus.getHeight());
-				point.setLocation(x,y);
+				Point point = new Point(-1,-1);
+				while (!campus.isTraversable(point.x,point.y))
+				{
+					int x = (int)(Math.random()*campus.getWidth());
+					int y = (int)(Math.random()*campus.getHeight());
+					point.setLocation(x,y);
+				}
+				Point dest = doors.get((int)(Math.random()*doors.size()));
+				dest = new Point(dest.x, dest.y+1);
+				pedestrians.add(i, new Pedestrian(point, dest, campus));
+				moveTimers.get(i).start();
 			}
-			Point dest = doors.get((int)(Math.random()*doors.size()));
-			dest = new Point(dest.x, dest.y+1);
-			pedestrians.add(i, new Pedestrian(point, dest, campus));
-			moveTimers.get(i).start();
 		}
 		
 		crowd.playSound();
 		bell.playSoundOnce();
+		
 		animate.start();
+		for (Timer t : moveTimers)
+			t.start();
 	}
 	
 	private void handleSpecialEvents()
 	{
 		// TRANSCRIPT HANDLING
-		// Transcript will only show at end of week 1 and 2
-		if((day.getDay() == 4 || day.getDay() == 6 || day.getDay() == 9) && !day.isTranscriptShow())
-		{
-			System.out.println("Transcript made");
-			Transcript transcript = new Transcript(student, day);
-			frame.addPanel(transcript, BackToSchool.Screen.TRANSCRIPT);	
-		}
-		if(day.getDay() == 5)
-		{
-			day.setTranscriptState(false);
-		}
-		System.out.println(student.toString());
-	
-		//FINAL BATTLE
-		if(day.getDay() == 10)
-		{
-			frame.addPanel(new FinalBattle(student), Screen.FINALBATTLE);
-			frame.switchPanel(Screen.FINALBATTLE);
-		}
+
+		System.out.println(student.toString());	// for debug
 	}
 	
 	private void generateClassroom()
@@ -165,18 +165,63 @@ public class CampusPanel extends JPanel
 		else
 			doors = campus.getDoors(false);
 		
-		//ArrayList<Point> doors = campus.getDoors(true);
 		if (destination != null)
 			doors.remove(destination);	// remove last used door (no two classes in same place in a row)
-		
 		destination = doors.get((int)(Math.random()*doors.size()));
 		campus.addSign(destination, day.getNextCourse());
 		
+		if (day.isLibrary())
+		{
+			library = destination;
+			while (library.equals(destination))
+				library = doors.get((int)(Math.random()*doors.size()));
+			campus.addLibrary(library);
+		}
+			
 		// Update any sign tiles currently onscreen
 		Rectangle window = new Rectangle(screenX, screenY+1, TILESX, TILESY);
 		for (Point p : doors)
 			if (window.contains(p)) 
 				tiles[p.x-screenX][p.y-1-screenY] = tileFactory.get(campus.getTile(p.x, p.y-1));	
+	}
+	
+	private void handleDestination(boolean classroom) 
+	{	
+		// Shut down timers/sound for panel switch
+		animate.stop();
+		for (Timer t : moveTimers)
+			t.stop();
+		crowd.stopSound();
+		
+		// Handle panel switch
+		if (classroom)
+		{
+			if(day.isTranscript())	// load transcripts for return from class
+			{
+				System.out.println("Transcript made");
+				Transcript transcript = new Transcript(student, day);
+				frame.addPanel(transcript, BackToSchool.Screen.TRANSCRIPT);	
+			}
+			
+			if (day.isMidtermNext())
+			{	//System.out.println("MIDTERM");
+				frame.addPanel(new Battle(student, day.getNextCourseName()), BackToSchool.Screen.BATTLE);
+				frame.switchPanel(BackToSchool.Screen.BATTLE);
+			}
+			else
+			{	//System.out.println("CLASS");
+				frame.addPanel(new MiniSplashPane(student, day), BackToSchool.Screen.MINISPLASH);
+				frame.switchPanel(BackToSchool.Screen.MINISPLASH);
+			}
+			day.attendClass();
+		}
+		else
+		{
+			isLibrary = true;
+			day.visitLibrary();
+			frame.addPanel(new Library(student), BackToSchool.Screen.LIBRARY);
+			frame.switchPanel(BackToSchool.Screen.LIBRARY);
+		}
 	}
 	
 	private void updateTiles(Direction dir)
@@ -291,30 +336,14 @@ public class CampusPanel extends JPanel
 		dbg.drawString("Class: "+day.getNextCourseName(), 100, 15);
 		//dbg.drawString("Destination: "+destination.x+","+destination.y, 14*50, 15);		
 	}
-
-	/*
-	private void paintScreen()
-	{
-		Graphics g;
-		try 
-		{	g = this.getGraphics();  // get the panel's graphic context
-			if ((g != null) && (buffer!= null))
-				g.drawImage(buffer, 0, 0, null);
-			Toolkit.getDefaultToolkit().sync();  // sync the display on some systems
-			g.dispose();
-		}
-		catch (Exception e)
-		{ 	System.out.println("Graphics context error: " + e);  
-		}
-	}*/
 	
 	public void paintComponent(Graphics g)
 	{
     	super.paintComponent(g);
     	if (buffer != null)
     		g.drawImage(buffer, 0, 0, null);
-    	else
-    		System.out.println("no buffer");
+    	//else
+    		//System.out.println("no buffer");
 	}
 	
 	/*
@@ -324,9 +353,8 @@ public class CampusPanel extends JPanel
 	{
 		public void actionPerformed(ActionEvent arg0) 
 		{
-			if (buffer != null)
-				repaint();
 			renderScreen();	
+			repaint();
 		}
 	}
 	
@@ -357,23 +385,12 @@ public class CampusPanel extends JPanel
 			{
 				player = playerUp;
 				if ((screenX+playerX==destination.x) && (screenY+playerY-1==destination.y))
-				{	// destination door reached
-					System.out.println("FOUND CLASS");
-					crowd.stopSound();
-					if (day.isMidtermNext())
-					{	System.out.println("MIDTERM");
-						frame.addPanel(new Battle(student, day.getNextCourseName()), BackToSchool.Screen.BATTLE);
-						frame.switchPanel(BackToSchool.Screen.BATTLE);
-					}
-					else
-					{	System.out.println("CLASS");
-						MiniSplashPane miniSplash = new MiniSplashPane(student, day);
-						
-						frame.addPanel(miniSplash, BackToSchool.Screen.MINISPLASH);
-						frame.switchPanel(BackToSchool.Screen.MINISPLASH);
-						
-					}
-					day.attendClass();			
+				{	
+					handleDestination(true);			
+				}
+				else if (day.isLibrary() && (screenX+playerX==library.x) && (screenY+playerY-1==library.y))
+				{	
+					handleDestination(false);
 				}
 				
 				if (campus.isTraversable(screenX+playerX, screenY+playerY-1))
@@ -385,7 +402,6 @@ public class CampusPanel extends JPanel
 					else
 						updateTiles(Direction.UP);
 				}
-				repaint();
 			}
 			else if(e.getKeyCode() == KeyEvent.VK_LEFT)
 			{	
@@ -399,7 +415,6 @@ public class CampusPanel extends JPanel
 					else
 						updateTiles(Direction.LEFT);
 				}
-				repaint();
 			}
 			else if(e.getKeyCode() == KeyEvent.VK_DOWN)
 			{	
@@ -413,7 +428,6 @@ public class CampusPanel extends JPanel
 					else
 						updateTiles(Direction.DOWN);
 				}
-				repaint();
 			}
 			else if(e.getKeyCode() == KeyEvent.VK_RIGHT)
 			{	
@@ -427,15 +441,6 @@ public class CampusPanel extends JPanel
 					else
 						updateTiles(Direction.RIGHT);
 				}
-				repaint();
-			}
-			else if(e.getKeyCode() == KeyEvent.VK_B)
-			{
-				
-			}
-			else if(e.getKeyCode() == KeyEvent.VK_C)
-			{
-				
 			}
 			
 			// debug statements
@@ -460,30 +465,34 @@ public class CampusPanel extends JPanel
 	
 	public class Sound // Holds one audio file
 	{
-	  private AudioClip song; // Sound player
-	  private URL songPath; // Sound path
+		private AudioClip song; // Sound player
+		private URL songPath; // Sound path
 
-	  Sound(String filename){
-	     try
-	     {
-	    	// System.out.println("file:" + System.getProperty("user.dir") + "\\" + filename);
-	    	 songPath = new URL ("file:" + System.getProperty("user.dir") + "\\" + filename);
-	    	 song = Applet.newAudioClip(songPath);
-	    	// playSound();
-	     }catch(Exception e){
-	         e.printStackTrace();
-	         //e.getMessage();
-	     } // Satisfy the catch
-	  }
-
-	  public void playSound(){
-	     song.loop(); // Play 
-	  }
-	  public void stopSound(){
-	     song.stop(); // Stop
-	  }
-	  public void playSoundOnce(){
-	     song.play(); // Play only once
-	  }
+		Sound(String filename)
+		{
+			try
+			{
+				// System.out.println("file:" + System.getProperty("user.dir") + "\\" + filename);
+				songPath = new URL ("file:" + System.getProperty("user.dir") + "\\" + filename);
+				song = Applet.newAudioClip(songPath);
+				// playSound();
+			}catch(Exception e){
+				e.printStackTrace();
+				//e.getMessage();
+			} // Satisfy the catch
+		}
+		
+		public void playSound()
+		{
+			song.loop();
+		}
+		public void stopSound()
+		{
+		  song.stop();
+		}
+		public void playSoundOnce()
+		{
+			song.play(); // Play only once
+		}
 	}
 }

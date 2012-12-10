@@ -11,7 +11,7 @@ import javax.swing.ImageIcon;
 public class Tiles 
 {	
 	private BufferedImage corner, grass, land, fork, roadh, roadv, roof, wall, door, treeTop, treeTrunk, 
-				  signHum, signMath, signSci, flower;
+				  signHum, signMath, signSci, signLibrary, flower;
 	
 	public Tiles()
 	{
@@ -31,6 +31,7 @@ public class Tiles
 			signMath = ImageIO.read(new File("art/school/math_sign.jpg"));
 			signSci = ImageIO.read(new File("art/school/science_sign.jpg"));
 			signHum = ImageIO.read(new File("art/school/humanities.jpg"));
+			signLibrary = ImageIO.read(new File("art/school/library_sign.jpg"));
 		} 
 		catch (IOException e) 
 		{	e.printStackTrace();
@@ -101,6 +102,10 @@ public class Tiles
 					}
 					case RIGHT:
 					{	tile = signSci;
+						break;
+					}
+					case DOWN:
+					{	tile = signLibrary;
 						break;
 					}
 					default:

@@ -231,6 +231,11 @@ public class Campus
 		
 		campus[door.x][door.y-1] = tile;
 	}
+	
+	public void addLibrary(Point library) 
+	{
+		campus[library.x][library.y-1] = new Tile(Tile.Type.SIGN, Tile.Direction.DOWN);
+	}
 
 	public ArrayList<Point> getAdjacent(Point current) 
 	{

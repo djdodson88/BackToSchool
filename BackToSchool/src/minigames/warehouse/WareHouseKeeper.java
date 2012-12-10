@@ -543,7 +543,7 @@ public class WareHouseKeeper extends JPanel
 			increaseStats();
 			backgroundSong.stopSound();
 			
-			if((day.getDay() == 4 || day.getDay() == 7) && !day.isTranscriptShow())
+			if(day.isTranscript())
 			{
 				frame.switchPanel(BackToSchool.Screen.TRANSCRIPT);
 			}

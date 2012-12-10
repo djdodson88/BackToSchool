@@ -173,16 +173,7 @@ public class Transcript extends JPanel{
 	{
 		public void actionPerformed(ActionEvent event)
 		{
-			if(week == 3)
-			{
-				// Need to reset game!
-				//frame.switchPanel(BackToSchool.Screen.WELCOME);
-			}
-			else
-			{
-				day.setTranscriptState(true);
-				frame.switchPanel(BackToSchool.Screen.CAMPUS);
-			}
+			frame.switchPanel(BackToSchool.Screen.CAMPUS);
 		}	
 	}
 
