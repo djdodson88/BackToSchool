@@ -3,17 +3,14 @@ package main;
 
 public class Day {
 	public enum Course {HUMANITIES, MATH, SCIENCE};
-	private int day;
+	private int day, library;
 	private double midtermScore;
 	private boolean humMidterm, mathMidterm, sciMidterm, finalBattle;
 	private boolean humAttend, mathAttend, sciAttend;
 	private Course nextCourse, current;
-	private boolean isShown;
 	
 	public Day(int d)
 	{
-		isShown = false;
-		
 		day=d-1;
 		nextDay();		
 	}
@@ -26,11 +23,11 @@ public class Day {
 		humMidterm = (day==4)? true : false;
 		mathMidterm = (day==5) ? true : false;
 		sciMidterm = (day==6) ? true : false;
-		finalBattle = (day==10) ? true : false;
-		
+		finalBattle = (day==10) ? true : false;	
 		humAttend = mathAttend = sciAttend = false;
 		
 		nextCourse = Course.HUMANITIES;
+		library = (int)(Math.random()*3);
 	}
 	
 	public int getDay()
@@ -133,18 +130,21 @@ public class Day {
 		return finalBattle;
 	}
 	
-	
-	
-	public void setTranscriptState(boolean state)
+	public boolean isLibrary()
 	{
-		// such that transcript shown once
-		isShown = state;
+		if (library == 0 && nextCourse == Course.HUMANITIES)
+			return true;
+		else if (library == 1 && nextCourse == Course.MATH)
+			return true;
+		else if (library == 2 && nextCourse == Course.SCIENCE)
+			return true;
+		else
+			return false;
 	}
 	
-	public boolean isTranscriptShow()
+	public boolean isTranscript()
 	{
-		return isShown;
+		return (day == 4 && nextCourse == Course.HUMANITIES) ||
+				(day == 7 && nextCourse == Course.HUMANITIES);
 	}
-
-	
 }
