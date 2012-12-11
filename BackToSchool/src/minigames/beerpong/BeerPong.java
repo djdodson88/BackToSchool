@@ -93,10 +93,10 @@ public class BeerPong extends JPanel{
         
         setLayout( new BoxLayout(this, BoxLayout.Y_AXIS));
         
-        add(p_beer);
-        add(p_top_view);
         add(p_side_view);
         add(p_info);
+        add(p_top_view);
+        add(p_beer);
         
         p_side_view.setVisible(false);
         
@@ -151,8 +151,6 @@ public class BeerPong extends JPanel{
 		myActionMap.put("space", space);
 
         setPreferredSize(new Dimension(550, 450));
-       // KeyListener listener = new MyKeyListener();    
-       // this.addKeyListener(listener );
         setFocusable(true);
 
         int delay = 10; //milliseconds
@@ -163,7 +161,11 @@ public class BeerPong extends JPanel{
     
     //Reset the game
     public void resetGame(){           
-        p_top_view.setCupsVisible();
+    	p_info.winLabel.setVisible(false);
+    	p_info.pointLabel.setVisible(false);
+    	p_info.exitLabel.setVisible(false);
+    	
+    	p_top_view.setCupsVisible();
         gameState = GS_INIT;
         missCount = 0;
         hitCount = 0;
@@ -181,8 +183,6 @@ public class BeerPong extends JPanel{
     
     //Reset all the ball attributes to the default
     private void resetBall(){
-    	p_info.winLabel.setVisible(false);
-    	p_info.pointLabel.setVisible(false);
     	ball_prev_z_speed = 10000;
     	ball_prev_z_coordinate = INIT_BALL_CZ;
     	ball.setRadius(10);
@@ -332,11 +332,13 @@ public class BeerPong extends JPanel{
             
             if( gameState == GS_WON)
             {
+            	
             	p_info.setVisible(true);
             	p_info.winLabel.setVisible(true);
-            	p_info.winLabel.setText("You Won!");
+            	p_info.winLabel.setText("YOU WON");
             	p_info.pointLabel.setVisible(true);
-            	p_info.pointLabel.setText("WYou've Earned Points!");
+            	p_info.pointLabel.setText("POINTS EARNED " );
+            	p_info.exitLabel.setVisible(true);
             	
             	p_side_view.setVisible(false);
             	
@@ -348,9 +350,10 @@ public class BeerPong extends JPanel{
             {
             	p_info.setVisible(true);
             	p_info.winLabel.setVisible(true);
-            	p_info.winLabel.setText("You Lost!");
+            	p_info.winLabel.setText("YOU LOST");
             	p_info.pointLabel.setVisible(true);
-            	p_info.pointLabel.setText("LYou've Earned Points!");
+            	p_info.pointLabel.setText("POINTS EARNED: " );
+            	p_info.exitLabel.setVisible(true);
             	
             	p_side_view.setVisible(false);
             	t.stop();
@@ -467,7 +470,13 @@ public class BeerPong extends JPanel{
 		public void actionPerformed(ActionEvent e)
 		{	
 			if(gameState == GS_INIT){
-				ball.setSpeedY( ball.getSpeedY() - 1000 );
+				
+				if(ball.getSpeedY() > -32000  )
+					ball.setSpeedY( ball.getSpeedY() - 1000 );
+				
+				System.out.println("X " + ball.getSpeedX());
+				System.out.println("Y " + ball.getSpeedY());
+				System.out.println("Z " + ball.getSpeedZ());
 			}			
 		}
 	}
@@ -476,7 +485,9 @@ public class BeerPong extends JPanel{
 		public void actionPerformed(ActionEvent e)
 		{
 			if(gameState == GS_INIT){
-				ball.setSpeedY( ball.getSpeedY() + 1000 );
+				if(ball.getSpeedY() < 32000  )
+					ball.setSpeedY( ball.getSpeedY() + 1000 );
+				
 			}
 		}	
     }
@@ -485,7 +496,8 @@ public class BeerPong extends JPanel{
 		public void actionPerformed(ActionEvent e)
 		{
 			if(gameState == GS_INIT){
-				ball.setSpeedX( ball.getSpeedX() + 1000 );
+				if(ball.getSpeedX() < 55000  )
+					ball.setSpeedX( ball.getSpeedX() + 1000 );
 			}			
 		}		
     }
@@ -494,8 +506,9 @@ public class BeerPong extends JPanel{
 		public void actionPerformed(ActionEvent e)
 		{
 			if(gameState == GS_INIT){
-				 ball.setSpeedX( ball.getSpeedX() - 1000 );
-			}
+				if(ball.getSpeedX() > 0  )
+					ball.setSpeedX( ball.getSpeedX() - 1000 );
+			}			
 		}
     }
     
@@ -503,7 +516,8 @@ public class BeerPong extends JPanel{
 		public void actionPerformed(ActionEvent e)
 		{
 			if(gameState == GS_INIT){
-				ball.setSpeedZ( ball.getSpeedZ() + 500 );
+				if(ball.getSpeedZ() < 22500  )
+					ball.setSpeedZ( ball.getSpeedZ() + 500 );
 			}
 		}
     }
@@ -512,7 +526,8 @@ public class BeerPong extends JPanel{
 		public void actionPerformed(ActionEvent e)
 		{
 			if(gameState == GS_INIT){
-				ball.setSpeedZ( ball.getSpeedZ() - 500 );
+				if(ball.getSpeedZ() > -22500  )
+					ball.setSpeedZ( ball.getSpeedZ() - 500 );
 			}
 		}
     }
@@ -521,6 +536,7 @@ public class BeerPong extends JPanel{
 		public void actionPerformed(ActionEvent e)
 		{
 			if(gameState == GS_INIT){
+				if(ball.getSpeedX() > 0  )
 				 ball.setSpeedX( ball.getSpeedX() - 1000 );
 			}
 		}
@@ -530,7 +546,9 @@ public class BeerPong extends JPanel{
 		public void actionPerformed(ActionEvent e)
 		{
 			if(gameState == GS_INIT){
-				 ball.setSpeedX( ball.getSpeedX() + 1000 );
+				if(ball.getSpeedX() < 55000  )
+					ball.setSpeedX( ball.getSpeedX() + 1000 );
+				 
 			}
 		}
     }
@@ -539,7 +557,8 @@ public class BeerPong extends JPanel{
 		public void actionPerformed(ActionEvent e)
 		{
 			if(gameState == GS_INIT){
-				ball.setCenterZ(ball.getCenterZ() + 5);
+				if( ball.getCenterZ() < 80)
+					ball.setCenterZ(ball.getCenterZ() + 5);
 			}
 		}
     }
@@ -548,7 +567,8 @@ public class BeerPong extends JPanel{
 		public void actionPerformed(ActionEvent e)
 		{
 			if(gameState == GS_INIT){
-				ball.setCenterZ(ball.getCenterZ() - 5);
+				if( ball.getCenterZ() > 0)
+					ball.setCenterZ(ball.getCenterZ() - 5);
 			}
 		}
     }
@@ -557,11 +577,12 @@ public class BeerPong extends JPanel{
     private class R extends AbstractAction{
 		public void actionPerformed(ActionEvent e)
 		{
-			resetGame();
+	//		resetGame();
 		}
     }
     
   
+    
     //S for side view hide/show
 	private class S extends AbstractAction{
 		public void actionPerformed(ActionEvent e)

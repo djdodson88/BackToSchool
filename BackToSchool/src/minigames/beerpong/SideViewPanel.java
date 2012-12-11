@@ -26,9 +26,7 @@ public class SideViewPanel extends JPanel {
 		setPreferredSize( new Dimension(TopViewPanel.WIDTH, 125) );
 		setBackground( new Color(222,215,173));
 		add(l_ball);
-		add(someWord);
-		
-		
+		add(someWord);		
 	}
 	
 	public void paintComponent(Graphics g){
@@ -50,7 +48,5 @@ public class SideViewPanel extends JPanel {
           		 	125 - ball.getRealRadius() * 2 - ball.getCenterZ(), 
           		 	 ball.getRealRadius() * 2, ball.getRealRadius() * 2  );
         }
-        
-        
 	}
 }

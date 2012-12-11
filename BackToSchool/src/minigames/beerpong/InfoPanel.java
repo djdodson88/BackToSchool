@@ -6,44 +6,54 @@ import java.awt.Graphics;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 public class InfoPanel extends JPanel{
-	JLabel timerLabel;
+	
 	JLabel wordLabel;
 	JLabel winLabel;
 	JLabel pointLabel;
+	JLabel exitLabel;
 
 	public InfoPanel(){
 		setPreferredSize( new Dimension(TopViewPanel.WIDTH, 125) );
 		setBackground(Color.DARK_GRAY);       
 		
-		timerLabel = new JLabel("Time");
 		wordLabel  = new JLabel("Press S for Side View");
+		wordLabel.setForeground(Color.LIGHT_GRAY);
 		
-		winLabel = new JLabel("winLabel");
-		winLabel.setVisible(false);
+		exitLabel = new JLabel("EXIT");
+		exitLabel.setOpaque(true);
+		exitLabel.setForeground(Color.BLACK);
+		exitLabel.setBackground(Color.orange);
+		exitLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		winLabel = new JLabel("result");
+		winLabel.setOpaque(true);
+		winLabel.setForeground(Color.BLACK);
+		winLabel.setBackground(Color.orange);
+		winLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		pointLabel = new JLabel("pointLabel");
-		winLabel.setVisible(false);
-		
-		timerLabel.setOpaque(true);
-		winLabel.setOpaque(true);
 		pointLabel.setOpaque(true);
-		wordLabel.setOpaque(true);
+		pointLabel.setForeground(Color.BLACK);
+		pointLabel.setBackground(Color.orange);
+		pointLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		
-		add(timerLabel);
+		
 		add(winLabel);
 		add(pointLabel);
 		add(wordLabel);
+		add(exitLabel);
 		
 	}
 	
 	public void paintComponent(Graphics g){
 		
 		super.paintComponent(g);
-		timerLabel.setBounds(100,50,70,20);
-		wordLabel.setBounds(200,50,130,20);
-		winLabel.setBounds(300,50,70,20);
-		pointLabel.setBounds(400,50,70,20);
+		wordLabel.setBounds(400,10,130,20);
+		winLabel.setBounds(20,25,130,40);
+		pointLabel.setBounds(20,65,130,40);
+		exitLabel.setBounds(200,50, 130, 40);
 	}
 }
