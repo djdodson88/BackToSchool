@@ -10,28 +10,43 @@ import javax.swing.ImageIcon;
 
 public class Tiles 
 {	
-	private BufferedImage corner, grass, land, fork, roadh, roadv, roof, wall, door, treeTop, treeTrunk, 
-				  signHum, signMath, signSci, signLibrary, flower;
+	private BufferedImage cornerUR, cornerUL, cornerDR, cornerDL, grass, land, forkU, forkL, forkR, forkD, roadh, roadv, roof, wall, windowL, windowR, windowU, door, treeTop, treeTrunk, 
+				  signHum, signMath, signSci, signLibrary, signDorm, wallDorm, doorDorm, roofDorm, flower;
 	
 	public Tiles()
 	{
 		try 
-		{	corner = ImageIO.read(new File("art/school/roadcorner.jpg"));
+		{	
+			cornerUR = ImageIO.read(new File("art/school/cornerUR.jpg"));
+			cornerUL = ImageIO.read(new File("art/school/cornerUL.jpg"));
+			cornerDR = ImageIO.read(new File("art/school/cornerDR.jpg"));
+			cornerDL = ImageIO.read(new File("art/school/cornerDL.jpg"));
 			grass = ImageIO.read(new File("art/school/grass.jpg"));
 			flower = ImageIO.read(new File("art/school/flower.jpg"));
 			land = ImageIO.read(new File("art/school/land.jpg"));
-			fork = ImageIO.read(new File("art/school/roadfork.jpg"));
+			forkU = ImageIO.read(new File("art/school/forkU.jpg"));
+			forkR = ImageIO.read(new File("art/school/forkR.jpg"));
+			forkD = ImageIO.read(new File("art/school/forkD.jpg"));
+			forkL = ImageIO.read(new File("art/school/forkL.jpg"));
 			roadh = ImageIO.read(new File("art/school/road-side.jpg"));
 			roadv = ImageIO.read(new File("art/school/road.jpg"));
 			roof = ImageIO.read(new File("art/school/wallroof.jpg"));
+			roofDorm = ImageIO.read(new File("art/school/dorm_roof.jpg")); 
 			wall = ImageIO.read(new File("art/school/wall.jpg"));
+			wallDorm = ImageIO.read(new File("art/school/dorm_wall.jpg")); 
 			door = ImageIO.read(new File("art/school/door.jpg"));
+			doorDorm = ImageIO.read(new File("art/school/dorm_door.jpg"));
 			treeTop = ImageIO.read(new File("art/school/tree_top.jpg"));
 			treeTrunk = ImageIO.read(new File("art/school/treetrunk.jpg"));
 			signMath = ImageIO.read(new File("art/school/math_sign.jpg"));
 			signSci = ImageIO.read(new File("art/school/science_sign.jpg"));
 			signHum = ImageIO.read(new File("art/school/humanities.jpg"));
 			signLibrary = ImageIO.read(new File("art/school/library_sign.jpg"));
+			signDorm = ImageIO.read(new File("art/school/dorm_sign.jpg"));
+			windowL = ImageIO.read(new File("art/school/window-1.jpg"));
+			windowR = ImageIO.read(new File("art/school/window-2.jpg"));
+			windowU = ImageIO.read(new File("art/school/window.jpg"));
+			
 		} 
 		catch (IOException e) 
 		{	e.printStackTrace();
@@ -45,12 +60,20 @@ public class Tiles
 		switch (t.getType())
 		{
 			case CORNER:
-			{	tile = corner;
-				break;	
+			{	switch(t.getDirection())
+				{
+					case UP:	tile = cornerUR;
+								break;
+					case LEFT:	tile = cornerUL;
+								break;
+					case RIGHT: tile = cornerDR;
+								break;
+					case DOWN: 	tile = cornerDL;
+				}
+				break;
 			}
 			case GRASS:
-			{	
-				tile = grass;
+			{	tile = grass;
 				break;	
 			}
 			case LAND:
@@ -62,27 +85,46 @@ public class Tiles
 				break;
 			}
 			case FORK:
-			{	tile = fork;
-				break;	
+			{	switch(t.getDirection())
+				{
+					case UP:	tile = forkU;
+								break;
+					case LEFT:	tile = forkL;
+								break;
+					case RIGHT: tile = forkR;
+								break;
+					case DOWN: 	tile = forkD;
+				}
+				break;
 			}
-			case ROADH:
-			{	tile = roadh;
-				break;	
-			}
-			case ROADV:
-			{	tile = roadv;
+			case ROAD:
+			{	if (t.getDirection() == Tile.Direction.UP)
+					tile = roadv;
+				else
+					tile = roadv;
 				break;	
 			}
 			case ROOF:
-			{	tile = roof;
+			{	if (t.getDirection() == Tile.Direction.RIGHT)
+					tile = roofDorm;
+				else
+					tile = roof;
 				break;	
 			}
 			case WALL:
-			{	tile = wall;
+			{	if (t.getDirection() == Tile.Direction.RIGHT)
+					tile = wallDorm;
+				else if (t.getDirection() == Tile.Direction.LEFT)
+					tile = signDorm;
+				else
+					tile = wall;
 				break;	
 			}
 			case DOOR:
-			{	tile = door;
+			{	if (t.getDirection() == Tile.Direction.RIGHT)
+					tile = doorDorm;
+				else
+					tile = door;
 				break;
 			}
 			case TREE:
@@ -110,7 +152,6 @@ public class Tiles
 					}
 					default:
 					{	tile = signHum;
-						break;
 					}
 				}		
 				break;

@@ -4,7 +4,7 @@ package main;
 public class Tile 
 {
 	public enum Direction {UP, RIGHT, DOWN, LEFT}
-	public enum Type {CORNER, WALL, ROOF, GRASS, LAND, FLOWER, ROADV, ROADH, FORK, DOOR, TREE, SIGN}
+	public enum Type {CORNER, WALL, WINDOW, ROOF, GRASS, LAND, FLOWER, ROAD, FORK, DOOR, TREE, SIGN}
 	private Type type;
 	private Direction dir;
 	
