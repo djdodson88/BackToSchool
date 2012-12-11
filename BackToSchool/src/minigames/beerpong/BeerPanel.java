@@ -23,11 +23,11 @@ public class BeerPanel extends JPanel{
     
     public BeerPanel(){
         
-        setPreferredSize(new Dimension(TablePanel.WIDTH, 50));
+        setPreferredSize(new Dimension(TopViewPanel.WIDTH, 50));
         setBackground(Color.BLACK);
         setLayout( new BoxLayout(this, BoxLayout.X_AXIS));
         
-        p_scala = new ColorScalaPanel(500, 50, 10, (float) 0, (float) 0.4, (float)  1, (float)  1);
+        p_scala = new ColorScalaPanel(500, 50, 10, (float) 0.1, (float) 0.2, (float)  1, (float)  1);
         
         repaint();
         revalidate();

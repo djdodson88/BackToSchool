@@ -5,19 +5,18 @@ package minigames.beerpong;
  *
  * @author Cagatay Sahin
  */
+
 public class Sprite {
     
-    //!!Tentative!!
-    boolean hit;
     boolean out;
     
     final static int PRECISION = 10000;
             
     private int radius;
     
-    private int center_x;
-    private int center_y;
-    private int center_z;
+    protected int center_x;
+    protected int center_y;
+    protected int center_z;
     
     private int speed_x;
     private int speed_y;
@@ -30,14 +29,10 @@ public class Sprite {
     //Default constructor
     public Sprite(){
         out = false;
-        hit = false;
     }
-    
     
     public Sprite( int r, int c_x, int c_y, int c_z, int s_x, int s_y, int s_z  ){
         out = false;
-        hit = false;
-        
         radius = r;
         center_x = c_x * PRECISION;
         center_y = c_y * PRECISION;
@@ -62,7 +57,7 @@ public class Sprite {
         center_z += speed_z;
         
         //If the spirit hits an x border (x < 0 )
-        if( getCenterX() < 0 || getCenterX() > TablePanel.WIDTH )
+        if( getCenterX() < 0 || getCenterX() > TopViewPanel.WIDTH )
         {
             //System.out.println("MISS X");
             out = true;
@@ -75,7 +70,7 @@ public class Sprite {
         }
         
         //If the spirit hits a y border (y < 0 )
-        if( getCenterY() < 0 || getCenterY() > TablePanel.HEIGHT )
+        if( getCenterY() < 0 || getCenterY() > TopViewPanel.HEIGHT )
         {
             out = true;
             //System.out.println("MISS Y");
@@ -99,9 +94,14 @@ public class Sprite {
         
     }
     
+    
     //Getter methods
     public int getRadius(){
-        return radius + getCenterZ() / 2;
+        return radius + getCenterZ() / 5;
+    }
+    
+    public int getRealRadius(){
+    	return radius;
     }
     
     public int getCenterX(){
@@ -143,10 +143,6 @@ public class Sprite {
     
     public boolean getOut(){
         return out;
-    }
-    
-    public boolean getHit(){
-        return hit;
     }
     
     //Setter methods
@@ -194,7 +190,4 @@ public class Sprite {
         this.out = out;
     }
     
-    public void setHit( boolean hit){
-        this.hit = hit;
-    }
 }
