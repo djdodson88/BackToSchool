@@ -50,7 +50,7 @@ public class ClassroomPanel extends JLayeredPane
 		this.setPreferredSize(new Dimension(800,600));
 		this.setBounds(0, 0, 800, 600);
 
-		//game = 1;		// for testing (doesn't change splash screens preceeding, of course)
+		//game = 5;		// for testing (doesn't change splash screens preceeding, of course)
 		switch(game)
 		{
 		

@@ -93,6 +93,11 @@ public class CampusPanel extends JPanel
 		animate = new Timer(FRAMERATE, new AnimationListener());
 	}
 	
+	public void reset(){
+		student = new Player();
+		day = new Day(1);
+	}
+	
 	protected void sendFrame(BackToSchool frame)
 	{
 		this.frame = frame;

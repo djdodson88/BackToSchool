@@ -106,6 +106,7 @@ public class BackToSchool extends JFrame
 				finalBattle.requestFocus();
 				break;
 			case WELCOME: 
+				campus.reset();
 				welcome.requestFocus();
 				break;
 			case LIBRARY:

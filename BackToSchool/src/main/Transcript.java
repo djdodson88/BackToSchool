@@ -176,7 +176,8 @@ public class Transcript extends JPanel{
 			if(day.getDay() == 10)
 			{
 				//end game
-				System.exit(0);
+				//System.exit(0);
+				frame.switchPanel(BackToSchool.Screen.WELCOME);
 			}
 			else
 			{
