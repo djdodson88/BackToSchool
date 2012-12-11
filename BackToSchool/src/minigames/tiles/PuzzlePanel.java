@@ -4,13 +4,13 @@ import java.applet.AudioClip;
 import java.awt.*;
 import java.awt.event.*;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Timer;
-import java.util.concurrent.LinkedBlockingQueue;
 import javax.swing.*;
+
 import main.BackToSchool;
 import main.Player;
 import main.Day;
-import minigames.fruit.Fruit_Game.Sound;
 
 public class PuzzlePanel extends JPanel implements ActionListener
 {	
@@ -20,27 +20,25 @@ public class PuzzlePanel extends JPanel implements ActionListener
 		eleven, twelve, thirteen, fourteen, fifteen, sixteen, blank;
 	private Rectangle oneR, twoR, threeR, fourR, fiveR, sixR, sevenR, eightR, nineR, tenR, 
 		elevenR, twelveR, thirteenR, fourteenR, fifteenR, sixteenR;
-	private int indexI, indexJ, xPad, yPad;
+	private int indexI, indexJ, xPad, yPad, shuffles;
 	private static int PWIDTH=550, PHEIGHT=450, TILE=100;
-	private boolean finished;
+	private boolean finished, gameOver;
 	private Player player;
 	private Day day;
 	private BackToSchool frame;
 	
 	private Clock gameTimer;
 	private Timer timer;
-	
 	private int startTime;
-	private boolean gameOver;
 	
 	private JButton exit;
+	private JLabel endLabel;
 	
 	public PuzzlePanel(Player student, Day current, BackToSchool frame)
 	{
 		player = student;
 		day = current;
 		this.frame = frame;
-		startTime = 0;
 		
 		backgroundSong = new Sound("sounds/Background/POL-water-world-short.wav");
 		backgroundSong.playSound();
@@ -68,71 +66,74 @@ public class PuzzlePanel extends JPanel implements ActionListener
 		int dayNum = day.getDay();
 		if (dayNum <= 3)
 		{
-			startTime = 60;
+			startTime = 30;
 			indexI = indexJ = 3;
 			eleven = blank;
+			shuffles = 12;
 		}
 		else if (dayNum > 3 && dayNum <=6)
 		{	
-			startTime = 75;
+			startTime = 50;
 			indexI = 4;
 			indexJ = 3;
 			twelve = blank;
+			shuffles = 15;
 		}
 		else
 		{
 			startTime = 90;
-			indexI=indexJ = 4;
+			indexI = indexJ = 4;
 			sixteen = blank;
+			shuffles = 20;
 		}
-		
-		//startTime = 5; //debug
-		gameTimer = new Clock(startTime);
 		
 		puzzle = new ImageIcon[indexI][indexJ];
 		xPad = (PWIDTH-(TILE*indexI))/2;
 		yPad = (PHEIGHT-(TILE*indexJ))/2;
 		
-		
 		Point p = new Point(xPad,yPad);
 		oneR = new Rectangle(p.x,p.y,TILE,TILE);
 		twoR = new Rectangle(p.x+TILE,p.y,TILE,TILE);
 		threeR = new Rectangle(p.x+2*TILE,p.y,TILE,TILE);
-		fourR = new Rectangle(p.x+3*TILE, p.y,TILE,TILE);
+		fourR = new Rectangle(-1 , -1, 0, 0);
 		
 		fiveR = new Rectangle(p.x,p.y+TILE,TILE,TILE);
 		sixR = new Rectangle(p.x+TILE,p.y+TILE,TILE,TILE);
 		sevenR = new Rectangle(p.x+2*TILE,p.y+TILE,TILE,TILE);
-		eightR = new Rectangle(p.x+3*TILE,p.y+TILE,TILE,TILE);
+		eightR = new Rectangle(-1, -1, 0, 0);
 		
 		nineR = new Rectangle(p.x,p.y+2*TILE,TILE,TILE);
 		tenR = new Rectangle(p.x+TILE,p.y+2*TILE,TILE,TILE);
 		elevenR = new Rectangle(p.x+2*TILE,p.y+2*TILE,TILE,TILE);
-		twelveR = new Rectangle(p.x+3*TILE,p.y+2*TILE,TILE,TILE);
+		twelveR = new Rectangle(-1, -1, 0, 0);
 		
-		thirteenR = new Rectangle(p.x,p.y+3*TILE,TILE,TILE);
-		fourteenR = new Rectangle(p.x+TILE,p.y+3*TILE,TILE,TILE); 
-		fifteenR = new Rectangle(p.x+2*TILE,p.y+3*TILE,TILE,TILE);
-		sixteenR = new Rectangle(p.x+3*TILE,p.y+3*TILE,TILE,TILE); 
+		thirteenR = fourteenR = fifteenR = sixteenR = new Rectangle(-1, -1, 0, 0);
 
 		newPuzzle();
 		finished = false;
-		gameTimer.start();
 		
 		// set up exit button
-		setLayout(null);
 		exit = new JButton(new ImageIcon("art/buttons/exit_btn.jpg"));
-		exit.setBounds(PWIDTH-120, PHEIGHT-40, 100,30);
-		this.add(exit);
+		//exit.setBounds(PWIDTH-120, PHEIGHT-40, 100,30);
+		exit.setBounds(250,210,100,30);
 		exit.addActionListener(this);
 		exit.setVisible(false);
-		
+	    endLabel = new JLabel();
+		endLabel.setFont(new Font("Serif", Font.PLAIN, 20));
+		endLabel.setVisible(false);
+
+		add(endLabel, BorderLayout.SOUTH);
+		add(exit);
 		addMouseListener(new PuzzleListener());
 		setPreferredSize(new Dimension(PWIDTH,PHEIGHT));
 		setBackground(Color.gray);
 		requestFocus();
 		
-		gameLoop();
+		timer = new Timer();
+		int fps = 80;
+		timer.schedule(new Loop(), 0, 1000/fps);
+		gameTimer = new Clock(startTime);
+		gameTimer.start();
 	}
 	
 	private void increaseStats(double score)
@@ -165,66 +166,99 @@ public class PuzzlePanel extends JPanel implements ActionListener
 			// 75-50
 			percentage = 0.4;
 		}
-		else if(endTime <= startTime * .30)
+		else if(endTime <= startTime * .4)
 		{
-			// 50-30
+			// 50-25
 			percentage = 0.3;
 		}
 		else
 		{
-			// 30-0
-			percentage = 0.1;
+			// 25-0
+			percentage = 0.2;
 		}
-		
 		return percentage;
 	}
 	
 	private void newPuzzle()
 	{	
-		LinkedBlockingQueue<ImageIcon> queue = new LinkedBlockingQueue<ImageIcon>();
-		queue.add(one);
-		queue.add(two);
-		queue.add(three);
-		queue.add(five);
-		queue.add(six);
-		queue.add(seven);
-		queue.add(nine);
-		queue.add(ten);
-		queue.add(eleven);
-
+		Point p = new Point(xPad,yPad);
+		
+		puzzle[0][0]=one;
+		puzzle[1][0]=two;
+		puzzle[2][0]=three;
+		puzzle[0][1]=five; 
+		puzzle[1][1]=six;
+		puzzle[2][1]=seven;
+		puzzle[0][2]=nine; 
+		puzzle[1][2]=ten; 
+		puzzle[2][2]=eleven;
 		indexI=indexJ=2;
+		Point current = new Point(2,2);
 		
-		if (day.getDay() > 3)
-		{	queue.add(four);		
-			queue.add(eight);
-			queue.add(twelve);
+		if (day.getDay()>3)
+		{	puzzle[3][0]=four;
+			puzzle[3][1]=eight;
+			puzzle[3][2]=twelve;
 			indexI = 3;
-		}
-		if (day.getDay() > 6)
-		{
-			queue.add(thirteen);		
-			queue.add(fourteen);
-			queue.add(fifteen);
-			queue.add(sixteen);
-			indexJ=3;
+			current = new Point(3,2);
+			fourR = new Rectangle(p.x+3*TILE, p.y,TILE,TILE);
+			eightR = new Rectangle(p.x+3*TILE,p.y+TILE,TILE,TILE);
+			twelveR = new Rectangle(p.x+3*TILE,p.y+2*TILE,TILE,TILE);
 		}
 		
-		for (int i=0; i<=indexI; i++)
-		{	for (int j=0; j<=indexJ; j++)
-			{
-				int skip = (int)((Math.random())*10);
-				for (int k=skip; k>0; k--)
-					if (queue.size()>1)
-						queue.add(queue.poll());
-
-				puzzle[i][j] = queue.poll();	
-			}
+		if (day.getDay()>6) 
+		{	puzzle[0][3]=thirteen;
+			puzzle[1][3]=fourteen;
+			puzzle[2][3]=fifteen; 
+			puzzle[3][3]=sixteen;
+			indexI = indexJ = 3;
+			current = new Point(3,3);
+			thirteenR = new Rectangle(p.x,p.y+3*TILE,TILE,TILE);
+			fourteenR = new Rectangle(p.x+TILE,p.y+3*TILE,TILE,TILE); 
+			fifteenR = new Rectangle(p.x+2*TILE,p.y+3*TILE,TILE,TILE);
+			sixteenR = new Rectangle(p.x+3*TILE,p.y+3*TILE,TILE,TILE); 
 		}
-		repaint();
+		
+		ArrayList<Point> swaps = new ArrayList<Point>();
+		Point next = current, last = null;
+		for (int s=0; s < shuffles; s++)
+		{
+			System.out.println("Current:" + current);
+			swaps.clear();
+			if (current.x-1 >= 0)
+				swaps.add(new Point(current.x-1, current.y));
+			if (current.x+1 <= indexI)
+				swaps.add(new Point(current.x+1, current.y));
+			if (current.y-1 >= 0)
+				swaps.add(new Point(current.x, current.y-1));
+			if (current.y+1 <= indexJ)
+				swaps.add(new Point(current.x, current.y+1));
+			
+			System.out.println("Options:" + swaps);
+			
+			if (last != null)
+			{	while (next.equals(last) || next.equals(current))
+				{	
+					int choice = (int)(Math.random()*swaps.size());
+					next = swaps.get(choice);
+				}
+			}
+			else
+				next = swaps.get((int)(Math.random()*swaps.size()));
+			
+			System.out.println("Next:" + next);
+
+			ImageIcon tmp = puzzle[current.x][current.y];
+			puzzle[current.x][current.y] = puzzle[next.x][next.y];
+			puzzle[next.x][next.y] = tmp;
+		
+			last = current;
+			current = next;
+		}	
 	}
 	
-	public void actionPerformed(ActionEvent e) {
-
+	public void actionPerformed(ActionEvent e) 
+	{
 		Object src = e.getSource();
 		backgroundSong.stopSound();
 		if(src == exit)
@@ -243,6 +277,7 @@ public class PuzzlePanel extends JPanel implements ActionListener
 	
 	public void paintComponent(Graphics g)
 	{
+		super.paintComponent(g);
 		g.setColor(Color.LIGHT_GRAY);
 		g.fillRect(0, 0, PWIDTH, PHEIGHT);
 		
@@ -250,7 +285,11 @@ public class PuzzlePanel extends JPanel implements ActionListener
 		{
 			for (int j=0; j<=indexJ; j++)
 			{
-				puzzle[i][j].paintIcon(this, g, (i*TILE)+xPad, (j*TILE)+yPad);
+				try {
+					puzzle[i][j].paintIcon(this, g, (i*TILE)+xPad, (j*TILE)+yPad);
+				} catch (Exception e){
+					System.out.println("ASdsadsa");
+				}
 			}
 		}
 		
@@ -266,16 +305,20 @@ public class PuzzlePanel extends JPanel implements ActionListener
 		
 		if (finished)
 		{
-			gameTimer.timeStop();
-			g.drawString("CONGRATULATIONS", PWIDTH/2 - 80, 20);
-			exit.setVisible(true);
-
-		}
-		else if (gameTimer.timeRemaining() == 0 && !finished)
-		{
-			gameTimer.timeStop();
-			g.drawString("GAME OVER", PWIDTH/2 - 50, 20);
-			exit.setVisible(true);
+			if (gameTimer.timeRemaining() > 0)
+			{
+				increaseStats(scorePerformance());
+				endLabel.setText("Congrats! You earned "+scorePerformance()+ " exp");
+				endLabel.setVisible(true);
+				exit.setVisible(true);
+			}
+			else		
+			{
+				increaseStats(.1);
+				endLabel.setText("Out of time... You earned .1 exp");
+				endLabel.setVisible(true);
+				exit.setVisible(true);
+			}
 		}
 	}
 	
@@ -298,7 +341,7 @@ public class PuzzlePanel extends JPanel implements ActionListener
 	{
 		public void mousePressed(MouseEvent e)
 		{
-			if (!finished)
+			if (!finished && !gameOver)
 			{
 				int x = e.getX();
 				int y = e.getY();
@@ -401,41 +444,42 @@ public class PuzzlePanel extends JPanel implements ActionListener
 					{
 						finished = true;
 						gameTimer.timeStop();
-						gameOver = true;
 					}
 					repaint();
 				}	
 			}
-			else // isFinished
-			{
-				
-				//newPuzzle();
-				gameOver = true;
-				gameTimer.timeStop();
-				increaseStats(scorePerformance());
-				
-			
-				
-			}
 		}
-	}
-	
-	public void gameLoop()
-	{
-		timer = new Timer();
-		int fps = 80;
-		timer.schedule(new Loop(), 0, 1000/fps);
-
 	}
 
 	public class Loop extends java.util.TimerTask
 	{
 		public void run()
 		{
-			repaint(); // render
-
-			if(gameOver)
+			repaint();
+			
+			if(gameTimer.timeRemaining() == 0)
 			{
+				gameOver = true;
+				gameTimer.timeStop();
+				timer.cancel();
+			}
+			
+			if (gameOver)
+			{
+				if (finished)
+				{
+					increaseStats(scorePerformance());
+					endLabel.setText("Congrats! You earned "+scorePerformance()+ " exp");
+					endLabel.setVisible(true);
+					exit.setVisible(true);
+				}
+				else		
+				{
+					increaseStats(.1);
+					endLabel.setText("Out of time... You earned .1 exp");
+					endLabel.setVisible(true);
+					exit.setVisible(true);
+				}
 				timer.cancel();
 			}
 		}
