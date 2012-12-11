@@ -69,7 +69,7 @@ public class CampusPanel extends JPanel
 		
 		student = new Player();
 		player = playerDown;
-		day = new Day(10);
+		day = new Day(1);
 		
 		crowd = new Sound("sounds/crowd.wav");
 		bell = new Sound("sounds/schoolbell.mp3");
