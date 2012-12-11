@@ -33,7 +33,8 @@ public class SideViewPanel extends JPanel {
 	
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
-		someWord.setBounds(480,0,60,40);
+		someWord.setBounds(480,0,160,40);
+		someWord.setOpaque(false);
 		g.drawImage(img, 0, 0, this); 
 		if( BeerPong.gameState == BeerPong.GS_INIT ) 
         {
@@ -52,5 +53,4 @@ public class SideViewPanel extends JPanel {
         
         
 	}
-	
 }

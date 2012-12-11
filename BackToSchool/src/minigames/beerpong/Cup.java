@@ -24,6 +24,10 @@ public class Cup extends Sprite{
 		setCenterX ( init_center_x );
 		setCenterY ( init_center_y );
 		setCenterZ ( init_center_z );
+		setSpeedX(0);
+		setSpeedY(0);
+		setSpeedZ(0);
+		
 	}
 	
 	public void setHit( boolean hit){

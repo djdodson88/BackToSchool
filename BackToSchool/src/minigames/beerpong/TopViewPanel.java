@@ -111,8 +111,8 @@ public class TopViewPanel extends JPanel{
     @Override
     public void paintComponent(Graphics g) {
     	super.paintComponent(g);
-    	someWord.setBounds(10,10,70,20);
-    	
+    	someWord.setBounds(10,10,60,40);
+    	someWord.setOpaque(false);
     	timeLeft = gameTimer.timeRemaining();
 		Font font = new Font("Arial", Font.BOLD, 50);
 		Font markup = new Font("Arial", Font.PLAIN, 50);
@@ -160,6 +160,8 @@ public class TopViewPanel extends JPanel{
                      ball.getCenterY() - ball.getRadius(), 
                      ball.getRadius() * 2, ball.getRadius() * 2);
              
+             
+             if(ball.getCenterZ() % 2 == 0)
              l_ball.setIcon( new ImageIcon( originalBallIcon.getImage().getScaledInstance(ball.getRadius() * 2, 
                                             ball.getRadius() * 2, 
                                             Image.SCALE_SMOOTH) ) );
@@ -167,7 +169,6 @@ public class TopViewPanel extends JPanel{
         }
         
     }
-    
     
     
 }//End of class TablePanel

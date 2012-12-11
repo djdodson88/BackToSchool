@@ -67,7 +67,7 @@ public class BeerPong extends JPanel{
     
     Timer t;
     public BeerPong(Player player, Day current, BackToSchool frame){
-		level = 1;
+		level = 6;
 		sidePanelVisible = false;
 		
     	backgroundSong = new Sound("sounds/Background/POL-stable-boy-short.wav");
@@ -79,12 +79,12 @@ public class BeerPong extends JPanel{
         
         cupList = new ArrayList<Cup>();
        
+        cupList.add( new Cup(430, TopViewPanel.HEIGHT / 2, 0 ) );
         cupList.add( new Cup(465, TopViewPanel.HEIGHT / 2 - 20, 0 ) );
+        cupList.add( new Cup(465, TopViewPanel.HEIGHT / 2 + 20, 0) );
         cupList.add( new Cup(500, TopViewPanel.HEIGHT / 2 - 40, 0 ) );
         cupList.add( new Cup(500, TopViewPanel.HEIGHT / 2, 0 ) );
         cupList.add( new Cup(500, TopViewPanel.HEIGHT / 2 + 40, 0) );
-        cupList.add( new Cup(465, TopViewPanel.HEIGHT / 2 + 20, 0) );
-        cupList.add( new Cup(430, TopViewPanel.HEIGHT / 2, 0 ) );
                
         p_info = new InfoPanel();
         p_beer = new BeerPanel();
@@ -181,6 +181,8 @@ public class BeerPong extends JPanel{
     
     //Reset all the ball attributes to the default
     private void resetBall(){
+    	p_info.winLabel.setVisible(false);
+    	p_info.pointLabel.setVisible(false);
     	ball_prev_z_speed = 10000;
     	ball_prev_z_coordinate = INIT_BALL_CZ;
     	ball.setRadius(10);
@@ -207,6 +209,8 @@ public class BeerPong extends JPanel{
         ball.setOut(false);
     }
     
+    
+    //Reset cups to default
     private void resetCups(){
        
         (cupList.get(0)).reset();
@@ -215,14 +219,6 @@ public class BeerPong extends JPanel{
         (cupList.get(3)).reset();
         (cupList.get(4)).reset();
         (cupList.get(5)).reset();
-        
-        (cupList.get(0)).setSpeedY(-10000);
-        (cupList.get(1)).setSpeedY(-10000);
-        (cupList.get(2)).setSpeedX(-10000);
-        (cupList.get(3)).setSpeedY(10000);
-        (cupList.get(4)).setSpeedY(10000);
-        (cupList.get(5)).setSpeedX(-10000);
-        
    }
     
     
@@ -230,12 +226,11 @@ public class BeerPong extends JPanel{
     ActionListener onEachFrame = new ActionListener() 
     {
         public void actionPerformed(ActionEvent evt) 
-        {
-        	danceCups();
+        {	
         	
-            if( gameState == GS_INIT)
+            if( gameState != GS_WON || gameState != GS_LOST)
             {
-               
+            	danceCups();
             }
             
             if( gameState == GS_MOTION)
@@ -256,10 +251,10 @@ public class BeerPong extends JPanel{
                    for( int i = 0; i < cupList.size() ; i++)
                    {
                        if( (ball.getCenterZ() <= 0) 
-                        && !((Cup) cupList.get(i)).getHit()  
-                        && ((Cup) cupList.get(i)).getDistance(ball) < ((Cup) cupList.get(i)).getRadius() * 1.5 )
+                        && !(cupList.get(i)).getHit()  
+                        && ((int) (cupList.get(i)).getDistance(ball)) < (60 - 5 * level)  )
                        {
-                           ((Cup) cupList.get(i)).setHit(true);
+                           (cupList.get(i)).setHit(true);
                            hitCount++;
                            gameState = BeerPong.GS_HIT;
                            break;
@@ -294,6 +289,7 @@ public class BeerPong extends JPanel{
             
             if( gameState == GS_MISS)
             {
+            	
                 p_beer.p_scala.setVisibleCount(missCount);
                 p_beer.repaint();
                 p_beer.revalidate();
@@ -302,21 +298,61 @@ public class BeerPong extends JPanel{
                 {
                     gameState = GS_LOST;
                 }
+                
                 else
                 {
                     initBall();
+                    
+                    //Increase x and y speed of each cup
+                    for(int i = 0; i < cupList.size(); i++ )
+                    {
+                    	if( (cupList.get(i)).getSpeedX() < 0 )
+                    	{
+                    		(cupList.get(i)).setSpeedX( (cupList.get(i)).getSpeedX() - 3000 );
+                    	}
+                    	else
+                    	{
+                    		(cupList.get(i)).setSpeedX( (cupList.get(i)).getSpeedX() + 3000 );
+                    	}
+                    	
+//                    	if( (cupList.get(i)).getSpeedY() < 0 )
+//                    	{
+//                    		(cupList.get(i)).setSpeedY( (cupList.get(i)).getSpeedY() - 5000 );
+//                    	}
+//                    	else
+//                    	{
+//                    		(cupList.get(i)).setSpeedY( (cupList.get(i)).getSpeedY() + 5000 );
+//                    	}      	
+                    	
+                    }
+                    
                     gameState = GS_INIT;
                 }
             }
             
             if( gameState == GS_WON)
             {
+            	p_info.setVisible(true);
+            	p_info.winLabel.setVisible(true);
+            	p_info.winLabel.setText("You Won!");
+            	p_info.pointLabel.setVisible(true);
+            	p_info.pointLabel.setText("WYou've Earned Points!");
+            	
+            	p_side_view.setVisible(false);
+            	
             	t.stop();
             	increaseStats();
             }
             
             if( gameState == GS_LOST)
             {
+            	p_info.setVisible(true);
+            	p_info.winLabel.setVisible(true);
+            	p_info.winLabel.setText("You Lost!");
+            	p_info.pointLabel.setVisible(true);
+            	p_info.pointLabel.setText("LYou've Earned Points!");
+            	
+            	p_side_view.setVisible(false);
             	t.stop();
             	increaseStats();
             }
@@ -350,27 +386,25 @@ public class BeerPong extends JPanel{
     	(cupList.get(4)).move();
     	(cupList.get(5)).move();
     	
-        if( (cupList.get(0)).getInitCenterY() - (cupList.get(0)).getCenterY() >= 50 )
-    	{
-        	(cupList.get(0)).setSpeedY(10000);
-            (cupList.get(1)).setSpeedY(10000);
-            (cupList.get(2)).setSpeedX(10000);
-            (cupList.get(3)).setSpeedY(-10000);
-            (cupList.get(4)).setSpeedY(-10000);
-            (cupList.get(5)).setSpeedX(+10000);
-        	
+    	//If the cup arrives in the maximum range, set velocities to negative, so it returns back
+        //If the cup arrives in the initial place, set velocities to negative again
+    	//Do this for each cup
+    	for(int i = 0; i < cupList.size(); i++ )
+    	{	
+    		//Do it on the X coordinate
+    		if( (cupList.get(i)).getInitCenterX() - (cupList.get(i)).getCenterX() > 50 ||
+    	        (cupList.get(i)).getInitCenterX() - (cupList.get(i)).getCenterX() < 0	)
+    		{
+    			(cupList.get(i)).setSpeedX( (cupList.get(i)).getSpeedX() * -1 );
+    		}
+    		
+    		//Do it on the Y coordinate
+    		if( (cupList.get(i)).getInitCenterY() - (cupList.get(i)).getCenterY() > 50 ||
+        	    (cupList.get(i)).getInitCenterY() - (cupList.get(i)).getCenterY() < 0	)
+    		{
+    			(cupList.get(i)).setSpeedY( (cupList.get(i)).getSpeedY() * -1 );
+    		}
     	}
-        
-        if( (cupList.get(0)).getInitCenterY() - (cupList.get(0)).getCenterY() <= 0 )
-        {
-        	(cupList.get(0)).setSpeedY(-10000);
-            (cupList.get(1)).setSpeedY(-10000);
-            (cupList.get(2)).setSpeedX(-10000);
-            (cupList.get(3)).setSpeedY(10000);
-            (cupList.get(4)).setSpeedY(10000);
-            (cupList.get(5)).setSpeedX(-10000);        	
-        }
-        
     }
     
     public void increaseStats(){
