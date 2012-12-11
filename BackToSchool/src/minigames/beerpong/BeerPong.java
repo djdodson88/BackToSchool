@@ -49,9 +49,11 @@ public class BeerPong extends JPanel{
     int ball_prev_z_coordinate;
     int level;
     
+    boolean sidePanelVisible;
+    
     JButton exit;
     
-    JPanel p_buttons;
+    InfoPanel p_info;
     TopViewPanel p_top_view;
     SideViewPanel p_side_view;
     BeerPanel p_beer;
@@ -65,10 +67,12 @@ public class BeerPong extends JPanel{
     
     Timer t;
     public BeerPong(Player player, Day current, BackToSchool frame){
-		backgroundSong = new Sound("sounds/Background/POL-stable-boy-short.wav");
-		//backgroundSong.playSound();
+		level = 1;
+		sidePanelVisible = false;
 		
-    	this.frame = frame;
+    	backgroundSong = new Sound("sounds/Background/POL-stable-boy-short.wav");
+		//backgroundSong.playSound();
+		this.frame = frame;
 		student = player;
 		day = current;
         ball = new Sprite();
@@ -82,19 +86,19 @@ public class BeerPong extends JPanel{
         cupList.add( new Cup(465, TopViewPanel.HEIGHT / 2 + 20, 0) );
         cupList.add( new Cup(430, TopViewPanel.HEIGHT / 2, 0 ) );
                
-        p_buttons = new JPanel();
+        p_info = new InfoPanel();
         p_beer = new BeerPanel();
         p_top_view = new TopViewPanel( cupList, ball, day);
         p_side_view = new SideViewPanel( ball);        		
         
         setLayout( new BoxLayout(this, BoxLayout.Y_AXIS));
         
-        p_buttons.setPreferredSize(new Dimension(TopViewPanel.WIDTH, 125));
-        p_buttons.setBackground(Color.GREEN);       
-        
         add(p_beer);
         add(p_top_view);
         add(p_side_view);
+        add(p_info);
+        
+        p_side_view.setVisible(false);
         
         // Adding KeyBindings
         InputMap myInputMap = new InputMap();
@@ -112,6 +116,7 @@ public class BeerPong extends JPanel{
 		shift_down shift_down = new shift_down();
 		R r = new R();
 		Space space = new Space();
+		S s = new S();
 		
 		myInputMap = this.getInputMap(WHEN_IN_FOCUSED_WINDOW);
 		myInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, InputEvent.CTRL_MASK), "ctrl_up");
@@ -124,7 +129,7 @@ public class BeerPong extends JPanel{
 		myInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0, false), "left");
 		myInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, InputEvent.SHIFT_MASK), "shift_up");
 		myInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, InputEvent.SHIFT_MASK), "shift_down");	
-		myInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_K, 0, false), "k");
+		myInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0, false), "s");
 		myInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_R, 0, false), "r");
 		myInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, 0, false), "x");
 		myInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, 0, false), "z");
@@ -136,6 +141,7 @@ public class BeerPong extends JPanel{
 		myActionMap.put("right", right);
 		myActionMap.put("left", left);
 		myActionMap.put("r", r);
+		myActionMap.put("s", s);
 		myActionMap.put("ctrl_up", ctrl_up);
 		myActionMap.put("ctrl_down", ctrl_down);
 		myActionMap.put("ctrl_left", ctrl_left);
@@ -307,17 +313,15 @@ public class BeerPong extends JPanel{
             {
             	t.stop();
             	increaseStats();
-              // 	System.out.println("WIN");
             }
             
             if( gameState == GS_LOST)
             {
             	t.stop();
             	increaseStats();
-               // System.out.println("LOST");
             }
             
-            
+            //Draw every cup image (if it was not hit) to the top view panel
             for( int i = 0; i < cupList.size(); i++)
             {
                 if( !((Cup) cupList.get(i)).getHit() )
@@ -374,8 +378,17 @@ public class BeerPong extends JPanel{
     	
     	if(gameState == GS_WON)
     		stats=0.5;
-    	else if(gameState == GS_LOST)
-    		stats=0.1;
+    	else if (gameState == GS_LOST)
+    	{
+    		if(hitCount == 1)
+    			stats = 0.1;
+    		else if(hitCount == 2)
+    			stats = 0.2;
+    		else if(hitCount == 3 || hitCount == 4 )
+    			stats = 0.3;
+    		else if(hitCount == 5)
+    			stats = 0.4;    			
+    	}
     	
     	switch(day.getCourse())
 		{
@@ -506,6 +519,7 @@ public class BeerPong extends JPanel{
 		}
     }
     
+    //R key for restart
     private class R extends AbstractAction{
 		public void actionPerformed(ActionEvent e)
 		{
@@ -514,6 +528,17 @@ public class BeerPong extends JPanel{
     }
     
   
+    //S for side view hide/show
+	private class S extends AbstractAction{
+		public void actionPerformed(ActionEvent e)
+		{
+			sidePanelVisible = !sidePanelVisible;
+			p_side_view.setVisible( sidePanelVisible );
+			p_info.setVisible( !sidePanelVisible );
+		}
+	}
+    
+    
     private class Space extends AbstractAction{
 		public void actionPerformed(ActionEvent e)
 		{
