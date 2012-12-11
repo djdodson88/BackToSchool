@@ -164,32 +164,32 @@ public class MiniSplashPane extends JLayeredPane
 			 */
 
 			Random generator = new Random();
-			game = generator.nextInt(5) + 1; // 1-4
+			game = generator.nextInt(5) + 1; // 1-5
 
-			//game = 3; //testing
+			//game = 5; //testing
 			switch(game)
 			{
 			case 1:
 				button = new JButton(start);
-				//minigame = new Fruit_Game(day.getDay());
+		
 				break;
 			case 2:
 				button = new JButton(start);
-				//minigame = new WareHouseKeeper(day.getDay());
+		
 				break;
 			case 3:
 				nxtScreen = true;
 				button = new JButton(next);
 				numScreen = 1;
-				//minigame = new SudokuGame(day.getDay());
+	
 				break;
 			case 4:
 				button = new JButton(start);
-				//minigame = new PuzzlePanel(day.getDay());
+			
 				break;
 			case 5:
 				button = new JButton(start);
-				//minigame = new BeerPanel();
+				
 				break;
 			}
 			finished = false;
@@ -234,7 +234,7 @@ public class MiniSplashPane extends JLayeredPane
 		{
 			super.paintComponent(g);
 			g.drawImage(binderBg, 0, 0, null);
-			Font font = new Font("Arial", Font.PLAIN, 12);
+		
 			drawString(g, setInstructions(), 60, 42);
 		}
 
@@ -248,7 +248,8 @@ public class MiniSplashPane extends JLayeredPane
 				gameTitle = "Fruit Game";
 				instructions += gameTitle + "\n\n";
 				instructions += "Instructions: \n\n";
-				instructions += ";liUse the <left> and <right> arrow keys to catch the falling fruit\n";
+				instructions += ";liUse the <left> and <right> arrow keys to\n";
+				instructions += "catch the falling fruit\n";
 				instructions += ";li;indent Each fruit missed will decrease life points\n";
 				instructions += ";li;indent Catch as many fruit as you can before life points is 0 \n";
 				instructions += ";li;indent Avoid the bombs! Bombs will decrease points";
@@ -297,6 +298,15 @@ public class MiniSplashPane extends JLayeredPane
 				gameTitle = "Beer Pong";
 				instructions += gameTitle + "\n";
 				instructions += "Instructions: \n";
+				instructions += ";li Press <S> key for hiding/showing the Side View \n";
+				instructions += ";li Use <up>, <down>, <left>, <right> keys to set X, Y speeds\n";
+				instructions += " of the ball (Best for the Top View)\n";
+				instructions += ";li Use <ctrl + up> <ctrl + down> <ctrl + left> <ctrl + right> \n";
+				instructions += " to set X, Z speeds of the ball\n";
+				instructions += ";li Use <shift + up> <shift + down> to set Z position of the ball\n";
+				instructions += ";li Press <space> to fire the ball into the cups\n";
+				instructions += ";li The game ends if the player makes all the cups and wins\n";
+				instructions += " without getting drunk or if the player loses by getting drunk.";
 
 			}
 			return instructions;

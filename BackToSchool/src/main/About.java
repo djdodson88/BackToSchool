@@ -184,8 +184,8 @@ public class About extends JPanel implements ActionListener {
 		instructions[12] = "\n";
 		instructions[13] = "In the classroom, a mini-game must be played before class,";
 		instructions[14] = "so the student(you) can stimulate their mind,";
-		instructions[15] =  "so they can stay awake in the game.  GPA points are";
-		instructions[16] = "rewarded, based on the performance of the minigame.";
+		instructions[15] =  "so they can stay awake in class.  GPA points are";
+		instructions[16] = "rewarded, based on the performance of the mini-game.";
 
 		// Second Screen
 		instructions[17] = "A variety of points are only rewarded if you attend class.";
@@ -215,8 +215,8 @@ public class About extends JPanel implements ActionListener {
 		instructions[38] = "to go to class AND the library.  Go to the library wisely.";
 		instructions[39] = "\n";
 		instructions[40] = "A weekly transcript will be shown to show your current";
-		instructions[41] = "statistics.  Make sure that you increase your stats,";
-		instructions[42] = "by attending classes, doing well in the mini games, and";
+		instructions[41] = "statistics.  Make sure that you increase your stats";
+		instructions[42] = "by attending classes, doing well in the mini-games, and";
 		instructions[43] = "occasionally going to the library.";
 		instructions[44] = "\n";
 		instructions[45] = "Once you finish the final, a final transcript will show your";
