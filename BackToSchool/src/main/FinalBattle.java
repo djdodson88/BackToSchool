@@ -146,8 +146,11 @@ public class FinalBattle extends JPanel {
 	ImageIcon sciTombstone;
 	ImageIcon mathTombstone;
 
-	public FinalBattle(Player player)
+	Day day;
+	
+	public FinalBattle(Player player, Day day)
 	{
+		this.day = day;
 		Font defaultFont = new Font("Courier", Font.PLAIN, 14);
 		this.player = player;
 		this.setPreferredSize(new Dimension(800, 600));// setting the size
@@ -1423,6 +1426,10 @@ public class FinalBattle extends JPanel {
 	{
 		public void actionPerformed(ActionEvent event)
 		{
+			// add transcript for later switch
+			Transcript transcript = new Transcript(player, day, humBossHealth, sciBossHealth, mathBossHealth);
+			frame.addPanel(transcript, BackToSchool.Screen.TRANSCRIPT);	
+			
 			frame.switchPanel(BackToSchool.Screen.TRANSCRIPT);
 			winSong.stopSound();
 			lostSong.stopSound();
@@ -1483,7 +1490,8 @@ public class FinalBattle extends JPanel {
 
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("Back To School: Battle Mode");
-		FinalBattle fBattle= new FinalBattle(new Player());
+		Day day = new Day(10);
+		FinalBattle fBattle= new FinalBattle(new Player(), day);
 		frame.setSize(800,600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// frame.add(battle);

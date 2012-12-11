@@ -153,7 +153,7 @@ public class Transcript extends JPanel{
 			week = 1;
 			nextWeek = "Prepare for this week, 'tis the midterm season!";
 		}
-		else if(day.getDay() <= 7)
+		else if(day.getDay() <= 6)
 		{
 			// Midterm
 			week = 2;
@@ -173,7 +173,15 @@ public class Transcript extends JPanel{
 	{
 		public void actionPerformed(ActionEvent event)
 		{
-			frame.switchPanel(BackToSchool.Screen.CAMPUS);
+			if(day.getDay() == 10)
+			{
+				//end game
+				System.exit(0);
+			}
+			else
+			{
+				frame.switchPanel(BackToSchool.Screen.CAMPUS);
+			}
 		}	
 	}
 

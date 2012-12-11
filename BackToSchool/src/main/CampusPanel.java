@@ -69,7 +69,7 @@ public class CampusPanel extends JPanel
 		
 		student = new Player();
 		player = playerDown;
-		day = new Day(1);
+		day = new Day(10);
 		
 		crowd = new Sound("sounds/crowd.wav");
 		bell = new Sound("sounds/schoolbell.mp3");
@@ -105,12 +105,9 @@ public class CampusPanel extends JPanel
 		
 		if(day.getDay() == 10)
 		{
-			// add transcript for later switch
-			Transcript transcript = new Transcript(student, day);
-			frame.addPanel(transcript, BackToSchool.Screen.TRANSCRIPT);	
-			
+	
 			// final battle
-			frame.addPanel(new FinalBattle(student), Screen.FINALBATTLE);
+			frame.addPanel(new FinalBattle(student, day), Screen.FINALBATTLE);
 			frame.switchPanel(Screen.FINALBATTLE);
 			
 			return;
