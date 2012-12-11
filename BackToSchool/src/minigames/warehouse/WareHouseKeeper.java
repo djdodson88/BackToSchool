@@ -88,19 +88,18 @@ public class WareHouseKeeper extends JPanel
     int moveCount;
     int spriteX;
     int spriteY;
-    
+    Color bg;
     private Player student;
     private Day day;
     private BackToSchool frame;
     
     public WareHouseKeeper(Player player, Day current, BackToSchool frame){
-    	backgroundSong = new Sound("sounds/Background/POL-henchman-short.wav");
+    	backgroundSong = new Sound("sounds/Background/POL-misty-cave-short.wav");
     	backgroundSong.playSound();
     	student = player;
     	day = current;
     	this.frame = frame;
     	
-    	//setMaximumSize(new Dimension(550,450));
     	earnedPercentage=0;
     	int delay = 1000; //milliseconds
     	ActionListener taskPerformer = new ActionListener() {
@@ -220,7 +219,8 @@ public class WareHouseKeeper extends JPanel
         controlPanel = new JPanel();
         controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.Y_AXIS));
         
-        controlPanel.setBackground( new Color(193,141,88));
+        bg = new Color(173,141,88);
+        controlPanel.setBackground( bg);
         
         controlPanel.setPreferredSize( new Dimension (75,450));
         controlPanel.setMaximumSize( new Dimension (75,450));
@@ -246,11 +246,14 @@ public class WareHouseKeeper extends JPanel
         controlPanel.add( Box.createRigidArea( new Dimension(5,25)) );
         
         controlPanel.addMouseListener( new MouseAdapter() {
-            @Override
+        	@Override
             public void mouseEntered(MouseEvent e) {
-                 undo.setForeground( Color.green); 
-                 undo.setFont(new Font("Comic Sans MS", Font.BOLD, 12));
-             	 controlPanel.setBackground( new Color(193,161,108));
+        		if(!isGameOver)
+        		{
+        			undo.setForeground( Color.orange); 
+                    undo.setFont(new Font("Comic Sans MS", Font.BOLD, 12));
+        		}
+        		 controlPanel.setBackground( new Color(173,151,108) ); 
                  controlPanel.repaint();
  	             controlPanel.validate();
             }
@@ -258,26 +261,30 @@ public class WareHouseKeeper extends JPanel
             public void mouseExited(MouseEvent e){
             	undo.setForeground( Color.black);
             	undo.setFont(new Font("Comic Sans MS", Font.PLAIN, 12));
-            	controlPanel.setBackground( new Color(193,141,88));
+            	controlPanel.setBackground( bg);
             	controlPanel.repaint();
 	            controlPanel.validate();
             	
             }
             public void mousePressed(MouseEvent e){
-                if(!stack.isEmpty())
-                {
-                    nums = stack.pop(); 
-                    moveCount--;
-                    reDraw();
-                }
-                
-                for( int i = 0; i < nums.length; i++ )
-	                for( int j = 0; j < nums[i].length; j++ )
-		                if(nums[i][j] == 3)
-		                {
-		                    spriteX = i;
-		                    spriteY = j;
-		                }
+            	if(!isGameOver)
+            	{
+            		if(!stack.isEmpty())
+                    {
+                        nums = stack.pop(); 
+                        moveCount--;
+                        reDraw();
+                    }
+                    
+                    for( int i = 0; i < nums.length; i++ )
+    	                for( int j = 0; j < nums[i].length; j++ )
+    		                if(nums[i][j] == 3)
+    		                {
+    		                    spriteX = i;
+    		                    spriteY = j;
+    		                }
+            		
+            	}
             }
         });
         
