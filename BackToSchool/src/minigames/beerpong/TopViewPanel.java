@@ -28,6 +28,7 @@ public class TopViewPanel extends JPanel{
     JLabel cup4;
     JLabel cup5;
     JLabel cup6;
+    JLabel someWord;
     ArrayList<JLabel> labelList;
     final static int WIDTH = 550;
     final static int HEIGHT = 275;
@@ -47,6 +48,7 @@ public class TopViewPanel extends JPanel{
                 
         originalBallIcon = new ImageIcon("art/beerpong/ball.png"); 
         l_ball = new JLabel(originalBallIcon);
+        someWord = new JLabel("Top View");
         
         cup1 = new JLabel(new ImageIcon("art/beerpong/cup.png"));
         cup2 = new JLabel(new ImageIcon("art/beerpong/cup.png"));
@@ -69,7 +71,7 @@ public class TopViewPanel extends JPanel{
         add(cup4);
         add(cup5);
         add(cup6);
-        
+        add(someWord);
         cupList = _cupList;
         ball = _ball;
         
@@ -108,14 +110,14 @@ public class TopViewPanel extends JPanel{
     
     @Override
     public void paintComponent(Graphics g) {
-    	//super.paintComponent(g);
+    	super.paintComponent(g);
+    	someWord.setBounds(10,10,70,20);
+    	
     	timeLeft = gameTimer.timeRemaining();
 		Font font = new Font("Arial", Font.BOLD, 50);
 		Font markup = new Font("Arial", Font.PLAIN, 50);
 		Font gameTxt = new Font("Arial", Font.PLAIN, 18);
 
-		//System.out.println(timeLeft);
-		
 		g.setColor(new Color(255,254,215));
 		g.fillRect(415, 60, 120, 300);
 

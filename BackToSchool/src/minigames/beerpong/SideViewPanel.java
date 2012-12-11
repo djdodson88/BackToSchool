@@ -14,26 +14,31 @@ public class SideViewPanel extends JPanel {
 	Sprite ball;
 	Image img;
 	JLabel l_ball;
+	JLabel someWord;
 	ImageIcon originalBallIcon;
 	
 	public SideViewPanel(Sprite _ball){
 		ball = _ball;
 		originalBallIcon = new ImageIcon("art/beerpong/ball.png"); 
         l_ball = new JLabel(originalBallIcon);
-        
+        someWord = new JLabel("Side View");
 		img = new ImageIcon("art/beerpong/a.jpg").getImage();
 		setPreferredSize( new Dimension(TopViewPanel.WIDTH, 125) );
 		setBackground( new Color(222,215,173));
 		add(l_ball);
+		add(someWord);
+		
+		
 	}
 	
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
+		someWord.setBounds(480,0,60,40);
 		g.drawImage(img, 0, 0, this); 
 		if( BeerPong.gameState == BeerPong.GS_INIT ) 
         {
 	    	g.drawLine(BeerPong.INIT_BALL_CX, 125 - ball.getRealRadius() - ball.getCenterZ(),
-	    			BeerPong.INIT_BALL_CX + ball.getSpeedX() / 700, 125 - ball.getCenterZ() - ball.getRealRadius() - ball.getSpeedZ() / 500 );
+	    			BeerPong.INIT_BALL_CX + ball.getSpeedX() / 700, 125 - ball.getCenterZ() - ball.getRealRadius() - ball.getSpeedZ() / 400 );
         }
 		
         if( !(BeerPong.gameState == BeerPong.GS_WON || BeerPong.gameState == BeerPong.GS_LOST) )
