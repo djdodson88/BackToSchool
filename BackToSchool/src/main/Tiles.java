@@ -112,19 +112,20 @@ public class Tiles
 				break;	
 			}
 			case WALL:
-			{	if (t.getDirection() == Tile.Direction.RIGHT)
-					tile = wallDorm;
-				else if (t.getDirection() == Tile.Direction.LEFT)
-					tile = signDorm;
-				else
-					tile = wall;
-				break;	
+			{	switch(t.getDirection())
+				{
+					case LEFT:	tile = signDorm;
+								break;
+					case RIGHT: tile = wallDorm;
+								break;
+					case DOWN: 	tile = doorDorm;
+								break;
+					default:	tile = wall;
+				}
+				break;
 			}
 			case DOOR:
-			{	if (t.getDirection() == Tile.Direction.RIGHT)
-					tile = doorDorm;
-				else
-					tile = door;
+			{	tile = door;
 				break;
 			}
 			case TREE:
