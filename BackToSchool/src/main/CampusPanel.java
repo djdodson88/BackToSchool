@@ -65,7 +65,7 @@ public class CampusPanel extends JPanel
 		
 		student = new Player();
 		player = playerDown;
-		day = new Day(3);
+		day = new Day(10);
 		
 		crowd = new Sound("sounds/crowd.wav");
 		bell = new Sound("sounds/schoolbell.mp3");
@@ -101,8 +101,14 @@ public class CampusPanel extends JPanel
 		
 		if(day.getDay() == 10)
 		{
+			// add transcript for later switch
+			Transcript transcript = new Transcript(student, day);
+			frame.addPanel(transcript, BackToSchool.Screen.TRANSCRIPT);	
+			
+			// final battle
 			frame.addPanel(new FinalBattle(student), Screen.FINALBATTLE);
 			frame.switchPanel(Screen.FINALBATTLE);
+			
 			return;
 		}
 		
@@ -199,7 +205,7 @@ public class CampusPanel extends JPanel
 			
 			if (day.isMidtermNext())
 			{	//System.out.println("MIDTERM");
-				frame.addPanel(new Battle(student, day.getNextCourseName()), BackToSchool.Screen.BATTLE);
+				frame.addPanel(new Battle(student, day.getCourseName()), BackToSchool.Screen.BATTLE);
 				frame.switchPanel(BackToSchool.Screen.BATTLE);
 			}
 			else
@@ -210,7 +216,7 @@ public class CampusPanel extends JPanel
 			
 			if(day.isTranscript())	// load transcripts for return from class
 			{
-				System.out.println("Transcript made");
+				//System.out.println("Transcript made");
 				Transcript transcript = new Transcript(student, day);
 				frame.addPanel(transcript, BackToSchool.Screen.TRANSCRIPT);	
 			}

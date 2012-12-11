@@ -48,6 +48,19 @@ public class Day {
 		return nextCourse;
 	}
 	
+	public String getCourseName()
+	{
+		switch (current)
+		{
+			case HUMANITIES:
+				return "Humanities";
+			case MATH: 
+				return "Math";
+			default: 
+				return "Science";
+		}
+	}
+	
 	public String getNextCourseName()
 	{
 		switch (nextCourse)
