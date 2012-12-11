@@ -32,6 +32,6 @@ public class Tile
 	
 	public String toString()
 	{
-		return "new Tile(Tile.Type."+type+", Tile.Direction."+dir+");";
+		return "new Tile(Tile.Type."+type+", Tile.Direction."+dir+")";
 	}
 }

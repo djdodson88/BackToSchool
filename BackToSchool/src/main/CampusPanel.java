@@ -12,6 +12,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.*;
 import java.net.Proxy.Type;
@@ -456,7 +458,9 @@ public class CampusPanel extends JPanel
 			int xIndex = click.x/TILE;
 			int yIndex = click.y/TILE;
 			
-			Tile clicked = campus.getTile(xIndex, yIndex);
+			Tile clicked = campus.getTile(xIndex+screenX, yIndex+screenY);
+			System.out.println("Clicked: " + xIndex + "," + yIndex + ", Tile: " + clicked);
+			
 			if (e.getButton() == MouseEvent.BUTTON3)
 			{
 			    Tile choice = (Tile)JOptionPane.showInputDialog(null, "Please choose a tile:", "Tile Swap",  
@@ -471,11 +475,12 @@ public class CampusPanel extends JPanel
 				    			new Tile(Tile.Type.ROAD), new Tile(Tile.Type.ROAD, Tile.Direction.LEFT), 
 				    			// nature
 				    			new Tile(Tile.Type.TREE), new Tile(Tile.Type.TREE, Tile.Direction.DOWN), 
-				    			new Tile(Tile.Type.FLOWER), new Tile(Tile.Type.GRASS), new Tile(Tile.Type.LAND),
+				    			new Tile(Tile.Type.FLOWER, Tile.Direction.DOWN), new Tile(Tile.Type.GRASS, Tile.Direction.DOWN), 
+				    			new Tile(Tile.Type.LAND, Tile.Direction.DOWN),
 				    			// buildings 
 				    			new Tile(Tile.Type.DOOR), new Tile(Tile.Type.ROOF), new Tile(Tile.Type.WALL), 
 				    			new Tile(Tile.Type.WINDOW, Tile.Direction.LEFT), new Tile(Tile.Type.WINDOW, Tile.Direction.RIGHT),
-				    			new Tile(Tile.Type.WINDOW)}
+				    			new Tile(Tile.Type.WINDOW), new Tile(Tile.Type.LAND, Tile.Direction.UP) }
 			    		, null);
 			    
 			    // choice is the tile chosen from list
@@ -486,15 +491,28 @@ public class CampusPanel extends JPanel
 			    	tiles[xIndex][yIndex] = tileFactory.get(choice);
 			    	//renderScreen();
 			    }
-			    System.out.println("New choice: " + choice);
-			}
-			System.out.println("Clicked: " + xIndex + "," + yIndex + ", Tile: " + clicked);
+			    System.out.println("New choice: " + choice);		
+			    
+			    if (xIndex+yIndex+screenX+screenY == 0)	// right clicked on upper left most tile
+			    {
+			    	int result = JOptionPane.showConfirmDialog(null, "Export code to text?", "Export", JOptionPane.OK_CANCEL_OPTION);
+			    	if (result == JOptionPane.OK_OPTION)
+			    	{
+			    		// Export code to campus.txt
+			    		try 
+			    		{	BufferedWriter writer = new BufferedWriter(new FileWriter(new File("campus.txt")));
+			    			String[] words = campus.getConstructor().split("\n");
+			    			for (String line : words) 
+			    			{
+			    				writer.write(line);
+			    				writer.newLine();
+			    			}
+			    			writer.close();
+			    		} catch (Exception ex) {}
+			    	}
+			    }
+			}	
 		}
-	}
-	
-	private class TileTool extends JOptionPane
-	{
-		
 	}
 	
 	public class Sound // Holds one audio file
