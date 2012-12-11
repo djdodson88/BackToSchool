@@ -71,7 +71,7 @@ public class BeerPong extends JPanel{
 		sidePanelVisible = false;
 		
     	backgroundSong = new Sound("sounds/Background/POL-stable-boy-short.wav");
-		//backgroundSong.playSound();
+		backgroundSong.playSound();
 		this.frame = frame;
 		student = player;
 		day = current;
