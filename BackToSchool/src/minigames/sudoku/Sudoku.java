@@ -25,7 +25,7 @@ public class Sudoku extends JFrame{
 		CardLayout layout = new CardLayout();
 		JPanel cards = new JPanel(layout);
 		BackToSchool b2sFrame = new BackToSchool(layout, cards);
-		frame.add(new SudokuGame(new Player(), new Day(1), b2sFrame));
+		frame.add(new SudokuGame(new Player(), new Day(5), b2sFrame));
 		frame.setResizable(false);
 		frame.pack();
 		frame.setVisible(true);

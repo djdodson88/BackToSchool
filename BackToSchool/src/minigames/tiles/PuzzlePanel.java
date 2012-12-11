@@ -66,14 +66,14 @@ public class PuzzlePanel extends JPanel implements ActionListener
 		int dayNum = day.getDay();
 		if (dayNum <= 3)
 		{
-			startTime = 30;
+			startTime = 60;
 			indexI = indexJ = 3;
 			eleven = blank;
 			shuffles = 12;
 		}
 		else if (dayNum > 3 && dayNum <=6)
 		{	
-			startTime = 50;
+			startTime = 90;
 			indexI = 4;
 			indexJ = 3;
 			twelve = blank;
@@ -81,7 +81,7 @@ public class PuzzlePanel extends JPanel implements ActionListener
 		}
 		else
 		{
-			startTime = 90;
+			startTime = 150;
 			indexI = indexJ = 4;
 			sixteen = blank;
 			shuffles = 20;
@@ -303,9 +303,17 @@ public class PuzzlePanel extends JPanel implements ActionListener
 		
 		g.setFont(gameMessage);
 		
-		if (finished)
+		
+		if(gameTimer.timeRemaining() == 0)
 		{
-			if (gameTimer.timeRemaining() > 0)
+			gameOver = true;
+			gameTimer.timeStop();
+
+		}
+		
+		if (gameOver)
+		{
+			if (finished)
 			{
 				increaseStats(scorePerformance());
 				endLabel.setText("Congrats! You earned "+scorePerformance()+ " exp");
@@ -319,6 +327,7 @@ public class PuzzlePanel extends JPanel implements ActionListener
 				endLabel.setVisible(true);
 				exit.setVisible(true);
 			}
+			timer.cancel();
 		}
 	}
 	
@@ -443,6 +452,7 @@ public class PuzzlePanel extends JPanel implements ActionListener
 					if (isSolved())
 					{
 						finished = true;
+						gameOver = true;
 						gameTimer.timeStop();
 					}
 					repaint();
@@ -456,32 +466,7 @@ public class PuzzlePanel extends JPanel implements ActionListener
 		public void run()
 		{
 			repaint();
-			
-			if(gameTimer.timeRemaining() == 0)
-			{
-				gameOver = true;
-				gameTimer.timeStop();
-				timer.cancel();
-			}
-			
-			if (gameOver)
-			{
-				if (finished)
-				{
-					increaseStats(scorePerformance());
-					endLabel.setText("Congrats! You earned "+scorePerformance()+ " exp");
-					endLabel.setVisible(true);
-					exit.setVisible(true);
-				}
-				else		
-				{
-					increaseStats(.1);
-					endLabel.setText("Out of time... You earned .1 exp");
-					endLabel.setVisible(true);
-					exit.setVisible(true);
-				}
-				timer.cancel();
-			}
+
 		}
 	}
 	

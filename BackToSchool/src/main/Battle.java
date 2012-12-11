@@ -132,12 +132,14 @@ public class Battle extends JPanel {
 		defaultFont = new Font("Courier", Font.PLAIN, 14);
 
 		//exit Button for debugging person
+		/*
 		exitDebug = new JButton(new ImageIcon("art/buttons/exit_btn.jpg"));
 		exitDebug.setBounds(650, 10, 100, 30);
 		exitDebug.setVisible(true);
 		this.add(exitDebug);
 		exitDebug.addActionListener(new exitDebugButtonListener());
-
+		*/
+		
 		drawSpecialAttackButton=false;
 		r = new Random();
 		bossSubject=classSubject;

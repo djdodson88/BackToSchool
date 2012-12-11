@@ -48,6 +48,7 @@ public class MiniSplashPane extends JLayeredPane
 		// STRICTLY FOR TESTING, WILL BE REMOVED 
 		//Button used for now to get through day-> weeks
 
+		/*
 		default_exit = new JButton(new ImageIcon("art/buttons/exit_btn.jpg"));
 		this.add(default_exit);
 		default_exit.setBounds(700,0, 100, 30);
@@ -91,7 +92,6 @@ public class MiniSplashPane extends JLayeredPane
 						}
 						//--- END ----
 						
-
 						if(day.isTranscript())
 						{
 							frame.switchPanel(BackToSchool.Screen.TRANSCRIPT);
@@ -102,7 +102,7 @@ public class MiniSplashPane extends JLayeredPane
 						}
 					}
 				});
-
+		 		*/
 		subPanel = new MiniSplash();
 		subPanel.setBounds(50,60,500,300);
 		add(subPanel);
@@ -166,7 +166,7 @@ public class MiniSplashPane extends JLayeredPane
 			Random generator = new Random();
 			game = generator.nextInt(5) + 1; // 1-5
 
-			//game = 5; //testing
+			//game = 3; //testing
 			switch(game)
 			{
 			case 1:
