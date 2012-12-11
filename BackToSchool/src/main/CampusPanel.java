@@ -10,6 +10,8 @@ import java.applet.Applet;
 import java.applet.AudioClip;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.BufferedWriter;
@@ -26,8 +28,9 @@ public class CampusPanel extends JPanel
 {
 	private int playerX, playerY, screenX, screenY, period=6;
 	private final static int PWIDTH=800, PHEIGHT=600, TILE=50, TILESX=16, TILESY=12, PADX=4, PADY=3, 
-				MOVERATE=750, FRAMERATE=50;
+				MOVERATE=750, FRAMERATE=50, ARROW=25;
 	private enum Direction{LEFT, UP, RIGHT, DOWN};
+	private double angle;
 	private Image[][] tiles;
 	private Graphics dbg;
 	private Image buffer;
@@ -44,22 +47,23 @@ public class CampusPanel extends JPanel
 	private ArrayList<Pedestrian> pedestrians;
 	private Point destination, library;
 	private Image player, playerUp, playerDown, playerLeft, playerRight;
+	private BufferedImage arrow;
 	private Sound crowd;
 	private Sound bell;
 	
 	public CampusPanel()
 	{
 		//TODO: more elaborate instatiation
-		
 		campus = new Campus();
 		tiles = new Image[TILESX][TILESY];
 		tileFactory = new Tiles();
-			
+
 		try 
 		{	playerUp = ImageIO.read(new File("art/characters/student_backside.png"));
 			playerDown = ImageIO.read(new File("art/characters/student.png"));
 			playerLeft = ImageIO.read(new File("art/characters/student_leftside.png"));
-			playerRight = ImageIO.read(new File("art/characters/student_rightside.png"));	
+			playerRight = ImageIO.read(new File("art/characters/student_rightside.png"));
+			arrow = ImageIO.read(new File("art/school/arrow.png"));
 		} 
 		catch(IOException e){};
 		
@@ -230,6 +234,24 @@ public class CampusPanel extends JPanel
 		}
 	}
 	
+	private void updateArrow(Graphics2D g2d)
+	{
+		// The required drawing location
+		int drawLocationX = 300;
+		int drawLocationY = 300;
+
+		// Rotation information
+
+		double rotationRequired = Math.toRadians(45);
+		double locationX = arrow.getWidth() / 2;
+		double locationY = arrow.getHeight() / 2;
+		AffineTransform tx = AffineTransform.getRotateInstance(rotationRequired, locationX, locationY);
+		AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
+
+		// Drawing the rotated image at the required drawing locations
+		g2d.drawImage(op.filter(arrow, null), drawLocationX, drawLocationY, null);
+	}
+	
 	private void updateTiles(Direction dir)
 	{
 		switch (dir) 
@@ -311,7 +333,8 @@ public class CampusPanel extends JPanel
 			buffer = createImage(PWIDTH, PHEIGHT);
 			dbg = buffer.getGraphics();
 		}
-		// render campus
+		
+		// Render campus
 		dbg.setColor(Color.LIGHT_GRAY);
 		for (int i=0; i<TILESX; i++)
 			for (int j=0; j<TILESY; j++)
@@ -321,10 +344,10 @@ public class CampusPanel extends JPanel
 					dbg.fillRect(i*TILE, j*TILE, TILE, TILE);
 			}
 			
-		// render player
+		// Render player
 		dbg.drawImage(player, playerX*TILE, playerY*TILE, TILE, TILE, this); //player.paintIcon(this, g, playerX, playerY);
 		
-		//* render pedestrians (currently even if off screen)
+		// Render pedestrians
 		for (Pedestrian p : pedestrians)
 		{	if (p.hasMove())
 			{	int pedX = p.getLocation().x-screenX;
@@ -332,15 +355,26 @@ public class CampusPanel extends JPanel
 				dbg.drawImage(p.getImage(), pedX*TILE, pedY*TILE, TILE, TILE, this);
 			}
 		}
-		//*/
 		
-		// render interface 
-		//TODO: draw arrow to class
+		// Arrow angle calculation
+		double a = (playerY+screenY) - destination.y;
+		double b = (playerX+screenX) - destination.x;
+		double c = Math.pow(Math.pow(a,2) + Math.pow(b,2), .5);
+		if (a <= 0)
+			angle = Math.toRadians(180) + Math.asin(b/c);
+		else
+			angle = Math.toRadians(0) - Math.asin(b/c);
 		
+		// Rotate arrow image and draw
+		AffineTransform tx = AffineTransform.getRotateInstance(angle, TILE/2, TILE/2);
+		AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
+		((Graphics2D)dbg).drawImage(op.filter(arrow, null),(PWIDTH/2 - TILE), 5, null);		// draw arrow
+		
+		// GUI labels
 		dbg.setColor(Color.RED);
-		dbg.drawString("Day: "+day.getDay(), 50, 15);
-		dbg.drawString("Class: "+day.getNextCourseName(), 100, 15);
-		//dbg.drawString("Destination: "+destination.x+","+destination.y, 14*50, 15);		
+		dbg.setFont(dbg.getFont().deriveFont(14));
+		dbg.drawString("Day: "+day.getDay(), 25, TILE/2);
+		dbg.drawString("Class: "+day.getNextCourseName(), PWIDTH-130, TILE/2);	
 	}
 	
 	public void paintComponent(Graphics g)
