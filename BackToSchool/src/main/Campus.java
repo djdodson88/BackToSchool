@@ -31,24 +31,22 @@ public class Campus
 			}
 		
 		// generated code
-		campus[0][16] = new Tile(Tile.Type.TREE, Tile.Direction.UP);
-		campus[0][17] = new Tile(Tile.Type.TREE, Tile.Direction.DOWN);
+		campus[0][16] = new Tile(Tile.Type.GRASS, Tile.Direction.DOWN);
+		campus[0][17] = new Tile(Tile.Type.GRASS, Tile.Direction.DOWN);
 		campus[1][2] = new Tile(Tile.Type.ROOF, Tile.Direction.RIGHT);
 		campus[1][3] = new Tile(Tile.Type.WALL, Tile.Direction.RIGHT);
 		campus[1][13] = new Tile(Tile.Type.TREE, Tile.Direction.UP);
 		campus[1][14] = new Tile(Tile.Type.TREE, Tile.Direction.DOWN);
-		campus[1][15] = new Tile(Tile.Type.TREE, Tile.Direction.UP);
-		campus[1][16] = new Tile(Tile.Type.TREE, Tile.Direction.DOWN);
-		campus[1][18] = new Tile(Tile.Type.TREE, Tile.Direction.UP);
-		campus[1][19] = new Tile(Tile.Type.TREE, Tile.Direction.DOWN);
+		campus[1][18] = new Tile(Tile.Type.GRASS, Tile.Direction.DOWN);
+		campus[1][19] = new Tile(Tile.Type.GRASS, Tile.Direction.DOWN);
 		campus[2][2] = new Tile(Tile.Type.ROOF, Tile.Direction.RIGHT);
 		campus[2][3] = new Tile(Tile.Type.WALL, Tile.Direction.RIGHT);
 		campus[2][16] = new Tile(Tile.Type.TREE, Tile.Direction.UP);
 		campus[2][17] = new Tile(Tile.Type.TREE, Tile.Direction.DOWN);
 		campus[2][27] = new Tile(Tile.Type.ROOF, Tile.Direction.UP);
 		campus[2][28] = new Tile(Tile.Type.WALL, Tile.Direction.UP);
-		campus[3][0] = new Tile(Tile.Type.TREE, Tile.Direction.UP);
-		campus[3][1] = new Tile(Tile.Type.TREE, Tile.Direction.DOWN);
+		campus[3][0] = new Tile(Tile.Type.GRASS, Tile.Direction.DOWN);
+		campus[3][1] = new Tile(Tile.Type.FLOWER, Tile.Direction.DOWN);
 		campus[3][2] = new Tile(Tile.Type.WALL, Tile.Direction.LEFT);
 		campus[3][3] = new Tile(Tile.Type.WALL, Tile.Direction.DOWN);
 		campus[3][4] = new Tile(Tile.Type.CORNER, Tile.Direction.UP);
@@ -111,13 +109,11 @@ public class Campus
 		campus[7][35] = new Tile(Tile.Type.ROOF, Tile.Direction.UP);
 		campus[7][36] = new Tile(Tile.Type.DOOR, Tile.Direction.UP);
 		campus[7][37] = new Tile(Tile.Type.CORNER, Tile.Direction.UP);
-		campus[8][0] = new Tile(Tile.Type.TREE, Tile.Direction.UP);
-		campus[8][1] = new Tile(Tile.Type.TREE, Tile.Direction.DOWN);
+		campus[8][0] = new Tile(Tile.Type.FLOWER, Tile.Direction.DOWN);
+		campus[8][1] = new Tile(Tile.Type.FLOWER, Tile.Direction.DOWN);
 		campus[8][2] = new Tile(Tile.Type.ROOF, Tile.Direction.UP);
 		campus[8][3] = new Tile(Tile.Type.DOOR, Tile.Direction.UP);
 		campus[8][4] = new Tile(Tile.Type.FORK, Tile.Direction.UP);
-		campus[8][5] = new Tile(Tile.Type.TREE, Tile.Direction.UP);
-		campus[8][6] = new Tile(Tile.Type.TREE, Tile.Direction.DOWN);
 		campus[8][7] = new Tile(Tile.Type.ROOF, Tile.Direction.UP);
 		campus[8][8] = new Tile(Tile.Type.DOOR, Tile.Direction.UP);
 		campus[8][9] = new Tile(Tile.Type.FORK, Tile.Direction.UP);
@@ -141,9 +137,9 @@ public class Campus
 		campus[9][22] = new Tile(Tile.Type.ROAD, Tile.Direction.LEFT);
 		campus[9][24] = new Tile(Tile.Type.TREE, Tile.Direction.UP);
 		campus[9][25] = new Tile(Tile.Type.TREE, Tile.Direction.DOWN);
-		campus[9][26] = new Tile(Tile.Type.TREE, Tile.Direction.UP);
-		campus[9][27] = new Tile(Tile.Type.TREE, Tile.Direction.DOWN);
-		campus[9][28] = new Tile(Tile.Type.FLOWER, Tile.Direction.DOWN);
+		campus[9][26] = new Tile(Tile.Type.GRASS, Tile.Direction.DOWN);
+		campus[9][27] = new Tile(Tile.Type.TREE, Tile.Direction.UP);
+		campus[9][28] = new Tile(Tile.Type.TREE, Tile.Direction.DOWN);
 		campus[9][29] = new Tile(Tile.Type.ROAD, Tile.Direction.LEFT);
 		campus[9][35] = new Tile(Tile.Type.ROOF, Tile.Direction.UP);
 		campus[9][36] = new Tile(Tile.Type.WALL, Tile.Direction.UP);
@@ -184,15 +180,15 @@ public class Campus
 		campus[12][21] = new Tile(Tile.Type.CORNER, Tile.Direction.RIGHT);
 		campus[12][22] = new Tile(Tile.Type.CORNER, Tile.Direction.LEFT);
 		campus[12][27] = new Tile(Tile.Type.ROAD, Tile.Direction.LEFT);
+		campus[12][32] = new Tile(Tile.Type.TREE, Tile.Direction.UP);
+		campus[12][33] = new Tile(Tile.Type.TREE, Tile.Direction.DOWN);
 		campus[12][34] = new Tile(Tile.Type.ROAD, Tile.Direction.LEFT);
 		campus[13][4] = new Tile(Tile.Type.ROAD, Tile.Direction.LEFT);
-		campus[13][5] = new Tile(Tile.Type.TREE, Tile.Direction.UP);
-		campus[13][6] = new Tile(Tile.Type.TREE, Tile.Direction.DOWN);
+		campus[13][6] = new Tile(Tile.Type.GRASS, Tile.Direction.DOWN);
 		campus[13][7] = new Tile(Tile.Type.ROOF, Tile.Direction.UP);
 		campus[13][8] = new Tile(Tile.Type.DOOR, Tile.Direction.UP);
 		campus[13][9] = new Tile(Tile.Type.FORK, Tile.Direction.UP);
-		campus[13][10] = new Tile(Tile.Type.TREE, Tile.Direction.UP);
-		campus[13][11] = new Tile(Tile.Type.TREE, Tile.Direction.DOWN);
+		campus[13][11] = new Tile(Tile.Type.GRASS, Tile.Direction.DOWN);
 		campus[13][12] = new Tile(Tile.Type.ROOF, Tile.Direction.UP);
 		campus[13][13] = new Tile(Tile.Type.DOOR, Tile.Direction.UP);
 		campus[13][14] = new Tile(Tile.Type.CORNER, Tile.Direction.UP);
@@ -251,8 +247,6 @@ public class Campus
 		campus[17][25] = new Tile(Tile.Type.ROOF, Tile.Direction.UP);
 		campus[17][26] = new Tile(Tile.Type.WINDOW, Tile.Direction.LEFT);
 		campus[17][27] = new Tile(Tile.Type.ROAD, Tile.Direction.LEFT);
-		campus[17][30] = new Tile(Tile.Type.TREE, Tile.Direction.UP);
-		campus[17][31] = new Tile(Tile.Type.TREE, Tile.Direction.DOWN);
 		campus[17][34] = new Tile(Tile.Type.ROAD, Tile.Direction.LEFT);
 		campus[18][1] = new Tile(Tile.Type.ROOF, Tile.Direction.UP);
 		campus[18][2] = new Tile(Tile.Type.WALL, Tile.Direction.UP);
@@ -262,13 +256,14 @@ public class Campus
 		campus[18][25] = new Tile(Tile.Type.ROOF, Tile.Direction.UP);
 		campus[18][26] = new Tile(Tile.Type.DOOR, Tile.Direction.UP);
 		campus[18][27] = new Tile(Tile.Type.FORK, Tile.Direction.UP);
-		campus[18][31] = new Tile(Tile.Type.TREE, Tile.Direction.UP);
-		campus[18][32] = new Tile(Tile.Type.TREE, Tile.Direction.DOWN);
+		campus[18][31] = new Tile(Tile.Type.FLOWER, Tile.Direction.DOWN);
 		campus[18][34] = new Tile(Tile.Type.ROAD, Tile.Direction.LEFT);
 		campus[19][1] = new Tile(Tile.Type.ROOF, Tile.Direction.UP);
 		campus[19][2] = new Tile(Tile.Type.DOOR, Tile.Direction.UP);
 		campus[19][3] = new Tile(Tile.Type.ROAD, Tile.Direction.UP);
 		campus[19][4] = new Tile(Tile.Type.CORNER, Tile.Direction.LEFT);
+		campus[19][6] = new Tile(Tile.Type.TREE, Tile.Direction.UP);
+		campus[19][7] = new Tile(Tile.Type.TREE, Tile.Direction.DOWN);
 		campus[19][11] = new Tile(Tile.Type.ROAD, Tile.Direction.LEFT);
 		campus[19][20] = new Tile(Tile.Type.ROAD, Tile.Direction.LEFT);
 		campus[19][25] = new Tile(Tile.Type.ROOF, Tile.Direction.UP);
@@ -285,8 +280,8 @@ public class Campus
 		campus[20][26] = new Tile(Tile.Type.WALL, Tile.Direction.UP);
 		campus[20][27] = new Tile(Tile.Type.ROAD, Tile.Direction.LEFT);
 		campus[20][34] = new Tile(Tile.Type.ROAD, Tile.Direction.LEFT);
-		campus[21][1] = new Tile(Tile.Type.TREE, Tile.Direction.UP);
-		campus[21][2] = new Tile(Tile.Type.TREE, Tile.Direction.DOWN);
+		campus[21][1] = new Tile(Tile.Type.FLOWER, Tile.Direction.DOWN);
+		campus[21][2] = new Tile(Tile.Type.GRASS, Tile.Direction.DOWN);
 		campus[21][11] = new Tile(Tile.Type.ROAD, Tile.Direction.LEFT);
 		campus[21][20] = new Tile(Tile.Type.ROAD, Tile.Direction.LEFT);
 		campus[21][27] = new Tile(Tile.Type.FORK, Tile.Direction.DOWN);
@@ -311,6 +306,8 @@ public class Campus
 		campus[22][32] = new Tile(Tile.Type.ROOF, Tile.Direction.UP);
 		campus[22][33] = new Tile(Tile.Type.WALL, Tile.Direction.UP);
 		campus[22][34] = new Tile(Tile.Type.ROAD, Tile.Direction.LEFT);
+		campus[23][5] = new Tile(Tile.Type.TREE, Tile.Direction.UP);
+		campus[23][6] = new Tile(Tile.Type.TREE, Tile.Direction.DOWN);
 		campus[23][11] = new Tile(Tile.Type.ROAD, Tile.Direction.LEFT);
 		campus[23][20] = new Tile(Tile.Type.ROAD, Tile.Direction.LEFT);
 		campus[23][27] = new Tile(Tile.Type.ROAD, Tile.Direction.LEFT);
@@ -319,6 +316,8 @@ public class Campus
 		campus[23][34] = new Tile(Tile.Type.ROAD, Tile.Direction.LEFT);
 		campus[24][11] = new Tile(Tile.Type.ROAD, Tile.Direction.LEFT);
 		campus[24][20] = new Tile(Tile.Type.ROAD, Tile.Direction.LEFT);
+		campus[24][22] = new Tile(Tile.Type.TREE, Tile.Direction.UP);
+		campus[24][23] = new Tile(Tile.Type.TREE, Tile.Direction.DOWN);
 		campus[24][27] = new Tile(Tile.Type.ROAD, Tile.Direction.LEFT);
 		campus[24][32] = new Tile(Tile.Type.ROOF, Tile.Direction.UP);
 		campus[24][33] = new Tile(Tile.Type.DOOR, Tile.Direction.UP);
@@ -369,6 +368,8 @@ public class Campus
 		campus[29][3] = new Tile(Tile.Type.TREE, Tile.Direction.DOWN);
 		campus[29][36] = new Tile(Tile.Type.ROAD, Tile.Direction.LEFT);
 		campus[30][36] = new Tile(Tile.Type.ROAD, Tile.Direction.LEFT);
+		campus[31][8] = new Tile(Tile.Type.TREE, Tile.Direction.UP);
+		campus[31][9] = new Tile(Tile.Type.TREE, Tile.Direction.DOWN);
 		campus[31][30] = new Tile(Tile.Type.TREE, Tile.Direction.UP);
 		campus[31][31] = new Tile(Tile.Type.TREE, Tile.Direction.DOWN);
 		campus[31][36] = new Tile(Tile.Type.ROAD, Tile.Direction.LEFT);
@@ -424,13 +425,12 @@ public class Campus
 		campus[38][13] = new Tile(Tile.Type.WINDOW, Tile.Direction.RIGHT);
 		campus[38][22] = new Tile(Tile.Type.ROOF, Tile.Direction.UP);
 		campus[38][23] = new Tile(Tile.Type.WINDOW, Tile.Direction.RIGHT);
-		campus[38][25] = new Tile(Tile.Type.TREE, Tile.Direction.UP);
-		campus[38][26] = new Tile(Tile.Type.TREE, Tile.Direction.DOWN);
+		campus[38][25] = new Tile(Tile.Type.GRASS, Tile.Direction.DOWN);
 		campus[38][27] = new Tile(Tile.Type.TREE, Tile.Direction.UP);
 		campus[38][28] = new Tile(Tile.Type.TREE, Tile.Direction.DOWN);
 		campus[38][29] = new Tile(Tile.Type.ROAD, Tile.Direction.LEFT);
 		campus[39][9] = new Tile(Tile.Type.ROAD, Tile.Direction.LEFT);
-		campus[39][12] = new Tile(Tile.Type.SIGN, Tile.Direction.UP);
+		campus[39][12] = new Tile(Tile.Type.ROOF, Tile.Direction.UP);
 		campus[39][13] = new Tile(Tile.Type.DOOR, Tile.Direction.UP);
 		campus[39][14] = new Tile(Tile.Type.ROAD, Tile.Direction.UP);
 		campus[39][15] = new Tile(Tile.Type.ROAD, Tile.Direction.UP);
@@ -460,7 +460,7 @@ public class Campus
 		campus[43][9] = new Tile(Tile.Type.ROAD, Tile.Direction.LEFT);
 		campus[43][17] = new Tile(Tile.Type.ROAD, Tile.Direction.LEFT);
 		campus[43][29] = new Tile(Tile.Type.ROAD, Tile.Direction.LEFT);
-		campus[44][6] = new Tile(Tile.Type.ROOF, Tile.Direction.UP);
+		campus[44][6] = new Tile(Tile.Type.SIGN, Tile.Direction.UP);
 		campus[44][7] = new Tile(Tile.Type.DOOR, Tile.Direction.UP);
 		campus[44][8] = new Tile(Tile.Type.ROAD, Tile.Direction.UP);
 		campus[44][9] = new Tile(Tile.Type.FORK, Tile.Direction.UP);
@@ -654,6 +654,7 @@ public class Campus
 		campus[58][32] = new Tile(Tile.Type.WALL, Tile.Direction.UP);
 		campus[58][37] = new Tile(Tile.Type.ROOF, Tile.Direction.UP);
 		campus[58][38] = new Tile(Tile.Type.WALL, Tile.Direction.UP);
+
 
 
 	}
