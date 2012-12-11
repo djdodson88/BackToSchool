@@ -17,6 +17,7 @@ public class Pedestrian
 	private ArrayList<Point> path;
 	private Point location;
 	private int pathIndex;
+	private boolean invalid;
 	
 	public Pedestrian(Point start, Point destination, Campus campus)
 	{
@@ -34,6 +35,15 @@ public class Pedestrian
 		// find a path from the start point to the destination point
 		pathIndex = 0;
 		path = aStarSearch(start, destination, campus);	
+		if (path == null)
+			invalid = true;
+		else
+			invalid = false;
+	}
+	
+	public boolean isInvalid()
+	{
+		return invalid;
 	}
 	
 	public boolean hasMove() 

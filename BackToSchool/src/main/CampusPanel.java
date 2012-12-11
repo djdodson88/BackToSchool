@@ -82,6 +82,14 @@ public class CampusPanel extends JPanel
 		moveTimers.add(new Timer (MOVERATE, new PedestrianListener(2)));
 		moveTimers.add(new Timer (MOVERATE, new PedestrianListener(3)));
 		moveTimers.add(new Timer (MOVERATE, new PedestrianListener(4)));
+		moveTimers.add(new Timer (MOVERATE, new PedestrianListener(5)));
+		moveTimers.add(new Timer (MOVERATE, new PedestrianListener(6)));
+		moveTimers.add(new Timer (MOVERATE, new PedestrianListener(7)));
+		moveTimers.add(new Timer (MOVERATE, new PedestrianListener(8)));
+		moveTimers.add(new Timer (MOVERATE, new PedestrianListener(9)));
+		moveTimers.add(new Timer (MOVERATE, new PedestrianListener(10)));
+		moveTimers.add(new Timer (MOVERATE, new PedestrianListener(11)));
+		moveTimers.add(new Timer (MOVERATE, new PedestrianListener(11)));
 		
 		addKeyListener(new CampusListener());
 		addMouseListener(new CampusMouseListener());
@@ -132,17 +140,9 @@ public class CampusPanel extends JPanel
 			pedestrians.clear();
 			for (int i=0; i<moveTimers.size(); i++)
 			{
-				Point point = new Point(-1,-1);
-				while (!campus.isTraversable(point.x,point.y))
-				{
-					int x = (int)(Math.random()*campus.getWidth());
-					int y = (int)(Math.random()*campus.getHeight());
-					point.setLocation(x,y);
-				}
-				Point dest = doors.get((int)(Math.random()*doors.size()));
-				dest = new Point(dest.x, dest.y+1);
-				pedestrians.add(i, new Pedestrian(point, dest, campus));
-				moveTimers.get(i).start();
+				do {
+					generatePedestrian(i);
+				} while (pedestrians.get(i).isInvalid());
 			}
 		}
 		
@@ -152,6 +152,21 @@ public class CampusPanel extends JPanel
 		animate.start();
 		for (Timer t : moveTimers)
 			t.start();
+	}
+	
+	private void generatePedestrian(int ped)
+	{
+		Point point = new Point(-1,-1);
+		while (!campus.isTraversable(point.x,point.y))
+		{
+			int x = (int)(Math.random()*campus.getWidth());
+			int y = (int)(Math.random()*campus.getHeight());
+			point.setLocation(x,y);
+		}
+		ArrayList<Point> doors = campus.getDoors(false);
+		Point dest = doors.get((int)(Math.random()*doors.size()));
+		dest = new Point(dest.x, dest.y+1);
+		pedestrians.add(ped, new Pedestrian(point, dest, campus));
 	}
 	
 	private void generateClassroom()
@@ -412,10 +427,12 @@ public class CampusPanel extends JPanel
 		
 		public void actionPerformed(ActionEvent e) 
 		{
-			Pedestrian current = pedestrians.get(pedID);
-			if (current.hasMove())
-				current.move();
-			repaint();
+			try{ 
+				Pedestrian current = pedestrians.get(pedID);
+				if (current.hasMove())
+					current.move();
+				repaint();
+			}catch (Exception ex) {}
 		}	
 	}
 	
