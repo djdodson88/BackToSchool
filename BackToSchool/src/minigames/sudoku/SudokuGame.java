@@ -27,8 +27,7 @@ public class SudokuGame extends JPanel implements ActionListener{
 	private BufferedImage fourByfour_grid;
 	private BufferedImage nineBynine_grid;
 	private BufferedImage colorSq;
-	private BufferedImage colorSq_thin;
-
+	
 	private BackToSchool frame;
 	private Player student;
 	private Day day;
@@ -60,6 +59,7 @@ public class SudokuGame extends JPanel implements ActionListener{
 	private boolean statsUpdated;
 	private int className; // int key -> name
 
+	private String gameResult;
 
 	public SudokuGame(Player player, Day current, BackToSchool frame)
 	{
@@ -82,10 +82,11 @@ public class SudokuGame extends JPanel implements ActionListener{
 		sevenKey sevenKey = new sevenKey();
 		eightKey eightKey = new eightKey();
 		nineKey nineKey = new nineKey();
-
+	
 		delete delete = new delete();
 		enter enter = new enter();
 
+		
 		up up = new up();
 		down down = new down();
 		left left = new left();
@@ -112,7 +113,7 @@ public class SudokuGame extends JPanel implements ActionListener{
 		myInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0, false), "down");
 		myInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0, false), "left");
 		myInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, false), "right");
-
+		
 		myActionMap = this.getActionMap();
 		myActionMap.put("1", oneKey);
 		myActionMap.put("2", twoKey);
@@ -137,6 +138,8 @@ public class SudokuGame extends JPanel implements ActionListener{
 
 		gameSol = new SudokuSol(day.getDay());
 		gameStatus = "In Progress"; // Default until <Enter> Pressed
+		gameResult = "";
+		
 		stats = 0;
 		statsUpdated = false;
 		
@@ -147,7 +150,7 @@ public class SudokuGame extends JPanel implements ActionListener{
 		exit = new JButton(new ImageIcon("art/buttons/exit_btn.jpg"));
 
 		this.add(exit);
-		exit.setBounds( 427, 250, 100, 30);
+		exit.setBounds( 427, 280, 100, 30);
 		exit.addActionListener(this);
 
 		exit.setVisible(false);
@@ -164,12 +167,12 @@ public class SudokuGame extends JPanel implements ActionListener{
 
 			if(day.getDay() >=3)
 			{
-				initialTime = 20;
+				initialTime = 25;
 				gameTimer = new Clock(initialTime);
 			}
 			else
 			{
-				initialTime = 40;
+				initialTime = 45;
 				gameTimer = new Clock(initialTime);
 			}
 
@@ -183,9 +186,9 @@ public class SudokuGame extends JPanel implements ActionListener{
 			fourxfour = false;
 			sq_x = 15;
 			sq_y = 16;
-			initialTime = 3;
-			gameTimer = new Clock(initialTime); //testing
-			//gameTimer = new Clock(150);
+			
+			initialTime = 150;
+			gameTimer = new Clock(initialTime);
 			currentAnswer = new int[9][9];
 
 		}
@@ -253,6 +256,7 @@ public class SudokuGame extends JPanel implements ActionListener{
 
 		Object src = e.getSource();
 		backgroundSong.stopSound();
+	
 		if(src == exit)
 		{
 			if(day.isTranscript())
@@ -292,8 +296,9 @@ public class SudokuGame extends JPanel implements ActionListener{
 			gameStatus = "Game Over";
 			
 			if(!statsUpdated)
-			{
+			{	
 				increaseStats(0); // Lose
+				gameResult = stats + "+ exp";
 			}
 			exit.setVisible(true);
 
@@ -302,7 +307,8 @@ public class SudokuGame extends JPanel implements ActionListener{
 
 		g.drawString("Status", 420, 200);
 		g.drawString(gameStatus, 420, 220);
-
+		g.drawString(gameResult, 420, 250);
+		
 		if(fourxfour)
 		{
 			g.drawImage(fourByfour_grid, 0, 0, null);
@@ -427,7 +433,7 @@ public class SudokuGame extends JPanel implements ActionListener{
 	public void gameLoop()
 	{
 		timer = new Timer();
-		int fps = 80;
+		int fps = 200;
 		timer.schedule(new Loop(), 0, 1000/fps);
 
 	}
@@ -473,6 +479,7 @@ public class SudokuGame extends JPanel implements ActionListener{
 		int index_i = 0;
 		int index_j = 0;
 
+		System.out.println(sq_x + ", " + sq_y);
 		if(fourxfour)
 		{
 			switch(sq_x)
@@ -498,9 +505,14 @@ public class SudokuGame extends JPanel implements ActionListener{
 			case 13:
 				index_i = 0;
 				break;
+			case 113:
+				index_i = 1;
+				break;
 			case 114:
 				index_i = 1;
 				break;
+			case 214:
+				index_i = 2;
 			case 215:
 				index_i = 2;
 				break;
@@ -590,7 +602,7 @@ public class SudokuGame extends JPanel implements ActionListener{
 	private class oneKey extends AbstractAction{
 		public void actionPerformed(ActionEvent e)
 		{
-
+			System.out.println("1");
 			if(timeLeft != 0)
 			{
 				currentAnswer[getIndex()[0]][getIndex()[1]] = 1;
@@ -602,6 +614,7 @@ public class SudokuGame extends JPanel implements ActionListener{
 	private class twoKey extends AbstractAction{
 		public void actionPerformed(ActionEvent e)
 		{
+			System.out.println("2");
 			if(timeLeft != 0)
 			{
 				currentAnswer[getIndex()[0]][getIndex()[1]] = 2;
@@ -613,6 +626,7 @@ public class SudokuGame extends JPanel implements ActionListener{
 	private class threeKey extends AbstractAction{
 		public void actionPerformed(ActionEvent e)
 		{
+			System.out.println("3");
 			if(timeLeft != 0)
 			{
 				currentAnswer[getIndex()[0]][getIndex()[1]] = 3;
@@ -624,6 +638,7 @@ public class SudokuGame extends JPanel implements ActionListener{
 	private class fourKey extends AbstractAction{
 		public void actionPerformed(ActionEvent e)
 		{
+			System.out.println("4");
 			if(timeLeft != 0)
 			{
 				currentAnswer[getIndex()[0]][getIndex()[1]] = 4;
@@ -635,6 +650,7 @@ public class SudokuGame extends JPanel implements ActionListener{
 	private class fiveKey extends AbstractAction{
 		public void actionPerformed(ActionEvent e)
 		{
+			System.out.println("5");
 			if(timeLeft != 0 && !fourxfour)
 			{
 				currentAnswer[getIndex()[0]][getIndex()[1]] = 5;
@@ -646,6 +662,7 @@ public class SudokuGame extends JPanel implements ActionListener{
 	private class sixKey extends AbstractAction{
 		public void actionPerformed(ActionEvent e)
 		{
+			System.out.println("6");
 			if(timeLeft != 0 && !fourxfour)
 			{
 				currentAnswer[getIndex()[0]][getIndex()[1]] = 6;
@@ -657,6 +674,7 @@ public class SudokuGame extends JPanel implements ActionListener{
 	private class sevenKey extends AbstractAction{
 		public void actionPerformed(ActionEvent e)
 		{
+			System.out.println("7");
 			if(timeLeft != 0 && !fourxfour)
 			{
 				currentAnswer[getIndex()[0]][getIndex()[1]] = 7;
@@ -668,6 +686,7 @@ public class SudokuGame extends JPanel implements ActionListener{
 	private class eightKey extends AbstractAction{
 		public void actionPerformed(ActionEvent e)
 		{
+			System.out.println("8");
 			if(timeLeft != 0 && !fourxfour)
 			{
 				currentAnswer[getIndex()[0]][getIndex()[1]] = 8;
@@ -679,6 +698,7 @@ public class SudokuGame extends JPanel implements ActionListener{
 	private class nineKey extends AbstractAction{
 		public void actionPerformed(ActionEvent e)
 		{
+			System.out.println("9");
 			if(timeLeft != 0 && !fourxfour)
 			{
 				currentAnswer[getIndex()[0]][getIndex()[1]] = 9;
@@ -726,7 +746,9 @@ public class SudokuGame extends JPanel implements ActionListener{
 					if(!statsUpdated)
 					{
 						increaseStats(win); 
+						gameResult = stats + "+ exp!";
 					}
+				
 					exit.setVisible(true);
 				}
 				else
@@ -868,6 +890,7 @@ public class SudokuGame extends JPanel implements ActionListener{
 
 		}
 	}
+	
 	private class right extends AbstractAction{
 		public void actionPerformed(ActionEvent e)
 		{
@@ -902,6 +925,15 @@ public class SudokuGame extends JPanel implements ActionListener{
 				//System.out.println(sq_x);
 			}
 		}
+	}
+
+	private class keyReleased extends AbstractAction{
+
+		public void actionPerformed(ActionEvent e) {
+			System.out.println("test!");
+			repaint();
+		}
+		
 	}
 
 	public class Sound // Holds one audio file
