@@ -14,6 +14,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.*;
+import java.net.Proxy.Type;
 import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.Random;
@@ -456,8 +457,44 @@ public class CampusPanel extends JPanel
 			int yIndex = click.y/TILE;
 			
 			Tile clicked = campus.getTile(xIndex, yIndex);
-			//System.out.println("Clicked: " + xIndex + "," + yIndex);
+			if (e.getButton() == MouseEvent.BUTTON3)
+			{
+			    Tile choice = (Tile)JOptionPane.showInputDialog(null, "Please choose a tile:", "Tile Swap",  
+			    		JOptionPane.QUESTION_MESSAGE, null, new Tile[] { 
+				    			// corners
+				    			new Tile(Tile.Type.CORNER, Tile.Direction.UP), new Tile(Tile.Type.CORNER, Tile.Direction.RIGHT), 
+				    			new Tile(Tile.Type.CORNER, Tile.Direction.DOWN), new Tile(Tile.Type.CORNER, Tile.Direction.LEFT), 
+				    			// forks
+				    			new Tile(Tile.Type.FORK, Tile.Direction.UP),  new Tile(Tile.Type.FORK, Tile.Direction.RIGHT),
+				    			new Tile(Tile.Type.FORK, Tile.Direction.DOWN), new Tile(Tile.Type.FORK, Tile.Direction.LEFT),
+				    			// straights
+				    			new Tile(Tile.Type.ROAD), new Tile(Tile.Type.ROAD, Tile.Direction.LEFT), 
+				    			// nature
+				    			new Tile(Tile.Type.TREE), new Tile(Tile.Type.TREE, Tile.Direction.DOWN), 
+				    			new Tile(Tile.Type.FLOWER), new Tile(Tile.Type.GRASS), new Tile(Tile.Type.LAND),
+				    			// buildings 
+				    			new Tile(Tile.Type.DOOR), new Tile(Tile.Type.ROOF), new Tile(Tile.Type.WALL), 
+				    			new Tile(Tile.Type.WINDOW, Tile.Direction.LEFT), new Tile(Tile.Type.WINDOW, Tile.Direction.RIGHT),
+				    			new Tile(Tile.Type.WINDOW)}
+			    		, null);
+			    
+			    // choice is the tile chosen from list
+			    if (choice != null)
+			    {	campus.changeTile(choice, new Point(xIndex+screenX,yIndex+screenY));
+			    	if (choice.getType() == Tile.Type.LAND)
+			    		campus.addLand(new Point(xIndex+screenX, yIndex+screenY));
+			    	tiles[xIndex][yIndex] = tileFactory.get(choice);
+			    	//renderScreen();
+			    }
+			    System.out.println("New choice: " + choice);
+			}
+			System.out.println("Clicked: " + xIndex + "," + yIndex + ", Tile: " + clicked);
 		}
+	}
+	
+	private class TileTool extends JOptionPane
+	{
+		
 	}
 	
 	public class Sound // Holds one audio file

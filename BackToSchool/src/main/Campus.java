@@ -151,7 +151,7 @@ public class Campus
 		return doors;
 	}
 	
-	public void addSign(Point door, Course course)
+	protected void addSign(Point door, Course course)
 	{
 		Tile tile = null;
 		
@@ -171,11 +171,38 @@ public class Campus
 		campus[door.x][door.y-1] = tile;
 	}
 	
-	public void addLibrary(Point library) 
+	protected void addLibrary(Point library) 
 	{
 		campus[library.x][library.y-1] = new Tile(Tile.Type.SIGN, Tile.Direction.DOWN);
 	}
 
+	protected boolean addLand(Point point)
+	{
+		if (point.x < 0 || point.x >= WIDTH || point.y < 0 || point.y >= HEIGHT)
+			return false;
+		else
+		{	// random land tile (same as in constructor)
+			int random = (int)(Math.random()*10);
+			if (random == 2 || random == 9)
+				campus[point.x][point.y] = new Tile(Tile.Type.GRASS);
+			else if (random == 5)
+				campus[point.x][point.y] = new Tile(Tile.Type.FLOWER);
+			else
+				campus[point.x][point.y] = new Tile(Tile.Type.LAND);
+			return true;
+		}
+	}
+	
+	protected boolean changeTile(Tile tile, Point point)
+	{
+		if (point.x < 0 || point.x >= WIDTH || point.y < 0 || point.y >= HEIGHT)
+			return false;
+		else
+		{	campus[point.x][point.y] = tile;
+			return true;
+		}
+	}
+	
 	public ArrayList<Point> getAdjacent(Point current) 
 	{
 		ArrayList<Point> adjacent = new ArrayList<Point>();

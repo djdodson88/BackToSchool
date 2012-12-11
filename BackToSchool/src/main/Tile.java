@@ -29,4 +29,9 @@ public class Tile
 	{
 		return dir;
 	}
+	
+	public String toString()
+	{
+		return "new Tile(Tile.Type."+type+", Tile.Direction."+dir+");";
+	}
 }

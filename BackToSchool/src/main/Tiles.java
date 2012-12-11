@@ -101,7 +101,7 @@ public class Tiles
 			{	if (t.getDirection() == Tile.Direction.UP)
 					tile = roadv;
 				else
-					tile = roadv;
+					tile = roadh;
 				break;	
 			}
 			case ROOF:
@@ -121,6 +121,17 @@ public class Tiles
 					case DOWN: 	tile = doorDorm;
 								break;
 					default:	tile = wall;
+				}
+				break;
+			}
+			case WINDOW:
+			{	switch(t.getDirection())
+				{
+					case LEFT:	tile = windowL;
+								break;
+					case RIGHT: tile = windowR;
+								break;
+					default:	tile = windowU;
 				}
 				break;
 			}
