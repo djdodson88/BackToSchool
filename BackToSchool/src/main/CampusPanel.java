@@ -365,13 +365,15 @@ public class CampusPanel extends JPanel
 		dbg.drawImage(player, playerX*TILE, playerY*TILE, TILE, TILE, this); //player.paintIcon(this, g, playerX, playerY);
 		
 		// Render pedestrians
-		for (Pedestrian p : pedestrians)
-		{	if (p.hasMove())
-			{	int pedX = p.getLocation().x-screenX;
-				int pedY = p.getLocation().y-screenY;
-				dbg.drawImage(p.getImage(), pedX*TILE, pedY*TILE, TILE, TILE, this);
+		try {
+			for (Pedestrian p : pedestrians)
+			{	if (p.hasMove())
+				{	int pedX = p.getLocation().x-screenX;
+					int pedY = p.getLocation().y-screenY;
+					dbg.drawImage(p.getImage(), pedX*TILE, pedY*TILE, TILE, TILE, this);
+				}
 			}
-		}
+		} catch (Exception e) {}
 		
 		// Arrow angle calculation
 		double a = (playerY+screenY) - destination.y;
